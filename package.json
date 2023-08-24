@@ -1,0 +1,9 @@
+{
+  "name": "dp",
+  "version": "1.0.0",
+  "description": "dp website bc annoyed",
+  "main": "index.js",
+  "repository": "https://github.com/insberr/dp.git",
+  "author": "Jonah Matteson <jonahmatteson@gmail.com>",
+  "license": "MIT"
+}
