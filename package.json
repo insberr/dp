@@ -2,8 +2,19 @@
   "name": "dp",
   "version": "1.0.0",
   "description": "dp website bc annoyed",
-  "main": "index.js",
+  "source": "src/index.ts",
   "repository": "https://github.com/insberr/dp.git",
   "author": "Jonah Matteson <jonahmatteson@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "scripts": {
+    "dev": "parcel src/index.html",
+    "build": "parcel build"
+  },
+  "devDependencies": {
+    "parcel": "^2.9.3"
+  },
+  "dependencies": {
+    "preact": "^10.17.1"
+  }
 }
