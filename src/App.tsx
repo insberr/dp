@@ -4,7 +4,7 @@ import { utcToZonedTime } from 'date-fns-tz';
 
 export default function App() {
     const schedule = ICSParser('test').filter((event: any) => {
-        return isSameDay(event.dtstart.toJSDate(), new Date('August 28, 2023'));
+        return isSameDay(event.dtstart.toJSDate(), new Date());
     });
     console.log(schedule);
     return (
