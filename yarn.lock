@@ -459,7 +459,7 @@
     "@parcel/transformer-react-refresh-wrap" "2.9.3"
     "@parcel/transformer-svg" "2.9.3"
 
-"@parcel/core@2.9.3":
+"@parcel/core@2.9.3", "@parcel/core@^2.9.3":
   version "2.9.3"
   resolved "https://registry.yarnpkg.com/@parcel/core/-/core-2.9.3.tgz#91346afa57d7b731e7c961451462a51af940acf3"
   integrity sha512-4KlM1Zr/jpsqWuMXr2zmGsaOUs1zMMFh9vfCNKRZkptf+uk8I3sugHbNdo+F5B+4e2yMuOEb1zgAmvJLeuH6ww==

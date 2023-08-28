@@ -17,6 +17,7 @@
     "devDependencies": {
         "@parcel/transformer-inline-string": "2.9.3",
         "@parcel/transformer-sass": "2.9.3",
+        "@parcel/core": "^2.9.3",
         "@types/node": "^20.5.6",
         "parcel": "^2.9.3",
         "parcel-reporter-clean-dist": "^1.0.4",
