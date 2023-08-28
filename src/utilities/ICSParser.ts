@@ -24,3 +24,21 @@ export default function ICSParser(ics: string): any {
     console.log(icalVeventsParsed);
     return icalVeventsParsed;
 }
+
+export type ICSLocation = {
+    location: string;
+    building: string;
+    room: string;
+};
+
+export function convertLocationToObject(locationString: string): ICSLocation {
+    const locationSplit = locationString.split(',');
+    const location = locationSplit[0].split(':')[1];
+    const building = locationSplit[1].split(':')[1];
+    const room = locationSplit[2].split(':')[1];
+    return {
+        location,
+        building,
+        room,
+    };
+}
