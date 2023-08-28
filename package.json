@@ -1,20 +1,46 @@
 {
-  "name": "dp",
-  "version": "1.0.0",
-  "description": "dp website bc annoyed",
-  "source": "src/index.ts",
-  "repository": "https://github.com/insberr/dp.git",
-  "author": "Jonah Matteson <jonahmatteson@gmail.com>",
-  "license": "MIT",
-  "browserslist": "> 0.5%, last 2 versions, not dead",
-  "scripts": {
-    "dev": "parcel src/index.html",
-    "build": "parcel build"
-  },
-  "devDependencies": {
-    "parcel": "^2.9.3"
-  },
-  "dependencies": {
-    "preact": "^10.17.1"
-  }
+    "name": "dp",
+    "version": "1.0.0",
+    "description": "dp website bc annoyed",
+    "source": "src/index.tsx",
+    "repository": "https://github.com/insberr/dp.git",
+    "author": "Jonah Matteson <jonahmatteson@gmail.com>",
+    "license": "MIT",
+    "browserslist": "> 0.5%, last 2 versions, not dead",
+    "staticFiles": {
+        "staticPath": "src/static"
+    },
+    "scripts": {
+        "dev": "parcel src/index.html",
+        "build": "parcel build"
+    },
+    "devDependencies": {
+        "@parcel/transformer-inline-string": "2.9.3",
+        "@parcel/transformer-sass": "2.9.3",
+        "@types/node": "^20.5.6",
+        "parcel": "^2.9.3",
+        "parcel-reporter-clean-dist": "^1.0.4",
+        "parcel-reporter-static-files-copy": "^1.5.2"
+    },
+    "dependencies": {
+        "@emotion/react": "^11.11.1",
+        "@emotion/styled": "^11.11.0",
+        "@fontsource/roboto": "^5.0.8",
+        "@mui/icons-material": "^5.14.6",
+        "@mui/material": "^5.14.6",
+        "@preact/compat": "^17.1.2",
+        "@preact/signals": "^1.2.1",
+        "date-fns": "^2.30.0",
+        "date-fns-tz": "^2.0.0",
+        "ical.js": "^1.5.0",
+        "preact": "^10.17.1",
+        "react": "^18.2.0"
+    },
+    "alias": {
+        "process": false,
+        "react": "preact/compat",
+        "react-dom/test-utils": "preact/test-utils",
+        "react-dom": "preact/compat",
+        "react/jsx-runtime": "preact/jsx-runtime"
+    }
 }
