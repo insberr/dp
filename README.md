@@ -3,6 +3,8 @@ build moment
 
 - Schedule
 - Scheduling/time management/sleep schedule/time management suggestions
+- link with moodle to show assignments/homework deadlines -- help manage time, automatically show when assignments should be done (ie auto plan the persons life that day lmao)
+- Customizations to tailor to the individual
 - Schedule comparing with friends
 - Useful links
 - Map (with pathfinding jkjk unless…)
