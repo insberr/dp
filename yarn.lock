@@ -983,6 +983,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@parcel/packager-raw-url@npm:^2.9.3":
+  version: 2.9.3
+  resolution: "@parcel/packager-raw-url@npm:2.9.3"
+  dependencies:
+    "@parcel/plugin": 2.9.3
+    "@parcel/utils": 2.9.3
+  checksum: 2c651f2857124c8b12eba3c68ae897e5cb8bc204b3ad286e9e3b46edd1dc75c6e8346c89e0473edfc316d3349884ae7fdd5b5029e4a508e43a2432af97285df7
+  languageName: node
+  linkType: hard
+
 "@parcel/packager-raw@npm:2.9.3":
   version: 2.9.3
   resolution: "@parcel/packager-raw@npm:2.9.3"
@@ -1111,6 +1121,13 @@ __metadata:
     "@parcel/utils": 2.9.3
     nullthrows: ^1.1.1
   checksum: e296a42e3e20a3a7b911236e8b349182210a8603c9b4a21023308b28a628c43acb23518e2b0502ef11e33463fa0426b344260a835e87f9a24838d5572df162ef
+  languageName: node
+  linkType: hard
+
+"@parcel/service-worker@npm:^2.9.3":
+  version: 2.9.3
+  resolution: "@parcel/service-worker@npm:2.9.3"
+  checksum: 848846309631b89c51d62a7818cbc40986fedf771a2e7906efcc3076f4f64a1760e351d51ade9f814d0c7f7865311b69e4dc7ad0d750879c33d42d30ac2e02e2
   languageName: node
   linkType: hard
 
@@ -1299,6 +1316,18 @@ __metadata:
     posthtml-render: ^3.0.0
     semver: ^7.5.2
   checksum: 19cec37f9cfb4a5506e48e41d70e970584cd06a913dfc92d128031991ff6615ce3302a896c2766fa64be8c8f56f81da47ece05e7b65c30f7e5213e676cae346c
+  languageName: node
+  linkType: hard
+
+"@parcel/transformer-webmanifest@npm:^2.9.3":
+  version: 2.9.3
+  resolution: "@parcel/transformer-webmanifest@npm:2.9.3"
+  dependencies:
+    "@mischnic/json-sourcemap": ^0.1.0
+    "@parcel/diagnostic": 2.9.3
+    "@parcel/plugin": 2.9.3
+    "@parcel/utils": 2.9.3
+  checksum: 1c94701fd41e3f6aa831001a247556f33464e45a1782c39fa5de18afbe7944b34a15aa194e5c527c37c8acfc66cf67c89cef8cae634669cbab726449adbb98c4
   languageName: node
   linkType: hard
 
@@ -2369,8 +2398,11 @@ __metadata:
     "@mui/material": ^5.14.6
     "@parcel/config-default": ^2.9.3
     "@parcel/core": ^2.9.3
+    "@parcel/packager-raw-url": ^2.9.3
+    "@parcel/service-worker": ^2.9.3
     "@parcel/transformer-inline-string": 2.9.3
     "@parcel/transformer-sass": 2.9.3
+    "@parcel/transformer-webmanifest": ^2.9.3
     "@preact/compat": ^17.1.2
     "@preact/signals": ^1.2.1
     "@types/node": ^20.5.6
@@ -2383,6 +2415,11 @@ __metadata:
     preact: ^10.17.1
     ts-node: ^10.9.1
     typescript: ^5.2.2
+    workbox-background-sync: ^7.0.0
+    workbox-cacheable-response: ^7.0.0
+    workbox-core: ^7.0.0
+    workbox-routing: ^7.0.0
+    workbox-strategies: ^7.0.0
   languageName: unknown
   linkType: soft
 
@@ -2802,6 +2839,13 @@ __metadata:
   dependencies:
     safer-buffer: ">= 2.1.2 < 3.0.0"
   checksum: 3f60d47a5c8fc3313317edfd29a00a692cc87a19cac0159e2ce711d0ebc9019064108323b5e493625e25594f11c6236647d8e256fbe7a58f4a3b33b89e6d30bf
+  languageName: node
+  linkType: hard
+
+"idb@npm:^7.0.1":
+  version: 7.1.1
+  resolution: "idb@npm:7.1.1"
+  checksum: 1973c28d53c784b177bdef9f527ec89ec239ec7cf5fcbd987dae75a16c03f5b7dfcc8c6d3285716fd0309dd57739805390bd9f98ce23b1b7d8849a3b52de8d56
   languageName: node
   linkType: hard
 
@@ -4332,6 +4376,50 @@ __metadata:
   dependencies:
     string-width: ^1.0.2 || 2 || 3 || 4
   checksum: d5fc37cd561f9daee3c80e03b92ed3e84d80dde3365a8767263d03dacfc8fa06b065ffe1df00d8c2a09f731482fcacae745abfbb478d4af36d0a891fad4834d3
+  languageName: node
+  linkType: hard
+
+"workbox-background-sync@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "workbox-background-sync@npm:7.0.0"
+  dependencies:
+    idb: ^7.0.1
+    workbox-core: 7.0.0
+  checksum: 79b64416563761d36b91342d6ce2618d1c984bebcd511ce56b80098127e42c676d4831dd566a0a80a6bb52a618ad815b277ce6b310e4a5c5043e7394829d30c6
+  languageName: node
+  linkType: hard
+
+"workbox-cacheable-response@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "workbox-cacheable-response@npm:7.0.0"
+  dependencies:
+    workbox-core: 7.0.0
+  checksum: c9d834b25564ee01dd4df17b1f27e61160a3b610f40c0e297a9973712878fe617e168e3b1541c7b70b0de3828cb4b62de3088424b4a2872ed5a106e7e777772f
+  languageName: node
+  linkType: hard
+
+"workbox-core@npm:7.0.0, workbox-core@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "workbox-core@npm:7.0.0"
+  checksum: ca64872f9ce59ee1f3f32a5ecbde36377081a221930c6f925e2c0d7fe39d3fdc309166c430d56d972eba4f7c40d2e7e91a0020699a0745790fbef578ff8f34f6
+  languageName: node
+  linkType: hard
+
+"workbox-routing@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "workbox-routing@npm:7.0.0"
+  dependencies:
+    workbox-core: 7.0.0
+  checksum: 9ea5b00fde5d90819e29ebf6d4aec3b84abec97854eb333c71b83548f1ba12b7f92d764a159f23cfa9e8164940e7b7136536fc0477784560cf2108d8dfe7f83b
+  languageName: node
+  linkType: hard
+
+"workbox-strategies@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "workbox-strategies@npm:7.0.0"
+  dependencies:
+    workbox-core: 7.0.0
+  checksum: 4f20604e762fb43b32a16d60e014d14c0933300083c109a95251c06c65c25c9d78ab16bbe638b64435911d4a01ae5f7c28c7e78d611a122ee6453be2c42a87dc
   languageName: node
   linkType: hard
 

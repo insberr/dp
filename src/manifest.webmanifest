@@ -1,0 +1,21 @@
+{
+    "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+    "short_name": "Egg",
+    "name": "Egg",
+    "icons": [],
+    "start_url": "./",
+    "background_color": "#1a1a1a",
+    "display": "standalone",
+    "scope": "./",
+    "theme_color": "#272727",
+    "shortcuts": [
+        {
+            "name": "Test",
+            "short_name": "test uh",
+            "description": "uh",
+            "url": "/uh"
+        }
+    ],
+    "description": "Egg",
+    "screenshots": []
+}

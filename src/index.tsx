@@ -15,12 +15,11 @@ import '@fontsource/roboto/700.css';
 
 const isProductionBuild = process.env.NODE_ENV === 'production';
 
-// ! To Do
-// if (navigator.serviceWorker) {
-//     if (isProductionBuild || new URLSearchParams(window.location.search).get('serviceworker') === 'true') {
-//         navigator.serviceWorker.register(new URL('./serviceworker.ts', import.meta.url), { type: 'module' });
-//     }
-// }
+if (navigator.serviceWorker) {
+    if (isProductionBuild || new URLSearchParams(window.location.search).get('serviceworker') === 'true') {
+        navigator.serviceWorker.register(new URL('./serviceworker.ts', import.meta.url), { type: 'module' });
+    }
+}
 
 const documentApp = document.getElementById('app');
 if (!documentApp) {
