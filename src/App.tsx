@@ -2,11 +2,11 @@ import { useState } from 'preact/hooks';
 
 import ICSParser, { convertLocationToObject } from './utilities/ICSParser';
 import { isSameDay } from 'date-fns';
-import { utcToZonedTime } from 'date-fns-tz';
+import { format, utcToZonedTime } from 'date-fns-tz';
 
 import { icsFileSignal } from './storage/icsfile';
 
-import { Card, Box, Button, Input } from '@mui/material';
+import { Card, Box, Button, Input, CardContent, CardHeader, Stack } from '@mui/material';
 
 export default function App() {
     const [dateToUseForDisplay, setDateToUseForDisplay] = useState(new Date());
@@ -18,6 +18,7 @@ export default function App() {
     if (_schedule === null) {
         return (
             <div>
+                <div>Upload ICS file, which can be downloaded from Self Service in the schedule section.</div>
                 <Input
                     type="file"
                     onChange={(change) => {
@@ -38,9 +39,14 @@ export default function App() {
             </div>
         );
     }
-    const schedule = _schedule.filter((event: any) => {
-        return isSameDay(event.dtstart.toJSDate(), dateToUseForDisplay);
-    });
+    const schedule = _schedule
+        .filter((event: any) => {
+            return isSameDay(event.dtstart.toJSDate(), dateToUseForDisplay);
+        })
+        .sort((a: any, b: any) => {
+            return a.dtstart.toJSDate().getTime() - b.dtstart.toJSDate().getTime();
+        });
+
     return (
         <div>
             <h1>App</h1>
@@ -83,18 +89,42 @@ export default function App() {
                 console.log(event);
                 const locationObject = convertLocationToObject(event.location);
                 return (
-                    <Box padding={2}>
-                        <h2>{event.summary}</h2>
-                        <div>Class Starts On {utcToZonedTime(event.dtstart.toJSDate(), 'America/Los_Angeles').toString()}</div>
-                        <div>Class Ends On {utcToZonedTime(event.dtend.toJSDate(), 'America/Los_Angeles').toString()}</div>
-                        <div>
-                            {locationObject.location} building {'('}
-                            {locationObject.building}
-                            {')'} in room {locationObject.room}
-                        </div>
-                    </Box>
+                    <Card sx={{ margin: 4 }} elevation={4}>
+                        <CardHeader title={event.summary} />
+                        <CardContent>
+                            <Box padding={2}>
+                                <div>Class Starts At {format(utcToZonedTime(event.dtstart.toJSDate(), 'America/Los_Angeles'), 'h:mma')}</div>
+                                <div>Class Ends At {format(utcToZonedTime(event.dtend.toJSDate(), 'America/Los_Angeles'), 'h:mma')}</div>
+                                <div>
+                                    {locationObject.location} building {'('}
+                                    {locationObject.building}
+                                    {')'} in room {locationObject.room}
+                                </div>
+                            </Box>
+                        </CardContent>
+                    </Card>
                 );
             })}
+            <div>
+                <Button
+                    variant="contained"
+                    onClick={() => {
+                        icsFileSignal.value = '';
+                    }}
+                >
+                    Reset (clear ics file)
+                </Button>
+            </div>
+            <div>
+                <h2>Links (To Do)</h2>
+                <Stack direction="column" spacing={2}>
+                    <a>Self Service</a>
+                    <a>Moodle</a>
+                    <a>Dragon Ride</a>
+                    <a>Housing Portal</a>
+                    <a>Am i missing anything?</a>
+                </Stack>
+            </div>
         </div>
     );
 }
