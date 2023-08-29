@@ -1,8 +1,9 @@
 import icaljs from 'ical.js';
-import * as ics2 from 'bundle-text:./schedule.R2023FA.ics';
+// import * as ics2 from 'bundle-text:./schedule.R2023FA.ics';
 
-export default function ICSParser(ics: string): any {
-    const icalParsedData = icaljs.parse(ics2);
+export default function ICSParser(ics: string | null): any {
+    if (!ics) return null;
+    const icalParsedData = icaljs.parse(ics);
     const icalComponent = new icaljs.Component(icalParsedData);
     const icalVevents = icalComponent.getAllSubcomponents('vevent');
     const icalVeventsParsed = icalVevents.map((vevent) => {

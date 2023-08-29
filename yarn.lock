@@ -307,6 +307,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@karmaniverous/serify-deserify@npm:^1.3.9":
+  version: 1.3.9
+  resolution: "@karmaniverous/serify-deserify@npm:1.3.9"
+  dependencies:
+    is-what: ^4.1.8
+  checksum: b7bb05a84aeee2b0652c8d8851bff1605bab0caabf3c029f659992ed5875cbb7d6b7b668934384d472f1e538137bed7083821f115900a6e95801745071cd7301
+  languageName: node
+  linkType: hard
+
 "@lezer/common@npm:^0.15.0, @lezer/common@npm:^0.15.7":
   version: 0.15.12
   resolution: "@lezer/common@npm:0.15.12"
@@ -2355,6 +2364,7 @@ __metadata:
     "@emotion/react": ^11.11.1
     "@emotion/styled": ^11.11.0
     "@fontsource/roboto": ^5.0.8
+    "@karmaniverous/serify-deserify": ^1.3.9
     "@mui/icons-material": ^5.14.6
     "@mui/material": ^5.14.6
     "@parcel/config-default": ^2.9.3
@@ -2916,6 +2926,13 @@ __metadata:
   version: 7.0.0
   resolution: "is-number@npm:7.0.0"
   checksum: 456ac6f8e0f3111ed34668a624e45315201dff921e5ac181f8ec24923b99e9f32ca1a194912dc79d539c97d33dba17dc635202ff0b2cf98326f608323276d27a
+  languageName: node
+  linkType: hard
+
+"is-what@npm:^4.1.8":
+  version: 4.1.15
+  resolution: "is-what@npm:4.1.15"
+  checksum: fe27f6cd4af41be59a60caf46ec09e3071bcc69b9b12a7c871c90f54360edb6d0bc7240cb944a251fb0afa3d35635d1cecea9e70709876b368a8285128d70a89
   languageName: node
   linkType: hard
 
