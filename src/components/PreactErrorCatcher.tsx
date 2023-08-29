@@ -61,6 +61,7 @@ export default class PreactErrorCatcher extends Component<props, state> {
                             color="warning"
                             onClick={() => {
                                 // resetStorage();
+                                localStorage.removeItem('icsFile');
                                 location.reload();
                             }}
                         >

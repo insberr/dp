@@ -1,3 +1,6 @@
-import { persist } from './persistSignal';
+import { persistJSON } from './persistSignal';
 
-export const icsFileSignal = persist<string | null>('icsFile', null);
+export type IcsFileSignalType = {
+    data: string | null;
+};
+export const icsFileSignal = persistJSON<IcsFileSignalType>('icsFile', { data: null });
