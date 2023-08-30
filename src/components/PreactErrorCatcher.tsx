@@ -65,7 +65,7 @@ export default class PreactErrorCatcher extends Component<props, state> {
                                 location.reload();
                             }}
                         >
-                            Reset (To Do)
+                            Reset (Resets ICS File)
                         </Button>
                     </div>
                 </Box>
