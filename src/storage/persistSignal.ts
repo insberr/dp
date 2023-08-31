@@ -23,13 +23,13 @@ export function persist<Type>(key: string, defaultValue: Type): Signal<Type> {
     let value = defaultValue;
 
     if (localStorageItem !== null) {
-        value = deserify(localStorageItem);
+        value = deserify(JSON.parse(localStorageItem)).data;
     }
 
     const internal = signal<Type>(value);
 
     effect(() => {
-        localStorage.setItem(key, serify(internal.value));
+        localStorage.setItem(key, JSON.stringify(serify({ data: internal.value })));
     });
 
     return internal;

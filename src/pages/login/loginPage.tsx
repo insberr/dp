@@ -1,6 +1,7 @@
 import { Box, Button, Input, Stack } from '@mui/material';
 import { useState } from 'preact/hooks';
 import CreateAccountPage from './createAccount';
+import { PageToRender, pageToRender } from '../../storage/pageToRender';
 
 export default function LoginPage() {
     const [passwordValue, setPasswordValue] = useState('');
@@ -34,10 +35,16 @@ export default function LoginPage() {
                 >
                     Login
                 </Button>
-                <Button>New? Create Account</Button>
+                <Button
+                    onClick={() => {
+                        pageToRender.value = PageToRender.CreateAccount;
+                    }}
+                >
+                    New? Create Account
+                </Button>
+
                 <Button>Im lazy, no account please</Button>
             </Stack>
-            <CreateAccountPage />
         </Box>
     );
 }

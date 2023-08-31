@@ -21,7 +21,25 @@ export default function CreateAccountPage() {
                 <div>Customize a few things?</div>
                 <div>Someday</div>
             </div>
-            <Button variant="contained">Create Account</Button>
+            <Button
+                variant="contained"
+                onClick={() => {
+                    fetch('http://localhost:3000/createAccount', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            username: 'test',
+                            password: 'test',
+                        }),
+                    }).then((res) => {
+                        console.log(res);
+                    });
+                }}
+            >
+                Create Account
+            </Button>
         </>
     );
 }
