@@ -135,3 +135,4 @@ src/backend/.yarn/cache
 src/backend/.yarn/unplugged
 src/backend/.yarn/build-state.yml
 src/backend/.yarn/install-state.gz
+src/backend/certs/*
