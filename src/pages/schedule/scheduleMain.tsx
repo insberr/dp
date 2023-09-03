@@ -7,7 +7,6 @@ import { format, utcToZonedTime } from 'date-fns-tz';
 import { dateForDisplay } from '../../storage/dateForDisplay';
 
 export default function ScheduleMain() {
-    console.log(null, icsFileSignal.value);
     if (icsFileSignal.value.data === null) {
         return (
             <div>
@@ -15,7 +14,11 @@ export default function ScheduleMain() {
                 <Input
                     type="file"
                     onChange={(change) => {
-                        console.log('change', change);
+                        if (change === null) {
+                            console.log('Uploaded ICS file is null. How ???');
+                            return;
+                        }
+
                         const reader = new FileReader();
                         reader.onload = (event) => {
                             const file = event.target?.result;
@@ -26,7 +29,10 @@ export default function ScheduleMain() {
                             console.log(error);
                             // actually show error to user
                         };
-                        reader.readAsText(change.target.files[0]); // you could also read images and other binaries
+
+                        // Bad, fix later
+                        // @ts-ignore
+                        reader.readAsText(change.target?.files[0]); // you could also read images and other binaries
                     }}
                 />
             </div>
@@ -34,7 +40,6 @@ export default function ScheduleMain() {
     }
 
     const _schedule = ICSParser(icsFileSignal.value.data);
-    console.log('_schedule', _schedule);
 
     const schedule = _schedule
         .filter((event: any) => {
@@ -47,27 +52,28 @@ export default function ScheduleMain() {
     return (
         <>
             <ChangeDateButtons />
-            {schedule.length === 0 && <div>No classes today / or something went wrong</div>}
-            {schedule.map((event: any) => {
-                console.log(event);
-                const locationObject = convertLocationToObject(event.location);
-                return (
-                    <Card sx={{ margin: 4 }} elevation={4}>
-                        <CardHeader title={event.summary} />
-                        <CardContent>
-                            <Box padding={2}>
-                                <div>Class Starts At {format(utcToZonedTime(event.dtstart.toJSDate(), 'America/Los_Angeles'), 'h:mma')}</div>
-                                <div>Class Ends At {format(utcToZonedTime(event.dtend.toJSDate(), 'America/Los_Angeles'), 'h:mma')}</div>
-                                <div>
-                                    {locationObject.location} building {'('}
-                                    {locationObject.building}
-                                    {')'} in room {locationObject.room}
-                                </div>
-                            </Box>
-                        </CardContent>
-                    </Card>
-                );
-            })}
+            <Box>
+                {schedule.length === 0 && <div>No classes today / or something went wrong</div>}
+                {schedule.map((event: any) => {
+                    const locationObject = convertLocationToObject(event.location);
+                    return (
+                        <Card sx={{ margin: 4 }} elevation={4}>
+                            <CardHeader title={event.summary} />
+                            <CardContent>
+                                <Box padding={2}>
+                                    <div>Class Starts At {format(utcToZonedTime(event.dtstart.toJSDate(), 'America/Los_Angeles'), 'h:mma')}</div>
+                                    <div>Class Ends At {format(utcToZonedTime(event.dtend.toJSDate(), 'America/Los_Angeles'), 'h:mma')}</div>
+                                    <div>
+                                        {locationObject.location} building {'('}
+                                        {locationObject.building}
+                                        {')'} in room {locationObject.room}
+                                    </div>
+                                </Box>
+                            </CardContent>
+                        </Card>
+                    );
+                })}
+            </Box>
         </>
     );
 }

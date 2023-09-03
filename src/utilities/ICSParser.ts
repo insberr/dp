@@ -22,7 +22,7 @@ export default function ICSParser(ics: string | null): any {
                 };
             }, {});
     });
-    console.log(icalVeventsParsed);
+
     return icalVeventsParsed;
 }
 

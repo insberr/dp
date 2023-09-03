@@ -1,19 +1,21 @@
 import { Box, Button, Input, Stack } from '@mui/material';
 import { useState } from 'preact/hooks';
-import CreateAccountPage from './createAccount';
 import { PageToRender, pageToRender } from '../../storage/pageToRender';
+import { icsFileSignal } from '../../storage/icsfile';
 
 export default function LoginPage() {
     const [passwordValue, setPasswordValue] = useState('');
     const [usernameValue, setUsernameValue] = useState('');
+    const [isError, setisError] = useState<null | string>(null);
 
     return (
         <Box sx={{ margin: 10 }}>
             <h1>Login Page</h1>
             <Stack direction="column" width={'50%'}>
+                {isError && <Box>{isError}</Box>}
                 <Input
                     onChange={(value) => {
-                        console.log('username', value.target?.value);
+                        // @ts-ignore
                         setUsernameValue(value.target?.value || '');
                     }}
                     type="text"
@@ -21,7 +23,7 @@ export default function LoginPage() {
                 />
                 <Input
                     onChange={(value) => {
-                        console.log('username', value.target?.value);
+                        // @ts-ignore
                         setPasswordValue(value.target?.value || '');
                     }}
                     type="password"
@@ -30,7 +32,32 @@ export default function LoginPage() {
                 <Button
                     variant="contained"
                     onclick={() => {
-                        console.log('login', passwordValue, usernameValue);
+                        fetch('https://backend.dpd.insberr.com/login', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+
+                            body: JSON.stringify({
+                                username: usernameValue,
+                                password: passwordValue,
+                            }),
+                        })
+                            .then((res) => {
+                                res.json().then((data) => {
+                                    console.log(data);
+                                    if (data.error) {
+                                        setisError(data.error);
+                                        throw new Error(data.error);
+                                    }
+                                    if (data.icsFile !== null) icsFileSignal.value = { data: atob(data.icsFile) };
+                                    pageToRender.value = PageToRender.Schedule;
+                                });
+                            })
+                            .catch((err) => {
+                                console.log(err);
+                                setisError(err.error);
+                            });
                     }}
                 >
                     Login
@@ -43,7 +70,7 @@ export default function LoginPage() {
                     New? Create Account
                 </Button>
 
-                <Button>Im lazy, no account please</Button>
+                <Button>Im lazy, no account please (To do)</Button>
             </Stack>
         </Box>
     );

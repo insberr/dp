@@ -1,7 +1,7 @@
 {
     "$schema": "https://json.schemastore.org/web-manifest-combined.json",
-    "short_name": "Egg",
-    "name": "Egg",
+    "short_name": "Dragons",
+    "name": "Dragons",
     "icons": [
         {
             "src": "./icons/maskable_icon.png",
@@ -35,6 +35,6 @@
             "url": "/uh"
         }
     ],
-    "description": "Egg",
+    "description": "DigiPen Student Website IDK What To Call It. Egg?",
     "screenshots": []
 }
