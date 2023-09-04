@@ -1,6 +1,8 @@
+import { computed } from '@preact/signals';
 import { persist } from './persistSignal';
 
 export enum PageToRender {
+    Intro,
     Login,
     CreateAccount,
 
@@ -10,4 +12,4 @@ export enum PageToRender {
     Settings,
 }
 
-export const pageToRender = persist<PageToRender>('pageToRender', PageToRender.Login);
+export const pageToRender = persist<PageToRender>('pageToRender', PageToRender.Intro);

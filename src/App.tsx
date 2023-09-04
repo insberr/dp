@@ -9,11 +9,15 @@ import CreateAccountPage from './pages/login/createAccount';
 import SettingsPage from './pages/settings/settingsPage';
 import MenuBar from './components/MenuBar';
 import RouterWrapper from './components/RouterWrapper';
+import IntroPage from './pages/IntroPage';
 
 export default function App() {
     return (
         <div>
-            <RouterWrapper pageIDs={[PageToRender.Login, PageToRender.CreateAccount]}>
+            <RouterWrapper pageIDs={[PageToRender.Login, PageToRender.CreateAccount, PageToRender.Intro]}>
+                <Router pageID={PageToRender.Intro}>
+                    <IntroPage />
+                </Router>
                 <Router pageID={PageToRender.Login}>
                     <LoginPage />
                 </Router>
