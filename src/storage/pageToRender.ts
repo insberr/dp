@@ -1,4 +1,3 @@
-import { computed } from '@preact/signals';
 import { persist } from './persistSignal';
 
 export enum PageToRender {

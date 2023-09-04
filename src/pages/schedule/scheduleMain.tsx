@@ -11,6 +11,16 @@ export default function ScheduleMain() {
     if (icsFileSignal.value.data === null) {
         return (
             <div>
+                <Box>
+                    <Typography variant="h4">Curious What This Website Is About?</Typography>
+                    <Button
+                        onCick={() => {
+                            pageToRender.value = PageToRender.Settings;
+                        }}
+                    >
+                        Click here
+                    </Button>
+                </Box>
                 <div>Upload ICS file, which can be downloaded from Self Service in the schedule section.</div>
                 <Input
                     type="file"
