@@ -12,6 +12,13 @@ export default function CreateAccountPage() {
     return (
         <Box>
             <Typography variant="h3">Create Account</Typography>
+            <Button
+                onClick={() => {
+                    pageToRender.value = PageToRender.Login;
+                }}
+            >
+                Back To Login
+            </Button>
             <Box>
                 <Typography variant="h4">Select A Username And Password</Typography>
                 <Stack direction="column" width={'50%'}>

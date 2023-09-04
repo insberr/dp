@@ -9,9 +9,9 @@ export default function LoginPage() {
     const [isError, setisError] = useState<null | string>(null);
 
     return (
-        <Box sx={{ margin: 10 }}>
+        <Box sx={{ width: '50%' }} justifyContent={'center'}>
             <h1>Login Page</h1>
-            <Stack direction="column" width={'50%'}>
+            <Stack direction="column">
                 {isError && <Box>{isError}</Box>}
                 <Input
                     onChange={(value) => {
@@ -70,7 +70,13 @@ export default function LoginPage() {
                     New? Create Account
                 </Button>
 
-                <Button>Im lazy, no account please (To do)</Button>
+                <Button
+                    onClick={() => {
+                        pageToRender.value = PageToRender.Schedule;
+                    }}
+                >
+                    Im lazy, no account please
+                </Button>
             </Stack>
         </Box>
     );

@@ -7,51 +7,51 @@ import { PageToRender, pageToRender } from './storage/pageToRender';
 import Router from './components/Router';
 import CreateAccountPage from './pages/login/createAccount';
 import SettingsPage from './pages/settings/settingsPage';
+import MenuBar from './components/MenuBar';
+import RouterWrapper from './components/RouterWrapper';
 
 export default function App() {
     return (
         <div>
-            <h1>Welcome!</h1>
-            <Box sx={{ marginBottom: 10 }}>
-                <Button onClick={() => (pageToRender.value = PageToRender.Schedule)}>Go To Schedule</Button>
-                <Button onClick={() => (pageToRender.value = PageToRender.Links)}>Go To Links And Info</Button>
-                <Button onClick={() => (pageToRender.value = PageToRender.Settings)}>Go To Settings</Button>
-                <Button onClick={() => (pageToRender.value = PageToRender.Login)}>Go To Login</Button>
-            </Box>
+            <RouterWrapper pageIDs={[PageToRender.Login, PageToRender.CreateAccount]}>
+                <Router pageID={PageToRender.Login}>
+                    <LoginPage />
+                </Router>
+                <Router pageID={PageToRender.CreateAccount}>
+                    <CreateAccountPage />
+                </Router>
+            </RouterWrapper>
+            <RouterWrapper pageIDs={[PageToRender.Schedule, PageToRender.Settings, PageToRender.Links]}>
+                <Router pageID={PageToRender.Schedule}>
+                    <ScheduleMain />
+                </Router>
+                <Router pageID={PageToRender.Settings}>
+                    <SettingsPage />
+                </Router>
+                <Router pageID={PageToRender.Links}>
+                    <div>
+                        <h2>Links (Work In Progress)</h2>
+                        <Stack direction="column" spacing={2}>
+                            <a href={'https://selfservice.digipen.edu'} target="_blank">
+                                Self Service
+                            </a>
+                            <a href={'https://distance.digipen.edu/2023-fall/login/index.php'} target="_blank">
+                                Moodle (Fall 2023)
+                            </a>
+                            <a href="https://bytesredmond.square.site/" target="_blank">
+                                Bytes Cafe Website
+                            </a>
+                            <a target="_blank">Dragon Ride</a>
+                            <a target="_blank">Housing Portal</a>
+                            <a target="_blank">Webmail</a>
+                            <a target="_blank">Handshake</a>
+                            <a target="_blank">Am i missing anything?</a>
+                        </Stack>
+                    </div>
+                </Router>
 
-            <Router pageID={PageToRender.Login}>
-                <LoginPage />
-            </Router>
-            <Router pageID={PageToRender.CreateAccount}>
-                <CreateAccountPage />
-            </Router>
-            <Router pageID={PageToRender.Schedule}>
-                <ScheduleMain />
-            </Router>
-            <Router pageID={PageToRender.Settings}>
-                <SettingsPage />
-            </Router>
-            <Router pageID={PageToRender.Links}>
-                <div>
-                    <h2>Links (Work In Progress)</h2>
-                    <Stack direction="column" spacing={2}>
-                        <a href={'https://selfservice.digipen.edu'} target="_blank">
-                            Self Service
-                        </a>
-                        <a href={'https://distance.digipen.edu/2023-fall/login/index.php'} target="_blank">
-                            Moodle (Fall 2023)
-                        </a>
-                        <a href="https://bytesredmond.square.site/" target="_blank">
-                            Bytes Cafe Website
-                        </a>
-                        <a target="_blank">Dragon Ride</a>
-                        <a target="_blank">Housing Portal</a>
-                        <a target="_blank">Webmail</a>
-                        <a target="_blank">Handshake</a>
-                        <a target="_blank">Am i missing anything?</a>
-                    </Stack>
-                </div>
-            </Router>
+                <MenuBar />
+            </RouterWrapper>
         </div>
     );
 }
