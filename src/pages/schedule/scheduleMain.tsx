@@ -62,16 +62,6 @@ export default function ScheduleMain() {
 
     return (
         <>
-            <Box>
-                <Typography variant="h4">Curious What This Website Is About?</Typography>
-                <Button
-                    onCick={() => {
-                        pageToRender.value = PageToRender.Settings;
-                    }}
-                >
-                    Click here
-                </Button>
-            </Box>
             <ChangeDateButtons />
             <Box>
                 {schedule.length === 0 && <div>No classes today / or something went wrong</div>}
