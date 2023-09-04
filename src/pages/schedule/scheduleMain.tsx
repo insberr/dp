@@ -1,10 +1,11 @@
-import { Box, Button, Card, CardContent, CardHeader, Input } from '@mui/material';
+import { Box, Button, Card, CardContent, CardHeader, Input, Typography } from '@mui/material';
 import { icsFileSignal } from '../../storage/icsfile';
 import ChangeDateButtons from './changeDateButtons';
 import { isSameDay } from 'date-fns';
 import ICSParser, { convertLocationToObject } from '../../utilities/ICSParser';
 import { format, utcToZonedTime } from 'date-fns-tz';
 import { dateForDisplay } from '../../storage/dateForDisplay';
+import { PageToRender, pageToRender } from '../../storage/pageToRender';
 
 export default function ScheduleMain() {
     if (icsFileSignal.value.data === null) {
@@ -51,6 +52,16 @@ export default function ScheduleMain() {
 
     return (
         <>
+            <Box>
+                <Typography variant="h4">Curious What This Website Is About?</Typography>
+                <Button
+                    onCick={() => {
+                        pageToRender.value = PageToRender.Settings;
+                    }}
+                >
+                    Click here
+                </Button>
+            </Box>
             <ChangeDateButtons />
             <Box>
                 {schedule.length === 0 && <div>No classes today / or something went wrong</div>}
