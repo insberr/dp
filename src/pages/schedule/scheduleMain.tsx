@@ -12,9 +12,9 @@ export default function ScheduleMain() {
         return (
             <div>
                 <Box>
-                    <Typography variant="h4">Curious What This Website Is About?</Typography>
+                    <Typography variant="h6">Curious What This Website Is About?</Typography>
                     <Button
-                        onCick={() => {
+                        onClick={() => {
                             pageToRender.value = PageToRender.Settings;
                         }}
                     >
@@ -62,6 +62,16 @@ export default function ScheduleMain() {
 
     return (
         <>
+            <Box>
+                <Typography variant="h6">Curious What This Website Is About?</Typography>
+                <Button
+                    onClick={() => {
+                        pageToRender.value = PageToRender.Settings;
+                    }}
+                >
+                    Click here
+                </Button>
+            </Box>
             <ChangeDateButtons />
             <Box>
                 {schedule.length === 0 && <div>No classes today / or something went wrong</div>}
