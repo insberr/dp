@@ -50,7 +50,7 @@ export default function LoginPage() {
                                         setisError(data.error);
                                         throw new Error(data.error);
                                     }
-                                    if (data.icsFile !== null) icsFileSignal.value = { data: atob(data.icsFile) };
+                                    if (data.files.ics !== null) icsFileSignal.value = { data: atob(data.files.ics) };
                                     pageToRender.value = PageToRender.Schedule;
                                 });
                             })
