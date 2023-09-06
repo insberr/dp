@@ -21,7 +21,7 @@ type User = {
     icsFile?: string | null;
     files: {
         ics: string | null;
-    }
+    };
     friends: UserID[];
 };
 
@@ -66,7 +66,7 @@ app.get('/admin', (req, res) => {
     console.log('GET on /admin Thier ip is: ', req.ip);
     if (req.query.password === undefined) return res.send('<div>Admin Page</div>');
     if (req.query.password === process.env.ADMIN_PASSWORD) {
-        const html = fs.readFileSync('/home/opc/dp/src/backend/src/admin.html').toString()
+        const html = fs.readFileSync('/home/opc/dp/src/backend/src/admin.html').toString();
         const parsedHtml = html.replace('{db}', json5.stringify(db()));
         res.send(parsedHtml);
     } else {
@@ -97,7 +97,15 @@ app.post('/createAccount', (req, res) => {
     const salt = crypto.randomBytes(16).toString('hex');
     const hash = crypto.pbkdf2Sync(reqBody.password, salt, 1000, 64, `sha512`).toString(`hex`);
 
-    temp_db.users.push({ userId: `${Date.parse(new Date().toDateString())}-1-uh`, dateCreated: new Date(), username: reqBody.username, passwordSalt: salt, passwordHash: hash, files: { ics: reqBody.icsFile }, friends: [] });
+    temp_db.users.push({
+        userId: `${Date.parse(new Date().toDateString())}-1-uh`,
+        dateCreated: new Date(),
+        username: reqBody.username,
+        passwordSalt: salt,
+        passwordHash: hash,
+        files: { ics: reqBody.icsFile },
+        friends: [],
+    });
 
     // Very temporary
     dbsave(temp_db);
