@@ -47,6 +47,17 @@ app.get('/', (req, res) => {
     res.send('<a>Hello World!</a>');
 });
 
+// admin page /admin?password=1234
+app.get('/admin', (req, res) => {
+    console.log('GET on /admin Thier ip is: ', req.ip);
+    if (req.query.password === undefined) return res.send('<div>Admin Page</div>');
+    if (req.query.password === '1234') {
+        res.send(fs.readFileSync('/home/opc/dp/src/backend/src/admin.html').toString());
+    } else {
+        res.send('<div>Nice Try LMAO</div>');
+    }
+});
+
 app.post('/createAccount', (req, res) => {
     const reqBody = req.body;
 
