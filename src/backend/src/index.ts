@@ -141,6 +141,13 @@ app.post('/login', (req, res) => {
     res.send(doesUserExist);
 });
 
+// Idea
+app.post('/user/:userId/addFriend', (req, res) => {
+    const reqBody = req.body;
+    const userId = req.params.userId;
+    const reqAuth = req.headers.authorization;
+});
+
 var privateKey = fs.readFileSync('/etc/letsencrypt/live/backend.dpd.insberr.com/privkey.pem');
 var certificate = fs.readFileSync('/etc/letsencrypt/live/backend.dpd.insberr.com/fullchain.pem');
 
