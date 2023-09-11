@@ -204,7 +204,6 @@ function migrateUsersToHaveSession() {
             ...user,
             session: null,
         };
-        delete updatedUser.icsFile;
         return updatedUser;
     });
     _temp_db.users = modified_users;
