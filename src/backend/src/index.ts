@@ -139,7 +139,6 @@ app.post('/login', (req, res, next) => {
     const reqBody = req.body;
     const reqSession = req.session;
 
-
     if (reqBody.username === '') {
         return res.send({ data: 'username is blank' });
     }
@@ -163,19 +162,19 @@ app.post('/login', (req, res, next) => {
     }
 
     req.session.regenerate(function (err) {
-    if (err) next(err)
+        if (err) next(err);
 
         // store user information in session, typically a user id
         // @ts-ignore
         req.session.user = doesUserExist.userId;
 
-    // save the session before redirection to ensure page
-    // load does not happen before session is saved
-    req.session.save(function (err) {
-      if (err) return next(err)
-      res.send(doesUserExist)
-    })
-  })
+        // save the session before redirection to ensure page
+        // load does not happen before session is saved
+        req.session.save(function (err) {
+            if (err) return next(err);
+            res.send(doesUserExist);
+        });
+    });
 
     // res.send(doesUserExist);
 });
@@ -184,7 +183,7 @@ app.post('/login', (req, res, next) => {
 app.post('/user/add_friend', (req, res) => {
     const reqSession = req.session;
     const reqBody = req.body;
-    console.log(req.sessionID, req.session.id)
+    console.log(req.sessionID, req.session.id);
 
     const user = db().users.find((u) => {
         return u.session?.id === req.sessionID;
