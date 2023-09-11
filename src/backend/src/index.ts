@@ -9,7 +9,7 @@ import fs from 'fs';
 import https from 'https';
 import json5 from 'json5';
 import crypto from 'crypto';
-import uuid from 'uuid';
+import { v4 } from 'uuid';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -65,7 +65,7 @@ app.use(
 
 app.use(
     sessions({
-        secret: process.env.SESSION_SECRET || 'secret', // bad
+        secret: process.env.SESSION_SECRET as string,
         saveUninitialized: true,
         cookie: { maxAge: 1000 * 60 * 60 * 24 },
         resave: false,
@@ -74,7 +74,6 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 app.use(cookieParser());
 
 app.get('/', (req, res) => {
@@ -116,8 +115,9 @@ app.post('/createAccount', async (req, res) => {
 
     const salt = crypto.randomBytes(16).toString('hex');
     const hash = crypto.pbkdf2Sync(reqBody.password, salt, 1000, 64, `sha512`).toString(`hex`);
-    const newUserId = uuid.v4();
+    const newUserId = v4();
 
+    req.sessionID = newUserId;
     temp_db.users.push({
         userId: newUserId,
         dateCreated: new Date(),
@@ -135,9 +135,10 @@ app.post('/createAccount', async (req, res) => {
     res.send({ data: 'user created successfully' });
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', (req, res, next) => {
     const reqBody = req.body;
     const reqSession = req.session;
+
 
     if (reqBody.username === '') {
         return res.send({ data: 'username is blank' });
@@ -161,20 +162,32 @@ app.post('/login', (req, res) => {
         return res.send({ error: 'incorrect password' });
     }
 
-    reqSession.id = doesUserExist.userId;
-    doesUserExist.session = reqSession;
-    dbsave(temp_db);
+    req.session.regenerate(function (err) {
+    if (err) next(err)
 
-    res.send(doesUserExist);
+        // store user information in session, typically a user id
+        // @ts-ignore
+        req.session.user = doesUserExist.userId;
+
+    // save the session before redirection to ensure page
+    // load does not happen before session is saved
+    req.session.save(function (err) {
+      if (err) return next(err)
+      res.send(doesUserExist)
+    })
+  })
+
+    // res.send(doesUserExist);
 });
 
 // Idea
 app.post('/user/add_friend', (req, res) => {
     const reqSession = req.session;
     const reqBody = req.body;
+    console.log(req.sessionID, req.session.id)
 
     const user = db().users.find((u) => {
-        return u.session?.id === reqSession.id;
+        return u.session?.id === req.sessionID;
     });
     if (user === undefined) return res.send({ error: 'user not found for given session id... hmm' });
 
@@ -196,18 +209,19 @@ https
 
 console.log('Listening on port 443!');
 
-function migrateUsersToHaveSession() {
-    const _temp_db = db();
-    dbBackup();
-    const modified_users = _temp_db.users.map((user) => {
-        const updatedUser: UserV2 = {
-            ...user,
-            session: null,
-        };
-        return updatedUser;
-    });
-    _temp_db.users = modified_users;
-    fs.writeFileSync('/home/opc/dp/src/backend/db/temp.new-next.db.json5', json5.stringify(_temp_db, null, 2));
-}
+// function migrateUsersToHaveSession() {
+//     const _temp_db = db();
+//     dbBackup();
+//     const modified_users = _temp_db.users.map((user) => {
+//         const updatedUser: UserV2 = {
+//             ...user,
+//             userId: v4(),
+//             session: null,
+//         };
+//         return updatedUser;
+//     });
+//     _temp_db.users = modified_users;
+//     fs.writeFileSync('/home/opc/dp/src/backend/db/temp.new-next.db.json5', json5.stringify(_temp_db, null, 2));
+// }
 
-migrateUsersToHaveSession();
+// migrateUsersToHaveSession();
