@@ -2,11 +2,14 @@
 // Need to host it somewhere
 
 import express from 'express';
+import cookieParser from 'cookie-parser';
+import sessions, { SessionData } from 'express-session';
 import cors from 'cors';
 import fs from 'fs';
 import https from 'https';
 import json5 from 'json5';
 import crypto from 'crypto';
+import uuid from 'uuid';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -25,8 +28,12 @@ type User = {
     friends: UserID[];
 };
 
+type UserV2 = User & {
+    session: (sessions.Session & Partial<sessions.SessionData>) | null;
+};
+
 type Db = {
-    users: User[];
+    users: UserV2[];
 };
 function db(): Db {
     return json5.parse(fs.readFileSync('/home/opc/dp/src/backend/db/temp.db.json5').toString());
@@ -55,7 +62,20 @@ app.use(
         },
     })
 );
+
+app.use(
+    sessions({
+        secret: process.env.SESSION_SECRET || 'secret', // bad
+        saveUninitialized: true,
+        cookie: { maxAge: 1000 * 60 * 60 * 24 },
+        resave: false,
+    })
+);
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use(cookieParser());
 
 app.get('/', (req, res) => {
     console.log('GET on / Thier ip is: ', req.ip);
@@ -74,7 +94,7 @@ app.get('/admin', (req, res) => {
     }
 });
 
-app.post('/createAccount', (req, res) => {
+app.post('/createAccount', async (req, res) => {
     const reqBody = req.body;
 
     if (reqBody.username === '') {
@@ -96,15 +116,17 @@ app.post('/createAccount', (req, res) => {
 
     const salt = crypto.randomBytes(16).toString('hex');
     const hash = crypto.pbkdf2Sync(reqBody.password, salt, 1000, 64, `sha512`).toString(`hex`);
+    const newUserId = uuid.v4();
 
     temp_db.users.push({
-        userId: `${Date.parse(new Date().toDateString())}-1-uh`,
+        userId: newUserId,
         dateCreated: new Date(),
         username: reqBody.username,
         passwordSalt: salt,
         passwordHash: hash,
         files: { ics: reqBody.icsFile },
         friends: [],
+        session: req.session, // ! temporary
     });
 
     // Very temporary
@@ -115,6 +137,7 @@ app.post('/createAccount', (req, res) => {
 
 app.post('/login', (req, res) => {
     const reqBody = req.body;
+    const reqSession = req.session;
 
     if (reqBody.username === '') {
         return res.send({ data: 'username is blank' });
@@ -138,14 +161,24 @@ app.post('/login', (req, res) => {
         return res.send({ error: 'incorrect password' });
     }
 
+    reqSession.id = doesUserExist.userId;
+    doesUserExist.session = reqSession;
+    dbsave(temp_db);
+
     res.send(doesUserExist);
 });
 
 // Idea
-app.post('/user/:userId/addFriend', (req, res) => {
+app.post('/user/add_friend', (req, res) => {
+    const reqSession = req.session;
     const reqBody = req.body;
-    const userId = req.params.userId;
-    const reqAuth = req.headers.authorization;
+
+    const user = db().users.find((u) => {
+        return u.session?.id === reqSession.id;
+    });
+    if (user === undefined) return res.send({ error: 'user not found for given session id... hmm' });
+
+    res.send({ data: 'not implemented' });
 });
 
 var privateKey = fs.readFileSync('/etc/letsencrypt/live/backend.dpd.insberr.com/privkey.pem');
@@ -163,20 +196,19 @@ https
 
 console.log('Listening on port 443!');
 
-// function migrateUsersToHaveID() {
-//     const _temp_db = db();
-//     dbBackup();
-//     const modified_users = _temp_db.users.map((user, index) => {
-//         const updatedUser: User = {
-//             ...user,
-//             userId: `${Date.parse(new Date().toDateString())}-1-uh`,
-//             dateCreated: new Date(),
-//             friends: [],
-//             files: { ics: user.icsFile || null }
-//         };
-//         delete updatedUser.icsFile;
-//         return updatedUser;
-//     })
-//     _temp_db.users = modified_users;
-//     fs.writeFileSync('/home/opc/dp/src/backend/db/temp.new-next.db.json5', json5.stringify(_temp_db, null, 2));
-// }
+function migrateUsersToHaveSession() {
+    const _temp_db = db();
+    dbBackup();
+    const modified_users = _temp_db.users.map((user) => {
+        const updatedUser: UserV2 = {
+            ...user,
+            session: null,
+        };
+        delete updatedUser.icsFile;
+        return updatedUser;
+    });
+    _temp_db.users = modified_users;
+    fs.writeFileSync('/home/opc/dp/src/backend/db/temp.new-next.db.json5', json5.stringify(_temp_db, null, 2));
+}
+
+migrateUsersToHaveSession();
