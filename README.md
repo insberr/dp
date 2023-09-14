@@ -1,5 +1,22 @@
 # dp
-build moment
+
+Install Dependencies
+
+```bash
+yarn
+```
+
+To run in dev mode:
+
+```bash
+yarn dev
+```
+
+To Build:
+
+```bash
+yarn build
+```
 
 - Schedule
 - Scheduling/time management/sleep schedule/time management suggestions
