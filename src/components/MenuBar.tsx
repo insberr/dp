@@ -10,6 +10,7 @@ export default function MenuBar() {
         <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
             <BottomNavigation
                 showLabels
+                sx={{ paddingBottom: 4, paddingTop: 4 }}
                 value={pageToRender.value}
                 onChange={(event, newValue) => {
                     pageToRender.value = newValue;
