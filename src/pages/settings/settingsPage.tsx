@@ -21,14 +21,22 @@ export default function SettingsPage() {
             >
                 Reset ics file
             </Button>
-
-            <Box sx={{ marginTop: 5 }}>
-                <Button onClick={() => (pageToRender.value = PageToRender.Schedule)}>Go To Schedule</Button>
-                <Button onClick={() => (pageToRender.value = PageToRender.Links)}>Go To Links And Info</Button>
-                <Button onClick={() => (pageToRender.value = PageToRender.Settings)}>Go To Settings</Button>
-                <Button onClick={() => (pageToRender.value = PageToRender.Login)}>Go To Login</Button>
-                <Button onClick={() => (pageToRender.value = PageToRender.Intro)}>Go To Intro</Button>
-            </Box>
+            <Button
+                variant="contained"
+                onClick={() => {
+                    icsFileSignal.value = { data: null };
+                }}
+            >
+                Reset Site (todo)
+            </Button>
+            <Button
+                variant="contained"
+                onClick={() => {
+                    icsFileSignal.value = { data: null };
+                }}
+            >
+                Add to homescreen (todo)
+            </Button>
         </div>
     );
 }
