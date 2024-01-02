@@ -1,10 +1,13 @@
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 
 import { dateForDisplay } from '../../storage/dateForDisplay';
+import { signal } from '@preact/signals';
+
+export const collapseUnusedTime = signal<boolean>(false);
 
 export default function ChangeDateButtons() {
     return (
-        <div>
+        <Box sx={{ top: 0, height: 150 }}>
             <Button
                 variant="contained"
                 onClick={() => {
@@ -34,6 +37,14 @@ export default function ChangeDateButtons() {
                 Today
             </Button>
             <div>Display Date: {dateForDisplay.value.toString()}</div>
-        </div>
+            <Button
+                variant="contained"
+                onClick={() => {
+                    collapseUnusedTime.value = !collapseUnusedTime.value;
+                }}
+            >
+                Collapse Unused Time
+            </Button>
+        </Box>
     );
 }

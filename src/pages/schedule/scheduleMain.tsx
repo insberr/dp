@@ -1,51 +1,19 @@
-import { Box, Button, Card, CardContent, CardHeader, Input, Typography } from '@mui/material';
+import { Grid, Box, Button, Card, CardContent, CardHeader, Input, Typography } from '@mui/material';
 import { icsFileSignal } from '../../storage/icsfile';
 import ChangeDateButtons from './changeDateButtons';
+
 import { isSameDay } from 'date-fns';
-import ICSParser, { convertLocationToObject } from '../../utilities/ICSParser';
-import { format, utcToZonedTime } from 'date-fns-tz';
-import { dateForDisplay } from '../../storage/dateForDisplay';
-import { PageToRender, pageToRender } from '../../storage/pageToRender';
+import ICSParser from '../../utilities/ICSParser';
+import { currentDate, dateForDisplay } from '../../storage/dateForDisplay';
+import EventBox from './eventBox';
+import InputFileUpload from '../../components/InputFileUpload';
 
 export default function ScheduleMain() {
     if (icsFileSignal.value.data === null) {
         return (
             <div>
-                <Box>
-                    <Typography variant="h6">Curious What This Website Is About?</Typography>
-                    <Button
-                        onClick={() => {
-                            pageToRender.value = PageToRender.Settings;
-                        }}
-                    >
-                        Click here
-                    </Button>
-                </Box>
                 <div>Upload ICS file, which can be downloaded from Self Service in the schedule section.</div>
-                <Input
-                    type="file"
-                    onChange={(change) => {
-                        if (change === null) {
-                            console.log('Uploaded ICS file is null. How ???');
-                            return;
-                        }
-
-                        const reader = new FileReader();
-                        reader.onload = (event) => {
-                            const file = event.target?.result;
-                            icsFileSignal.value = { data: file as string };
-                            console.log('event:file: ', file); // desired file content
-                        };
-                        reader.onerror = (error) => {
-                            console.log(error);
-                            // actually show error to user
-                        };
-
-                        // Bad, fix later
-                        // @ts-ignore
-                        reader.readAsText(change.target?.files[0]); // you could also read images and other binaries
-                    }}
-                />
+                <InputFileUpload />
             </div>
         );
     }
@@ -60,40 +28,74 @@ export default function ScheduleMain() {
             return a.dtstart.toJSDate().getTime() - b.dtstart.toJSDate().getTime();
         });
 
+    const timeHeight = 50;
+
+    const fakeEvent = {
+        summary: 'Fake Event',
+        location: 'Location: MAIN, Building:RB1, Room:MCHLNGLO',
+        dtstart: {
+            toJSDate: () => {
+                return new Date('January 8, 2024 2:00:00');
+            },
+        },
+        dtend: {
+            toJSDate: () => {
+                return new Date('January 8, 2024 2:30:00');
+            },
+        },
+    };
+
+    schedule.push(fakeEvent);
+
+    // TODO: Make this work frfr no cap
+    const hoursToDisplay = [...Array(25)]; // [1, 2, 3, 11, 12, 13, 14, 15, 16, 17];
     return (
         <>
-            <Box>
-                <Typography variant="h6">Curious What This Website Is About?</Typography>
-                <Button
-                    onClick={() => {
-                        pageToRender.value = PageToRender.Settings;
-                    }}
-                >
-                    Click here
-                </Button>
-            </Box>
             <ChangeDateButtons />
-            <Box>
-                {schedule.length === 0 && <div>No classes today / or something went wrong</div>}
-                {schedule.map((event: any) => {
-                    const locationObject = convertLocationToObject(event.location);
-                    return (
-                        <Card sx={{ margin: 4 }} elevation={4}>
-                            <CardHeader title={event.summary} />
-                            <CardContent>
-                                <Box padding={2}>
-                                    <div>Class Starts At {format(utcToZonedTime(event.dtstart.toJSDate(), 'America/Los_Angeles'), 'h:mma')}</div>
-                                    <div>Class Ends At {format(utcToZonedTime(event.dtend.toJSDate(), 'America/Los_Angeles'), 'h:mma')}</div>
-                                    <div>
-                                        {locationObject.location} building {'('}
-                                        {locationObject.building}
-                                        {')'} in room {locationObject.room}
-                                    </div>
-                                </Box>
-                            </CardContent>
-                        </Card>
-                    );
-                })}
+            <Box
+                sx={{
+                    borderColor: 'gray',
+                    borderWidth: '2px',
+                    borderStyle: 'solid',
+                    paddingTop: 2,
+                }}
+            >
+                <Grid container spacing={0} columns={4} rowSpacing={2}>
+                    <Grid item xs={1}>
+                        <Grid container direction="column" spacing={0} rowSpacing={2}>
+                            {hoursToDisplay.map((hour, index) => {
+                                if (hour === undefined) hour = index;
+                                return (
+                                    <>
+                                        <Grid item sx={{ height: timeHeight, overflow: 'hidden' }}>
+                                            {hour > 12 ? hour - 12 : hour == 0 ? 12 : hour} {hour >= 12 ? 'P' : 'A'}M{' '}
+                                            <Box sx={{ height: 2, backgroundColor: 'grey', position: 'relative', top: -12, left: 60 }}></Box>
+                                        </Grid>
+                                    </>
+                                );
+                            })}
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={3} sx={{ position: 'relative' }}>
+                        <Box
+                            sx={{
+                                top: () => {
+                                    const time = currentDate.value;
+                                    const value = 12 + timeHeight * (time.getHours() + time.getMinutes() / 60);
+                                    return value;
+                                },
+                                height: 0,
+                                position: 'relative',
+                                backgroundColor: 'red',
+                                blockSize: 2,
+                                zIndex: 2,
+                            }}
+                        ></Box>
+                        {schedule.map((event: any) => {
+                            return <EventBox timeHeight={timeHeight} event={event} color={'green'} opacity={0.5} />;
+                        })}
+                    </Grid>
+                </Grid>
             </Box>
         </>
     );
