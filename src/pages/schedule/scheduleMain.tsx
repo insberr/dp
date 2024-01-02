@@ -1,4 +1,4 @@
-import { Grid, Box, Button, Card, CardContent, CardHeader, Input, Typography } from '@mui/material';
+import { Grid, Box, Button, Card, CardContent, CardHeader, Input, Typography, Modal } from '@mui/material';
 import { icsFileSignal } from '../../storage/icsfile';
 import ChangeDateButtons from './changeDateButtons';
 
@@ -7,6 +7,8 @@ import ICSParser from '../../utilities/ICSParser';
 import { currentDate, dateForDisplay } from '../../storage/dateForDisplay';
 import EventBox from './eventBox';
 import InputFileUpload from '../../components/InputFileUpload';
+import { useEffect, useState } from 'preact/hooks';
+import { signal } from '@preact/signals';
 
 export default function ScheduleMain() {
     if (icsFileSignal.value.data === null) {
@@ -20,13 +22,15 @@ export default function ScheduleMain() {
 
     const _schedule = ICSParser(icsFileSignal.value.data);
 
-    const schedule = _schedule
-        .filter((event: any) => {
-            return isSameDay(event.dtstart.toJSDate(), dateForDisplay.value);
-        })
-        .sort((a: any, b: any) => {
-            return a.dtstart.toJSDate().getTime() - b.dtstart.toJSDate().getTime();
-        });
+    const schedule = signal<Object[]>(
+        _schedule
+            .filter((event: any) => {
+                return isSameDay(event.dtstart.toJSDate(), dateForDisplay.value);
+            })
+            .sort((a: any, b: any) => {
+                return a.dtstart.toJSDate().getTime() - b.dtstart.toJSDate().getTime();
+            })
+    );
 
     const timeHeight = 50;
 
@@ -45,10 +49,10 @@ export default function ScheduleMain() {
         },
     };
 
-    // schedule.push(fakeEvent);
+    // schedule.value = schedule.value.push(fakeEvent);
 
     // TODO: Make this work frfr no cap
-    const hoursToDisplay = [...Array(24)]; // [1, 2, 3, 11, 12, 13, 14, 15, 16, 17];
+    const hoursToDisplay = [...Array(25)]; // [1, 2, 3, 11, 12, 13, 14, 15, 16, 17];
     return (
         <>
             <ChangeDateButtons />
@@ -77,7 +81,19 @@ export default function ScheduleMain() {
                             })}
                         </Grid>
                     </Grid>
-                    <Grid item xs={3} sx={{ position: 'relative' }}>
+                    <Grid
+                        id="scheduleClickAddEventArea"
+                        item
+                        xs={3}
+                        sx={{ position: 'relative' }}
+                        onClick={(event: any) => {
+                            if (event.target.id !== 'scheduleClickAddEventArea') return;
+                            const clickedTime = (event.offsetY - 28) / timeHeight;
+                            const hours = Math.floor(clickedTime);
+                            const minutes = Math.floor((clickedTime - hours) * 60);
+                            console.log(`ClickedTime = ${hours}:${minutes}`);
+                        }}
+                    >
                         <Box
                             sx={{
                                 top: () => {
@@ -92,7 +108,7 @@ export default function ScheduleMain() {
                                 zIndex: 2,
                             }}
                         ></Box>
-                        {schedule.map((event: any) => {
+                        {schedule.value.map((event: any) => {
                             return <EventBox timeHeight={timeHeight} event={event} color={'green'} opacity={0.5} />;
                         })}
                     </Grid>
