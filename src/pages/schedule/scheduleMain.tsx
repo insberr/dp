@@ -45,10 +45,10 @@ export default function ScheduleMain() {
         },
     };
 
-    schedule.push(fakeEvent);
+    // schedule.push(fakeEvent);
 
     // TODO: Make this work frfr no cap
-    const hoursToDisplay = [...Array(25)]; // [1, 2, 3, 11, 12, 13, 14, 15, 16, 17];
+    const hoursToDisplay = [...Array(24)]; // [1, 2, 3, 11, 12, 13, 14, 15, 16, 17];
     return (
         <>
             <ChangeDateButtons />
@@ -57,7 +57,8 @@ export default function ScheduleMain() {
                     borderColor: 'gray',
                     borderWidth: '2px',
                     borderStyle: 'solid',
-                    paddingTop: 2,
+                    paddingTop: 1,
+                    marginBottom: 10,
                 }}
             >
                 <Grid container spacing={0} columns={4} rowSpacing={2}>
