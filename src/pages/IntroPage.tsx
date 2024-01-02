@@ -4,7 +4,7 @@ import { PageToRender, pageToRender } from '../storage/pageToRender';
 
 export default function IntroPage() {
     setTimeout(() => {
-        pageToRender.value = PageToRender.Login;
+        pageToRender.value = PageToRender.Schedule;
     }, 2000);
 
     // Todo Add fancy animation
