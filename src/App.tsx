@@ -10,8 +10,20 @@ import SettingsPage from './pages/settings/settingsPage';
 import MenuBar from './components/MenuBar';
 import RouterWrapper from './components/RouterWrapper';
 import IntroPage from './pages/IntroPage';
+import { defferedInstallPrompt } from './storage/signals';
 
 export default function App() {
+    window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent the mini-infobar from appearing on mobile
+        e.preventDefault();
+        // Stash the event so it can be triggered later.
+        defferedInstallPrompt.value = e;
+        // Update UI notify the user they can install the PWA
+        // showInstallPromotion();
+        // Optionally, send analytics event that PWA install promo was shown.
+        console.log(`'beforeinstallprompt' event was fired.`);
+    });
+
     return (
         <div>
             <RouterWrapper pageIDs={[PageToRender.Login, PageToRender.CreateAccount, PageToRender.Intro]}>
