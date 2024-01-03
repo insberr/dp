@@ -3,12 +3,14 @@ import { convertLocationToObject } from '../../utilities/ICSParser';
 import { utcToZonedTime, format } from 'date-fns-tz';
 import { differenceInMinutes } from 'date-fns';
 import { useState } from 'preact/hooks';
+import { timeHeight } from './daySchedule';
+import { ScheduleEvent } from './scheduleMain';
 
-export default function EventBox(props: { event: any; timeHeight: number; color: string; opacity?: number }) {
+export default function EventBox(props: { event: ScheduleEvent; color?: string; opacity?: number }) {
     const event = props.event;
     const locationObject = convertLocationToObject(event.location);
-    const startTime = utcToZonedTime(event.dtstart.toJSDate(), 'America/Los_Angeles');
-    const endTime = utcToZonedTime(event.dtend.toJSDate(), 'America/Los_Angeles');
+    const startTime = utcToZonedTime(event.startDate, 'America/Los_Angeles');
+    const endTime = utcToZonedTime(event.endDate, 'America/Los_Angeles');
     const durationMinutes = differenceInMinutes(endTime, startTime);
 
     const eventID = event.uid;
@@ -21,16 +23,16 @@ export default function EventBox(props: { event: any; timeHeight: number; color:
             <Box
                 sx={{
                     borderStyle: 'solid',
-                    borderColor: props.color,
+                    borderColor: props.color || event.borderColor,
                     borderWidth: '2px',
                     borderRadius: '4px',
                     position: 'absolute',
                     top: () => {
-                        const topValue = 28 + props.timeHeight * (startTime.getHours() + startTime.getMinutes() / 60);
+                        const topValue = 28 + timeHeight * (startTime.getHours() + startTime.getMinutes() / 60);
                         return topValue;
                     },
                     height: () => {
-                        const heightFor60Minutes = props.timeHeight;
+                        const heightFor60Minutes = timeHeight;
                         const duration = durationMinutes;
                         const height = heightFor60Minutes * (duration / 60);
                         return height;
@@ -46,8 +48,8 @@ export default function EventBox(props: { event: any; timeHeight: number; color:
             >
                 <Box
                     sx={{
-                        opacity: props.opacity ?? 1,
-                        backgroundColor: props.color,
+                        opacity: props.opacity || (event.opacity ?? 1),
+                        backgroundColor: props.color || event.backgroundColor,
                         height: '100%',
                         width: '100%',
                         position: 'absolute',
@@ -55,7 +57,7 @@ export default function EventBox(props: { event: any; timeHeight: number; color:
                 ></Box>
                 <Box sx={{ position: 'absolute' }}>
                     <div>
-                        {event.summary} {format(startTime, 'h:mma')} - {format(endTime, 'h:mma')} ({durationMinutes} minutes)
+                        {event.title} {format(startTime, 'h:mma')} - {format(endTime, 'h:mma')} ({durationMinutes} minutes)
                     </div>
                     <div>
                         {locationObject.location} building {'('}
@@ -79,7 +81,7 @@ export default function EventBox(props: { event: any; timeHeight: number; color:
                     }}
                 >
                     <Typography id="modal-modal-title" variant="h6" component="h2">
-                        {event.summary}
+                        {event.title}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                         {format(startTime, 'h:mma')} - {format(endTime, 'h:mma')} ({durationMinutes} minutes)
