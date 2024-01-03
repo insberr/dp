@@ -27,30 +27,21 @@ export default function EventBox(props: { event: ScheduleEvent; key: number | st
                 className={'eventBox'}
                 sx={{
                     borderColor: props.color || event.borderColor,
+                    backgroundColor: props.color || event.backgroundColor,
+                    opacity: props.opacity || event.opacity,
                     top: topPosition,
                     height: height,
                 }}
                 onClick={handleOpen}
             >
-                <Box
-                    sx={{
-                        opacity: props.opacity || (event.opacity ?? 1),
-                        backgroundColor: props.color || event.backgroundColor,
-                        height: '100%',
-                        width: '100%',
-                        position: 'absolute',
-                    }}
-                ></Box>
-                <Box sx={{ position: 'absolute' }} position={'absolute'}>
-                    <div>
-                        {event.title} {format(event.startDate, 'h:mma')} - {format(event.endDate, 'h:mma')} ({durationMinutes} minutes)
-                    </div>
-                    <div>
-                        {locationObject.location} building {'('}
-                        {locationObject.building}
-                        {')'} in room {locationObject.room}
-                    </div>
-                </Box>
+                <div>
+                    {event.title} {format(event.startDate, 'h:mma')} - {format(event.endDate, 'h:mma')} ({durationMinutes} minutes)
+                </div>
+                <div>
+                    {locationObject.location} building {'('}
+                    {locationObject.building}
+                    {')'} in room {locationObject.room}
+                </div>
             </Box>
             <Modal open={open} onClose={handleClose} aria-labelledby={'model' + eventID + event.title} aria-describedby={'model' + eventID}>
                 <Box
@@ -69,10 +60,10 @@ export default function EventBox(props: { event: ScheduleEvent; key: number | st
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         {event.title}
                     </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                    <Typography id={'modal-modal-description' + eventID} sx={{ mt: 2 }}>
                         {format(event.startDate, 'h:mma')} - {format(event.endDate, 'h:mma')} ({durationMinutes} minutes)
                     </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                    <Typography id={'modal-modal-description' + eventID} sx={{ mt: 2 }}>
                         {locationObject.location} building {'('}
                         {locationObject.building}
                         {')'} in room {locationObject.room}

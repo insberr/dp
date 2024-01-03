@@ -28,8 +28,6 @@ export default function DaySchedule(props: {
     displayDate: Date;
     timeBarTime: Date;
     onClickSchedule: (clickEvent: any, scheduleDate: Date, clickDate: Date) => void;
-    onDraggingSchedule: (clickEvent: any, startDate: Date, endDate: Date) => void;
-    onClickEvent?: (clickEvent: any, scheduleEvent: ScheduleEvent) => void;
 }) {
     // TODO: Make this work frfr no cap
     const eventsForDisplayDate = props.schedules[0].scheduleEvents
@@ -54,53 +52,23 @@ export default function DaySchedule(props: {
                         id="scheduleClickAddEventArea"
                         item
                         xs={3}
-                        position={'relative'}
-                        onMouseDown={(clickEvent: any) => {
+                        sx={{ position: 'relative' }}
+                        onClick={async (clickEvent: any) => {
                             if (clickEvent.target.id !== 'scheduleClickAddEventArea') return;
-                            draggingStartPos = clickEvent.offsetY;
-                            // draggingStartTime = new Date().getTime();
-                            isMouseDown = true;
-                        }}
-                        onMouseMove={(clickEvent: any) => {
-                            // clickEvent.preventDefault();
-                            if (isMouseDown === false) return;
-                            // if (draggingStartTime === null) return;
+                            const clickPos = clickEvent.offsetY;
+                            const time = (clickPos - 28) / timeHeight;
+                            const hours = Math.floor(time);
+                            const minutes = (time - hours) * 60;
 
-                            draggingEndPos = clickEvent.offsetY;
-                            // console.log('dragging', draggingStartPos, draggingEndPos);
-                        }}
-                        onMouseUp={(clickEvent: any) => {
-                            // clickEvent.preventDefault();
-
-                            const startDraggingTime = (draggingStartPos - 28) / timeHeight;
-                            const startDragginghours = Math.floor(startDraggingTime);
-                            const startDraggingminutes = (startDraggingTime - startDragginghours) * 60;
-                            const endDraggingTime = (draggingEndPos - 28) / timeHeight;
-                            const endDragginghours = Math.floor(endDraggingTime);
-                            const endDraggingminutes = (endDraggingTime - endDragginghours) * 60;
-
-                            const startDate = new Date(
+                            const clickDate = new Date(
                                 props.displayDate.getFullYear(),
                                 props.displayDate.getMonth(),
                                 props.displayDate.getDate(),
-                                startDragginghours,
-                                startDraggingminutes
+                                hours,
+                                minutes
                             );
 
-                            // if the start and end times are less than 30 minutes apart, don't create an event
-                            if (Math.abs(startDraggingTime - endDraggingTime) < 1) {
-                                return props.onClickSchedule(clickEvent, props.displayDate, startDate);
-                            }
-
-                            const endDate = new Date(
-                                props.displayDate.getFullYear(),
-                                props.displayDate.getMonth(),
-                                props.displayDate.getDate(),
-                                endDragginghours,
-                                endDraggingminutes
-                            );
-
-                            return props.onDraggingSchedule(clickEvent, startDate, endDate);
+                            return props.onClickSchedule(clickEvent, props.displayDate, clickDate);
                         }}
                     >
                         <Box

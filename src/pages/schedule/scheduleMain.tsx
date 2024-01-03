@@ -68,10 +68,9 @@ export default function ScheduleMain() {
 
     // schedule.value = schedule.value.push(fakeEvent);
     const onClickScheduleHandler = (clickEvent: any, scheduleDate: Date, clickDate: Date) => {
-        const schedulesTemp = schedulesSignal.value;
-        if (schedulesTemp === null) return;
+        const schedulesTemp = schedulesSignal.value || [];
 
-        const newEvent: ScheduleEvent = {
+        schedulesTemp[0].scheduleEvents.push({
             uid: 'newEvent',
             title: 'New Event',
             startDate: clickDate,
@@ -82,31 +81,10 @@ export default function ScheduleMain() {
             backgroundColor: 'salmon',
             borderColor: 'red',
             opacity: 1,
-        };
+        });
 
-        schedulesTemp[0].scheduleEvents.push(newEvent);
         schedulesSignal.value = schedulesTemp;
-    };
-
-    const onDraggingScheduleHandler = (clickEvent: any, startDate: Date, endDate: Date) => {
-        // console.log('drag schedule event, start date: ' + startDate + ', end date: ' + endDate);
-        const schedulesTemp = schedulesSignal.value;
-        if (schedulesTemp === null) return;
-        const newEvent: ScheduleEvent = {
-            uid: 'newEvent',
-            title: 'New Event',
-            startDate: startDate,
-            endDate: endDate,
-            description: 'Test Click Schedule To Create Event',
-            location: 'Location: MAIN, Building:RB1, Room:MCHLNGLO',
-
-            backgroundColor: 'salmon',
-            borderColor: 'red',
-            opacity: 1,
-        };
-
-        schedulesTemp[0].scheduleEvents.push(newEvent);
-        schedulesSignal.value = schedulesTemp;
+        schedulesSignal.store();
     };
 
     return (
@@ -117,7 +95,6 @@ export default function ScheduleMain() {
                 displayDate={dateForDisplay.value}
                 timeBarTime={currentDate.value}
                 onClickSchedule={onClickScheduleHandler}
-                onDraggingSchedule={onDraggingScheduleHandler}
             />
         </>
     );

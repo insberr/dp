@@ -18,7 +18,11 @@ export function persistJSON<Type>(key: string, defaultValue: Type): Signal<Type>
     return internal;
 }
 
-export function persist<Type>(key: string, defaultValue: Type): Signal<Type> {
+export interface PersistSignal<Type> extends Signal<Type> {
+    store(): void;
+}
+
+export function persist<Type>(key: string, defaultValue: Type): PersistSignal<Type> {
     const localStorageItem = localStorage.getItem(key);
     let value = defaultValue;
 
@@ -26,7 +30,10 @@ export function persist<Type>(key: string, defaultValue: Type): Signal<Type> {
         value = deserify(JSON.parse(localStorageItem)).data;
     }
 
-    const internal = signal<Type>(value);
+    const internal: PersistSignal<Type> = signal<Type>(value) as PersistSignal<Type>;
+    internal.store = () => {
+        localStorage.setItem(key, JSON.stringify(serify({ data: internal.value })));
+    };
 
     effect(() => {
         localStorage.setItem(key, JSON.stringify(serify({ data: internal.value })));
