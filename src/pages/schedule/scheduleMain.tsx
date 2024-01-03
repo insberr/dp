@@ -1,9 +1,10 @@
-import ChangeDateButtons from './changeDateButtons';
 import { currentDate, dateForDisplay } from '../../storage/dateForDisplay';
 import InputFileUpload from '../../components/InputFileUpload';
 import DaySchedule from './daySchedule';
-import { schedulesSignal } from '../../storage/scheduleSignal';
 import { Button } from '@mui/material';
+import CalendarMenuBar from './CalendarMenuBar';
+
+import { schedulesSignal } from '../../storage/scheduleSignal';
 
 export enum EventCreatedFrom {
     ICS_FILE,
@@ -49,7 +50,14 @@ export default function ScheduleMain() {
                 <Button
                     variant="contained"
                     onClick={() => {
-                        schedulesSignal.value = [];
+                        schedulesSignal.value = [
+                            {
+                                createdFrom: EventCreatedFrom.DEFAULT,
+                                uid: 'default_schedule',
+                                name: 'Default Schedule',
+                                scheduleEvents: [],
+                            },
+                        ];
                     }}
                 >
                     Continue Without Upload
@@ -58,27 +66,59 @@ export default function ScheduleMain() {
         );
     }
 
-    const fakeEvent = {
-        summary: 'Fake Event',
-        location: 'Location: MAIN, Building:RB1, Room:MCHLNGLO',
-        dtstart: {
-            toJSDate: () => {
-                return new Date('January 8, 2024 2:00:00');
-            },
-        },
-        dtend: {
-            toJSDate: () => {
-                return new Date('January 8, 2024 2:30:00');
-            },
-        },
+    // schedule.value = schedule.value.push(fakeEvent);
+    const onClickScheduleHandler = (clickEvent: any, scheduleDate: Date, clickDate: Date) => {
+        const schedulesTemp = schedulesSignal.value;
+        if (schedulesTemp === null) return;
+
+        const newEvent: ScheduleEvent = {
+            uid: 'newEvent',
+            title: 'New Event',
+            startDate: clickDate,
+            endDate: new Date(clickDate.getTime() + 30 * 60000),
+            description: 'Test Click Schedule To Create Event',
+            location: 'Location: MAIN, Building:RB1, Room:MCHLNGLO',
+
+            backgroundColor: 'salmon',
+            borderColor: 'red',
+            opacity: 1,
+        };
+
+        schedulesTemp[0].scheduleEvents.push(newEvent);
+        schedulesSignal.value = schedulesTemp;
     };
 
-    // schedule.value = schedule.value.push(fakeEvent);
+    const onDraggingScheduleHandler = (clickEvent: any, startDate: Date, endDate: Date) => {
+        // console.log('drag schedule event, start date: ' + startDate + ', end date: ' + endDate);
+        const schedulesTemp = schedulesSignal.value;
+        if (schedulesTemp === null) return;
+        const newEvent: ScheduleEvent = {
+            uid: 'newEvent',
+            title: 'New Event',
+            startDate: startDate,
+            endDate: endDate,
+            description: 'Test Click Schedule To Create Event',
+            location: 'Location: MAIN, Building:RB1, Room:MCHLNGLO',
+
+            backgroundColor: 'salmon',
+            borderColor: 'red',
+            opacity: 1,
+        };
+
+        schedulesTemp[0].scheduleEvents.push(newEvent);
+        schedulesSignal.value = schedulesTemp;
+    };
 
     return (
         <>
-            <ChangeDateButtons />
-            <DaySchedule schedules={schedulesSignal.value} displayDate={dateForDisplay.value} timeBarTime={currentDate.value} />
+            <CalendarMenuBar />
+            <DaySchedule
+                schedules={schedulesSignal.value}
+                displayDate={dateForDisplay.value}
+                timeBarTime={currentDate.value}
+                onClickSchedule={onClickScheduleHandler}
+                onDraggingSchedule={onDraggingScheduleHandler}
+            />
         </>
     );
 }

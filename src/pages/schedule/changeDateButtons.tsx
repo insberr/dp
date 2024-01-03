@@ -7,7 +7,7 @@ export const collapseUnusedTime = signal<boolean>(false);
 
 export default function ChangeDateButtons() {
     return (
-        <Box sx={{ top: 0, height: 150 }}>
+        <Box>
             <Button
                 variant="contained"
                 onClick={() => {
@@ -35,15 +35,6 @@ export default function ChangeDateButtons() {
                 }}
             >
                 Today
-            </Button>
-            <div>Display Date: {dateForDisplay.value.toString()}</div>
-            <Button
-                variant="contained"
-                onClick={() => {
-                    collapseUnusedTime.value = !collapseUnusedTime.value;
-                }}
-            >
-                Collapse Unused Time (todo)
             </Button>
         </Box>
     );

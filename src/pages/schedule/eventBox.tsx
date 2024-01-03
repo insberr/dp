@@ -1,50 +1,36 @@
 import { Box, Modal, Typography } from '@mui/material';
 import { convertLocationToObject } from '../../utilities/ICSParser';
-import { utcToZonedTime, format } from 'date-fns-tz';
-import { differenceInMinutes } from 'date-fns';
+import { differenceInMinutes, format } from 'date-fns';
 import { useState } from 'preact/hooks';
 import { timeHeight } from './daySchedule';
 import { ScheduleEvent } from './scheduleMain';
 
-export default function EventBox(props: { event: ScheduleEvent; color?: string; opacity?: number }) {
+import './daySchedule.scss';
+
+export default function EventBox(props: { event: ScheduleEvent; key: number | string; color?: string; opacity?: number }) {
     const event = props.event;
     const locationObject = convertLocationToObject(event.location);
-    const startTime = utcToZonedTime(event.startDate, 'America/Los_Angeles');
-    const endTime = utcToZonedTime(event.endDate, 'America/Los_Angeles');
-    const durationMinutes = differenceInMinutes(endTime, startTime);
+    const durationMinutes = differenceInMinutes(event.endDate, event.startDate);
 
-    const eventID = event.uid;
+    const eventID = `eventBox_${props.key}_${event.uid}_${event.startDate.getTime()}`;
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
+    const topPosition = 28 + timeHeight * (event.startDate.getHours() + event.startDate.getMinutes() / 60);
+    const height = timeHeight * (durationMinutes / 60);
+
     return (
         <>
             <Box
+                id={eventID}
+                className={'eventBox'}
                 sx={{
-                    borderStyle: 'solid',
                     borderColor: props.color || event.borderColor,
-                    borderWidth: '2px',
-                    borderRadius: '4px',
-                    position: 'absolute',
-                    top: () => {
-                        const topValue = 28 + timeHeight * (startTime.getHours() + startTime.getMinutes() / 60);
-                        return topValue;
-                    },
-                    height: () => {
-                        const heightFor60Minutes = timeHeight;
-                        const duration = durationMinutes;
-                        const height = heightFor60Minutes * (duration / 60);
-                        return height;
-                    },
-                    width: '100%',
-                    color: 'black',
-                    overflow: 'hidden',
+                    top: topPosition,
+                    height: height,
                 }}
-                onClick={() => {
-                    console.log('clicked event with id: ' + eventID);
-                    handleOpen();
-                }}
+                onClick={handleOpen}
             >
                 <Box
                     sx={{
@@ -55,9 +41,9 @@ export default function EventBox(props: { event: ScheduleEvent; color?: string; 
                         position: 'absolute',
                     }}
                 ></Box>
-                <Box sx={{ position: 'absolute' }}>
+                <Box sx={{ position: 'absolute' }} position={'absolute'}>
                     <div>
-                        {event.title} {format(startTime, 'h:mma')} - {format(endTime, 'h:mma')} ({durationMinutes} minutes)
+                        {event.title} {format(event.startDate, 'h:mma')} - {format(event.endDate, 'h:mma')} ({durationMinutes} minutes)
                     </div>
                     <div>
                         {locationObject.location} building {'('}
@@ -66,10 +52,10 @@ export default function EventBox(props: { event: ScheduleEvent; color?: string; 
                     </div>
                 </Box>
             </Box>
-            <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+            <Modal open={open} onClose={handleClose} aria-labelledby={'model' + eventID + event.title} aria-describedby={'model' + eventID}>
                 <Box
                     sx={{
-                        position: 'absolute' as 'absolute',
+                        position: 'absolute',
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
@@ -84,7 +70,7 @@ export default function EventBox(props: { event: ScheduleEvent; color?: string; 
                         {event.title}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        {format(startTime, 'h:mma')} - {format(endTime, 'h:mma')} ({durationMinutes} minutes)
+                        {format(event.startDate, 'h:mma')} - {format(event.endDate, 'h:mma')} ({durationMinutes} minutes)
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                         {locationObject.location} building {'('}

@@ -62,19 +62,24 @@ export default function InputFileUpload() {
                             return event;
                         });
 
-                        if (schedulesSignal.value === null) schedulesSignal.value = [];
+                        const schedulesSignalValue = schedulesSignal.value || [];
 
-                        const existingICSFileCalendars = schedulesSignal.value.filter((schedule) => {
+                        const existingICSFileCalendars = schedulesSignalValue.filter((schedule) => {
                             return schedule.createdFrom === EventCreatedFrom.ICS_FILE;
                         });
 
+                        // Remember, this does not modify the localstorage value, so when we are done we need to set it
                         if (existingICSFileCalendars.length > 0) {
                             // TODO: Add a popup to ask if they want to replace or create a new calendar
                             // For now, just replace it
-                            const index = schedulesSignal.value.indexOf(existingICSFileCalendars[0]);
-                            schedulesSignal.value[index].scheduleEvents = scheduleFromICS_FILE;
+                            console.log('Replacing existing ICS file calendar');
+
+                            const index = schedulesSignalValue.indexOf(existingICSFileCalendars[0]);
+                            schedulesSignalValue[index].scheduleEvents = scheduleFromICS_FILE;
                         } else {
-                            schedulesSignal.value.push({
+                            console.log('Adding ICS file calendar');
+
+                            schedulesSignalValue.push({
                                 createdFrom: EventCreatedFrom.ICS_FILE,
                                 uid: 'icsFileCalendar',
                                 name: 'Calendar From ICS File',
@@ -85,6 +90,9 @@ export default function InputFileUpload() {
                                 defaultOpacity: 1,
                             });
                         }
+
+                        // Save the schedules to localstorage now that we are done
+                        schedulesSignal.value = schedulesSignalValue;
 
                         // console.log('event:file: ', file);
                     };

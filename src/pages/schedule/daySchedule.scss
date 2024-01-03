@@ -1,0 +1,17 @@
+.dayScheduleRoot {
+    border-color: gray;
+    border-width: 2px;
+    border-style: solid;
+    padding-top: 1px;
+    margin-bottom: 10px;
+}
+
+.eventBox {
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 4px;
+    position: absolute;
+    width: 100%;
+    color: black;
+    overflow: hidden;
+}
