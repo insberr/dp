@@ -1,7 +1,6 @@
 import { Box, Button, Input, Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { useState } from 'preact/hooks';
-import { icsFileSignal } from '../../storage/icsfile';
 import { PageToRender, pageToRender } from '../../storage/pageToRender';
 
 export default function CreateAccountPage() {
@@ -50,7 +49,7 @@ export default function CreateAccountPage() {
                         const reader = new FileReader();
                         reader.onload = (event) => {
                             const file = event.target?.result;
-                            icsFileSignal.value = { data: file as string };
+                            // Todo fix (it was removed): icsFileSignal.value = { data: file as string };
                             setIcsFile(file as string);
                             console.log('event:file: ', file); // desired file content
                         };

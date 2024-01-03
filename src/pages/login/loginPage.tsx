@@ -1,7 +1,7 @@
 import { Box, Button, Input, Stack } from '@mui/material';
 import { useState } from 'preact/hooks';
 import { PageToRender, pageToRender } from '../../storage/pageToRender';
-import { icsFileSignal } from '../../storage/icsfile';
+// import { icsFileSignal } from '../../storage/icsfile';
 
 export default function LoginPage() {
     const [passwordValue, setPasswordValue] = useState('');
@@ -50,7 +50,7 @@ export default function LoginPage() {
                                         setisError(data.error);
                                         throw new Error(data.error);
                                     }
-                                    if (data.files.ics !== null) icsFileSignal.value = { data: atob(data.files.ics) };
+                                    // if (data.files.ics !== null) icsFileSignal.value = { data: atob(data.files.ics) };
                                     pageToRender.value = PageToRender.Schedule;
                                 });
                             })
