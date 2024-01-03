@@ -1,5 +1,4 @@
 import { Box, Button, Typography } from '@mui/material';
-import { icsFileSignal } from '../../storage/icsfile';
 import { PageToRender, pageToRender } from '../../storage/pageToRender';
 import { defferedInstallPrompt } from '../../storage/signals';
 import { schedulesSignal } from '../../storage/scheduleSignal';
@@ -19,12 +18,11 @@ export default function SettingsPage() {
             <Button
                 variant="contained"
                 onClick={() => {
-                    icsFileSignal.value = { data: null };
                     schedulesSignal.value = null;
                     pageToRender.value = PageToRender.Intro;
                 }}
             >
-                Reset Site (todo)
+                Reset Site
             </Button>
             <InputFileUpload />
             <Button
