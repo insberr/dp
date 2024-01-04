@@ -2,8 +2,9 @@ import { Box, Button, TextField } from '@mui/material';
 import ChangeDateButtons, { collapseUnusedTime } from './changeDateButtons';
 import { dateForDisplay } from '../../storage/dateForDisplay';
 import { timeHeightSignal } from '../../storage/signals';
+import { SchedulesViewMode } from './scheduleMain';
 
-export default function CalendarMenuBar() {
+export default function CalendarMenuBar(props: { viewMode: SchedulesViewMode; viewModeSet: (viewMode: SchedulesViewMode) => void }) {
     return (
         <Box sx={{ top: 0, height: 150 }}>
             <ChangeDateButtons />
@@ -29,6 +30,13 @@ export default function CalendarMenuBar() {
                     timeHeightSignal.value = value;
                 }}
             />
+            <Button
+                onClick={() => {
+                    props.viewModeSet(props.viewMode === SchedulesViewMode.DAY ? SchedulesViewMode.WEEK : SchedulesViewMode.DAY);
+                }}
+            >
+                Toggle Week View
+            </Button>
         </Box>
     );
 }

@@ -1,4 +1,4 @@
-import { Box, Grid } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import EventBox from './eventBox';
 import { ScheduleEvent, Schedule } from '../scheduleMain';
 import { isBefore, isSameDay, set } from 'date-fns';
@@ -16,6 +16,8 @@ export default function DaySchedule(props: {
     timeBarTime: Date;
     onClickSchedule: (clickEvent: any, startDate: Date, endDate?: Date) => void;
     onDraggingSchedule: (startDate: Date, endDate: Date) => ScheduleEvent;
+    hideTimeBar?: boolean;
+    hidetimes?: boolean;
 }) {
     if (schedulesSignal.value === null) return <>HOW</>;
 
@@ -33,22 +35,28 @@ export default function DaySchedule(props: {
         <>
             <Box className="dayScheduleRoot">
                 <Grid container spacing={0} columns={4} rowSpacing={2}>
-                    <Grid item xs={1}>
+                    <Grid item xs={props.hidetimes ? 0 : 1}>
                         <Grid container direction="column" spacing={0} rowSpacing={2}>
                             {hoursToDisplay.map((hour, index) => {
                                 if (hour === undefined) hour = index;
                                 return (
                                     <>
                                         <Grid item sx={{ height: timeHeightSignal.value, overflow: 'hidden' }}>
-                                            {hour > 12 ? hour - 12 : hour == 0 ? 12 : hour} {hour >= 12 ? 'P' : 'A'}M{' '}
-                                            <Box sx={{ height: 2, backgroundColor: 'grey', position: 'relative', top: -12, left: 60 }}></Box>
+                                            {props.hidetimes ? null : (
+                                                <>
+                                                    <Typography variant="subtitle2">
+                                                        {hour > 12 ? hour - 12 : hour == 0 ? 12 : hour} {hour === 0 ? 'AM' : hour === 12 ? 'PM' : ''}
+                                                    </Typography>
+                                                    <Box sx={{ height: 2, backgroundColor: 'grey', position: 'relative', top: -12, left: 60 }}></Box>
+                                                </>
+                                            )}
                                         </Grid>
                                     </>
                                 );
                             })}
                         </Grid>
                     </Grid>
-                    <Grid item xs={3} sx={{ position: 'relative' }}>
+                    <Grid item xs={props.hidetimes ? 4 : 3} sx={{ position: 'relative' }}>
                         <ScheduleClickAddEventArea
                             displayDate={props.displayDate}
                             onClickSchedule={props.onClickSchedule}
@@ -67,6 +75,7 @@ export default function DaySchedule(props: {
                                 blockSize: 2,
                                 zIndex: 2,
                             }}
+                            hidden={props.hideTimeBar}
                         ></Box>
                         {eventsForDisplayDate.map((event: ScheduleEvent, index: number) => {
                             return <EventBox event={event} key={index} />;

@@ -5,6 +5,8 @@ import { Button } from '@mui/material';
 import CalendarMenuBar from './CalendarMenuBar';
 
 import { blankSchedulesSignal, createEvent, createScheduleAdvanced, generateUID, schedulesSignal } from '../../storage/scheduleSignal';
+import WeekSchedule from './WeekSchedule/WeekSchedule';
+import { useState } from 'preact/hooks';
 
 export enum ScheduleCreatedFrom {
     ICS_FILE,
@@ -42,6 +44,12 @@ export type Schedule = {
 
 export type Schedules = Schedule[];
 
+export enum SchedulesViewMode {
+    DAY,
+    WEEK,
+    MONTH,
+}
+
 export default function ScheduleMain() {
     if (schedulesSignal.value === null) schedulesSignal.value = blankSchedulesSignal();
 
@@ -70,6 +78,8 @@ export default function ScheduleMain() {
             </div>
         );
     }
+
+    const [viewMode, viewModeSet] = useState(SchedulesViewMode.DAY);
 
     // schedule.value = schedule.value.push(fakeEvent);
     const onClickScheduleHandler = (clickEvent: any, startDate: Date, endDate?: Date) => {
@@ -105,13 +115,22 @@ export default function ScheduleMain() {
 
     return (
         <>
-            <CalendarMenuBar />
-            <DaySchedule
-                displayDate={dateForDisplay.value}
-                timeBarTime={currentDate.value}
-                onClickSchedule={onClickScheduleHandler}
-                onDraggingSchedule={onDraggingSchedule}
-            />
+            <CalendarMenuBar viewMode={viewMode} viewModeSet={viewModeSet} />
+            {viewMode === SchedulesViewMode.DAY ? (
+                <DaySchedule
+                    displayDate={dateForDisplay.value}
+                    timeBarTime={currentDate.value}
+                    onClickSchedule={onClickScheduleHandler}
+                    onDraggingSchedule={onDraggingSchedule}
+                />
+            ) : (
+                <WeekSchedule
+                    displayDate={dateForDisplay.value}
+                    timeBarTime={currentDate.value}
+                    onClickSchedule={onClickScheduleHandler}
+                    onDraggingSchedule={onDraggingSchedule}
+                />
+            )}
         </>
     );
 }
