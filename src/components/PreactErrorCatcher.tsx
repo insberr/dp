@@ -5,7 +5,7 @@ import { Box, Button } from '@mui/material';
 // import { resetStorage } from '../storage/store';
 
 type props = { children: ComponentChildren };
-type state = { hasError: boolean };
+type state = { hasError: boolean; error?: Error; errorInfo?: ErrorInfo };
 
 const isProductionBuild = process.env.NODE_ENV === 'production';
 // const tracesSampleRate = isProductionBuild ? 0.2 : 1.0;
@@ -33,7 +33,7 @@ export default class PreactErrorCatcher extends Component<props, state> {
     static getDerivedStateFromError(_: Error) {
         // Update state so the next render will show the fallback UI.
         console.error(_);
-        return { hasError: true };
+        return { hasError: true, error: _ };
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -43,7 +43,7 @@ export default class PreactErrorCatcher extends Component<props, state> {
 
         // sentry should also go here. How Do You Do This?
         // Sentry.captureException(_q);
-        this.setState({ hasError: true });
+        this.setState({ hasError: true, error: _q, errorInfo: _e });
     }
 
     render(props: props, state: state) {
@@ -53,19 +53,26 @@ export default class PreactErrorCatcher extends Component<props, state> {
                     <h2 className="text-center full-center">
                         Hmmm... Something went wrong, Try refreshing. If the error continues, please let me know!
                     </h2>
-                    <h4 className="text-center full-center">If you are a developer, check the console for more details</h4>
+                    <h4 className="text-center full-center">If you are a developer, check the console and below for more details</h4>
+                    <div>Error: {state.error}</div>
+                    <div>Error Info: {state.errorInfo}</div>
+                    <div>
+                        LocalStorage: {JSON.stringify(localStorage.getItem('schedules'))} | {JSON.stringify(localStorage.getItem('pageToRender'))}
+                    </div>
                     <div className="text-center full-center">
                         <div>You can also try resetting the website</div>
                         <Button
                             variant="outlined"
                             color="warning"
                             onClick={() => {
-                                // resetStorage();
                                 localStorage.removeItem('icsFile');
+                                localStorage.removeItem('schedules');
+                                localStorage.removeItem('schedule');
+                                localStorage.removeItem('pageToRender');
                                 location.reload();
                             }}
                         >
-                            Reset (Resets ICS File)
+                            Reset Website
                         </Button>
                     </div>
                 </Box>
