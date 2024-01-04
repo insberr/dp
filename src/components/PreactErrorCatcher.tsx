@@ -54,11 +54,6 @@ export default class PreactErrorCatcher extends Component<props, state> {
                         Hmmm... Something went wrong, Try refreshing. If the error continues, please let me know!
                     </h2>
                     <h4 className="text-center full-center">If you are a developer, check the console and below for more details</h4>
-                    <div>Error: {JSON.stringify(state.error)}</div>
-                    <div>Error Info: {JSON.stringify(state.errorInfo)}</div>
-                    <div>
-                        LocalStorage: {JSON.stringify(localStorage.getItem('schedules'))} | {JSON.stringify(localStorage.getItem('pageToRender'))}
-                    </div>
                     <div className="text-center full-center">
                         <div>You can also try resetting the website</div>
                         <Button
