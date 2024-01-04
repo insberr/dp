@@ -66,6 +66,13 @@ export default function App() {
                     </div>
                 </Router>
 
+                <Box
+                    sx={{
+                        marginBottom: '70px',
+                    }}
+                >
+                    Created By Jonah Matteson (@insberr)
+                </Box>
                 <MenuBar />
             </RouterWrapper>
         </div>
