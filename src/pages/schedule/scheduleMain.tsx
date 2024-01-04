@@ -1,18 +1,19 @@
 import { currentDate, dateForDisplay } from '../../storage/dateForDisplay';
 import InputFileUpload from '../../components/InputFileUpload';
-import DaySchedule from './daySchedule';
+import DaySchedule from './DaySchedule/daySchedule';
 import { Button } from '@mui/material';
 import CalendarMenuBar from './CalendarMenuBar';
 
-import { schedulesSignal } from '../../storage/scheduleSignal';
+import { blankSchedulesSignal, createEvent, createScheduleAdvanced, generateUID, schedulesSignal } from '../../storage/scheduleSignal';
 
-export enum EventCreatedFrom {
+export enum ScheduleCreatedFrom {
     ICS_FILE,
     USER,
     DEFAULT,
 }
 
 export type ScheduleEvent = {
+    parentScheduleUid: string;
     uid: string;
     title: string;
     startDate: Date;
@@ -28,7 +29,7 @@ export type ScheduleEvent = {
 };
 
 export type Schedule = {
-    createdFrom: EventCreatedFrom;
+    createdFrom: ScheduleCreatedFrom;
     uid: string;
     name: string;
     scheduleEvents: ScheduleEvent[];
@@ -42,7 +43,9 @@ export type Schedule = {
 export type Schedules = Schedule[];
 
 export default function ScheduleMain() {
-    if (schedulesSignal.value === null) {
+    if (schedulesSignal.value === null) schedulesSignal.value = blankSchedulesSignal();
+
+    if (schedulesSignal.value.schedules.length === 0) {
         return (
             <div>
                 <div>Upload ICS file, which can be downloaded from Self Service in the schedule section.</div>
@@ -50,14 +53,16 @@ export default function ScheduleMain() {
                 <Button
                     variant="contained"
                     onClick={() => {
-                        schedulesSignal.value = [
-                            {
-                                createdFrom: EventCreatedFrom.DEFAULT,
-                                uid: 'default_schedule',
-                                name: 'Default Schedule',
-                                scheduleEvents: [],
-                            },
-                        ];
+                        createScheduleAdvanced({
+                            createdFrom: ScheduleCreatedFrom.DEFAULT,
+                            uid: generateUID(),
+                            name: 'Main Schedule',
+                            scheduleEvents: [],
+
+                            defaultBackgroundColor: 'salmon',
+                            defaultBorderColor: 'salmon',
+                            defaultOpacity: 1,
+                        });
                     }}
                 >
                     Continue Without Upload
@@ -67,34 +72,45 @@ export default function ScheduleMain() {
     }
 
     // schedule.value = schedule.value.push(fakeEvent);
-    const onClickScheduleHandler = (clickEvent: any, scheduleDate: Date, clickDate: Date) => {
-        const schedulesTemp = schedulesSignal.value || [];
-
-        schedulesTemp[0].scheduleEvents.push({
-            uid: 'newEvent',
+    const onClickScheduleHandler = (clickEvent: any, startDate: Date, endDate?: Date) => {
+        createEvent(schedulesSignal.value.schedules[0].uid, {
+            parentScheduleUid: schedulesSignal.value.schedules[0].uid,
+            uid: generateUID(),
             title: 'New Event',
-            startDate: clickDate,
-            endDate: new Date(clickDate.getTime() + 30 * 60000),
+            startDate: startDate,
+            endDate: endDate || new Date(startDate.getTime() + 30 * 60000),
             description: 'Test Click Schedule To Create Event',
             location: 'Location: MAIN, Building:RB1, Room:MCHLNGLO',
 
-            backgroundColor: 'salmon',
-            borderColor: 'red',
-            opacity: 1,
+            opacity: 0.5,
         });
+        // schedulesTemp[0].scheduleEvents.push();
+        // schedulesSignal.value = { updated: true, schedules: schedulesTemp };
+        // schedulesSignal.store();
+    };
 
-        schedulesSignal.value = schedulesTemp;
-        schedulesSignal.store();
+    const onDraggingSchedule = (startDate: Date, endDate: Date): ScheduleEvent => {
+        const newEvent: ScheduleEvent = {
+            parentScheduleUid: 'temporary_event_dragging',
+            uid: generateUID(),
+            title: 'New Event',
+            startDate: startDate,
+            endDate: endDate,
+            description: '',
+            location: '',
+        };
+
+        return newEvent;
     };
 
     return (
         <>
             <CalendarMenuBar />
             <DaySchedule
-                schedules={schedulesSignal.value}
                 displayDate={dateForDisplay.value}
                 timeBarTime={currentDate.value}
                 onClickSchedule={onClickScheduleHandler}
+                onDraggingSchedule={onDraggingSchedule}
             />
         </>
     );

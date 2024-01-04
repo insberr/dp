@@ -2,8 +2,8 @@ import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Input } from '@mui/material';
 import ICSParser from '../utilities/ICSParser';
-import { schedulesSignal } from '../storage/scheduleSignal';
-import { EventCreatedFrom, ScheduleEvent } from '../pages/schedule/scheduleMain';
+import { createScheduleAdvanced, generateUID, schedulesSignal } from '../storage/scheduleSignal';
+import { ScheduleCreatedFrom, ScheduleEvent } from '../pages/schedule/scheduleMain';
 
 export default function InputFileUpload() {
     return (
@@ -40,6 +40,12 @@ export default function InputFileUpload() {
                             Its possible to just add a catch to the ICSParser function using promises, joy
                         */
 
+                        const schedulesSignalValue = schedulesSignal.value?.schedules || [];
+
+                        const existingICSFileCalendars = schedulesSignalValue.filter((schedule) => {
+                            return schedule.createdFrom === ScheduleCreatedFrom.ICS_FILE;
+                        });
+
                         // Parse the ICS file into JSON format so we can work with it
                         const icsFileSchedule = ICSParser(file as string);
 
@@ -47,6 +53,7 @@ export default function InputFileUpload() {
                         // TODO: Make this detect duplicates, dont add them, and use the reoccurring event data to make the event reoccur
                         const scheduleFromICS_FILE = icsFileSchedule.map((icsEvent: any) => {
                             const event: ScheduleEvent = {
+                                parentScheduleUid: 'TEMP_UID_icsFileCalendar',
                                 uid: icsEvent.uid,
                                 title: icsEvent.summary,
                                 startDate: icsEvent.dtstart.toJSDate(),
@@ -62,12 +69,6 @@ export default function InputFileUpload() {
                             return event;
                         });
 
-                        const schedulesSignalValue = schedulesSignal.value || [];
-
-                        const existingICSFileCalendars = schedulesSignalValue.filter((schedule) => {
-                            return schedule.createdFrom === EventCreatedFrom.ICS_FILE;
-                        });
-
                         // Remember, this does not modify the localstorage value, so when we are done we need to set it
                         if (existingICSFileCalendars.length > 0) {
                             // TODO: Add a popup to ask if they want to replace or create a new calendar
@@ -75,15 +76,23 @@ export default function InputFileUpload() {
                             console.log('Replacing existing ICS file calendar');
 
                             const index = schedulesSignalValue.indexOf(existingICSFileCalendars[0]);
-                            schedulesSignalValue[index].scheduleEvents = scheduleFromICS_FILE;
+
+                            schedulesSignalValue[index].scheduleEvents = scheduleFromICS_FILE.map((event: ScheduleEvent) => {
+                                event.parentScheduleUid = existingICSFileCalendars[0].uid;
+                                return event;
+                            });
                         } else {
                             console.log('Adding ICS file calendar');
 
-                            schedulesSignalValue.push({
-                                createdFrom: EventCreatedFrom.ICS_FILE,
-                                uid: 'icsFileCalendar',
+                            const scheduleUID = generateUID();
+                            createScheduleAdvanced({
+                                createdFrom: ScheduleCreatedFrom.ICS_FILE,
+                                uid: scheduleUID,
                                 name: 'Calendar From ICS File',
-                                scheduleEvents: scheduleFromICS_FILE,
+                                scheduleEvents: scheduleFromICS_FILE.map((event: ScheduleEvent) => {
+                                    event.parentScheduleUid = scheduleUID;
+                                    return event;
+                                }),
 
                                 defaultBackgroundColor: 'salmon',
                                 defaultBorderColor: 'red',
@@ -92,7 +101,7 @@ export default function InputFileUpload() {
                         }
 
                         // Save the schedules to localstorage now that we are done
-                        schedulesSignal.value = schedulesSignalValue;
+                        // schedulesSignal.value = schedulesSignalValue;
 
                         // console.log('event:file: ', file);
                     };

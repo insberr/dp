@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from '@mui/material';
 import { PageToRender, pageToRender } from '../../storage/pageToRender';
 import { defferedInstallPrompt } from '../../storage/signals';
-import { schedulesSignal } from '../../storage/scheduleSignal';
+import { blankSchedulesSignal, schedulesSignal } from '../../storage/scheduleSignal';
 import InputFileUpload from '../../components/InputFileUpload';
 
 export default function SettingsPage() {
@@ -18,7 +18,7 @@ export default function SettingsPage() {
             <Button
                 variant="contained"
                 onClick={() => {
-                    schedulesSignal.value = null;
+                    schedulesSignal.value = blankSchedulesSignal();
                     pageToRender.value = PageToRender.Intro;
                 }}
             >

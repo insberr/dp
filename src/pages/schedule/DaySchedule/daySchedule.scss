@@ -1,0 +1,32 @@
+.dayScheduleRoot {
+    border-color: gray;
+    border-width: 2px;
+    border-style: solid;
+    padding-top: 1px;
+    margin-bottom: 100px;
+    overflow: hidden;
+}
+
+.eventBox {
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 4px;
+    position: absolute;
+    width: 100%;
+    color: black;
+    overflow: hidden;
+    // disable text selection
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                              supported by Chrome and Opera */
+}
+
+.eventBoxBackground {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}

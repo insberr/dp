@@ -1,13 +1,15 @@
-import { Box, Modal, Typography } from '@mui/material';
-import { convertLocationToObject } from '../../utilities/ICSParser';
+import { Box, Button, Modal, Typography } from '@mui/material';
+import { convertLocationToObject } from '../../../utilities/ICSParser';
 import { differenceInMinutes, format } from 'date-fns';
 import { useState } from 'preact/hooks';
-import { timeHeight } from './daySchedule';
-import { ScheduleEvent } from './scheduleMain';
+import { ScheduleEvent } from '../scheduleMain';
 
 import './daySchedule.scss';
+import { deleteEvent, schedulesSignal } from '../../../storage/scheduleSignal';
+import { timeHeightSignal } from '../../../storage/signals';
 
-export default function EventBox(props: { event: ScheduleEvent; key: number | string; color?: string; opacity?: number }) {
+export type EventBoxProps = { event: ScheduleEvent; key: number | string; color?: string; opacity?: number };
+export default function EventBox(props: EventBoxProps) {
     const event = props.event;
     const locationObject = convertLocationToObject(event.location);
     const durationMinutes = differenceInMinutes(event.endDate, event.startDate);
@@ -17,8 +19,17 @@ export default function EventBox(props: { event: ScheduleEvent; key: number | st
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    const topPosition = 28 + timeHeight * (event.startDate.getHours() + event.startDate.getMinutes() / 60);
-    const height = timeHeight * (durationMinutes / 60);
+    const topPosition = 28 + timeHeightSignal.value * (event.startDate.getHours() + event.startDate.getMinutes() / 60);
+    const height = timeHeightSignal.value * (durationMinutes / 60);
+
+    // Figure out colors
+    const parentSchedule = schedulesSignal.value.schedules.find((schedule) => {
+        return schedule.uid === event.parentScheduleUid;
+    });
+
+    const backgroundColor = props.color || event.backgroundColor || parentSchedule?.defaultBackgroundColor || 'paper.primary';
+    const borderColor = props.color || event.borderColor || parentSchedule?.defaultBorderColor || 'primary.primary';
+    const opacity = props.opacity || event.opacity || parentSchedule?.defaultOpacity || 1;
 
     return (
         <>
@@ -26,11 +37,11 @@ export default function EventBox(props: { event: ScheduleEvent; key: number | st
                 id={eventID}
                 className={'eventBox'}
                 sx={{
-                    borderColor: props.color || event.borderColor,
-                    backgroundColor: props.color || event.backgroundColor,
-                    opacity: props.opacity || event.opacity,
-                    top: topPosition,
-                    height: height,
+                    borderColor: borderColor,
+                    backgroundColor: backgroundColor,
+                    opacity: opacity,
+                    top: topPosition + 'px',
+                    height: height + 'px',
                 }}
                 onClick={handleOpen}
             >
@@ -68,6 +79,14 @@ export default function EventBox(props: { event: ScheduleEvent; key: number | st
                         {locationObject.building}
                         {')'} in room {locationObject.room}
                     </Typography>
+                    <Button
+                        onClick={() => {
+                            deleteEvent(event);
+                            handleClose();
+                        }}
+                    >
+                        Delete Event
+                    </Button>
                 </Box>
             </Modal>
         </>
