@@ -1,3 +1,4 @@
+import { effect } from '@preact/signals';
 import { Schedules, ScheduleCreatedFrom, ScheduleEvent, Schedule } from '../pages/schedule/scheduleMain';
 import { persist } from './persistSignal';
 
@@ -7,6 +8,11 @@ export type SchedulesSignal = {
 };
 
 export const schedulesSignal = persist<SchedulesSignal>('schedules', blankSchedulesSignal());
+effect(() => {
+    if (schedulesSignal.value.updated === undefined) {
+        schedulesSignal.value = { updated: true, schedules: schedulesSignal.value as unknown as Schedules };
+    }
+});
 
 export function blankSchedulesSignal(): SchedulesSignal {
     const value = {
@@ -85,4 +91,4 @@ export function createScheduleAdvanced(schedule: Schedule) {
     tellSchedulesSignalUpdated();
 }
 
-window.createSchedule = createSchedule;
+// window.createSchedule = createSchedule;
