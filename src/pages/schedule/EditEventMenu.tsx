@@ -5,7 +5,7 @@ import { deleteEvent, editEvent } from '../../storage/scheduleSignal';
 import { convertLocationToObject } from '../../utilities/ICSParser';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import { ChromePicker, Color } from 'react-color';
-import hexRgb from 'hex-rgb';
+import hexRgb, { RgbaObject } from 'hex-rgb';
 import dayjs from 'dayjs';
 
 export function EditEventMenu(props: { event: ScheduleEvent | null; setEvent: (event: ScheduleEvent | null) => void }) {
@@ -25,7 +25,7 @@ export function EditEventMenu(props: { event: ScheduleEvent | null; setEvent: (e
         props.setEvent(newEvent);
     };
 
-    const eventBGColor = hexRgb(event.backgroundColor || '000000');
+    const eventBGColor = hexRgb(event.backgroundColor?.includes('#') ? event.backgroundColor : false || '#ffffff');
 
     return (
         <Modal
