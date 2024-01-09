@@ -33,17 +33,19 @@ export function generateUID() {
     return Math.random().toString(36);
 }
 
-export function createEvent(scheduleUID: string, event: ScheduleEvent) {
+export function createEvent(scheduleUID: string, event: ScheduleEvent): ScheduleEvent | null {
     // TODO: How would this ever be null? We should probably return an error if it is.
-    if (schedulesSignal.value === null) return;
+    if (schedulesSignal.value === null) return null;
 
     const schedule = schedulesSignal.value?.schedules.find((scheduleFindValue) => scheduleFindValue.uid === scheduleUID);
     // TODO: Maybe we should return error and promt user to create a calendar?
-    if (!schedule) return;
+    if (!schedule) return null;
 
     schedule.scheduleEvents.push(event);
 
     tellSchedulesSignalUpdated();
+
+    return event;
 }
 
 export function deleteEvent(event: ScheduleEvent) {
@@ -57,6 +59,17 @@ export function deleteEvent(event: ScheduleEvent) {
 
     // Remove event
     schedule.scheduleEvents = schedule.scheduleEvents.filter((eventFilter) => eventFilter.uid !== event.uid);
+    tellSchedulesSignalUpdated();
+}
+
+export function editEvent(current: ScheduleEvent, newEvent: ScheduleEvent) {
+    const scheduleIndex = schedulesSignal.value.schedules.findIndex((scheduleFindValue) => scheduleFindValue.uid === current.parentScheduleUid);
+    if (scheduleIndex === -1) return;
+    const eventIndex = schedulesSignal.value.schedules[scheduleIndex].scheduleEvents.findIndex((eventFilter) => eventFilter.uid === current.uid);
+    if (eventIndex === -1) return;
+
+    schedulesSignal.value.schedules[scheduleIndex].scheduleEvents[eventIndex] = newEvent;
+
     tellSchedulesSignalUpdated();
 }
 
@@ -89,6 +102,25 @@ export function createScheduleAdvanced(schedule: Schedule) {
     schedulesSignal.value.schedules.push(schedule);
 
     tellSchedulesSignalUpdated();
+}
+
+export function getEvent(eventUID: string, scheduleUID: string): ScheduleEvent | null {
+    // if (scheduleUID) {
+    const schedule = schedulesSignal.value.schedules.find((scheduleFindValue) => scheduleFindValue.uid === scheduleUID);
+    if (!schedule) return null;
+    const event = schedule.scheduleEvents.find((event) => event.uid === eventUID);
+    if (!event) return null;
+    return event;
+    // }
+
+    // const event = schedulesSignal.value.schedules.map(scheduleFindValue => {
+    //     const event = scheduleFindValue.scheduleEvents.find((event) => event.uid === eventUID);
+    //     if (event) return event;
+    //     return null;
+    // }).filter(event => event !== null)[0];
+
+    // if (!event) return null;
+    // return event;
 }
 
 // window.createSchedule = createSchedule;

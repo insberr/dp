@@ -1,9 +1,7 @@
-import { icsFileSignal } from './storage/icsfile';
-
-import { Box, Button, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import ScheduleMain from './pages/schedule/scheduleMain';
 import LoginPage from './pages/login/loginPage';
-import { PageToRender, pageToRender } from './storage/pageToRender';
+import { PageToRender } from './storage/pageToRender';
 import Router from './components/Router';
 import CreateAccountPage from './pages/login/createAccount';
 import SettingsPage from './pages/settings/settingsPage';
@@ -11,6 +9,7 @@ import MenuBar from './components/MenuBar';
 import RouterWrapper from './components/RouterWrapper';
 import IntroPage from './pages/IntroPage';
 import { defferedInstallPrompt } from './storage/signals';
+import MoveableLibPlay from './pages/moveable/moveableLibPlay';
 
 export default function App() {
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -37,7 +36,10 @@ export default function App() {
                     <CreateAccountPage />
                 </Router>
             </RouterWrapper>
-            <RouterWrapper pageIDs={[PageToRender.Schedule, PageToRender.Settings, PageToRender.Links]}>
+            <RouterWrapper pageIDs={[PageToRender.MoveableTest, PageToRender.Schedule, PageToRender.Settings, PageToRender.Links]}>
+                <Router pageID={PageToRender.MoveableTest}>
+                    <MoveableLibPlay />
+                </Router>
                 <Router pageID={PageToRender.Schedule}>
                     <ScheduleMain />
                 </Router>

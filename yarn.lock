@@ -58,6 +58,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.23.2":
+  version: 7.23.8
+  resolution: "@babel/runtime@npm:7.23.8"
+  dependencies:
+    regenerator-runtime: ^0.14.0
+  checksum: 0bd5543c26811153822a9f382fd39886f66825ff2a397a19008011376533747cd05c33a91f6248c0b8b0edf0448d7c167ebfba34786088f1b7eb11c65be7dfc3
+  languageName: node
+  linkType: hard
+
 "@babel/runtime@npm:^7.23.6":
   version: 7.23.7
   resolution: "@babel/runtime@npm:7.23.7"
@@ -78,12 +87,58 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cfcs/core@npm:^0.0.6":
+  version: 0.0.6
+  resolution: "@cfcs/core@npm:0.0.6"
+  dependencies:
+    "@egjs/component": ^3.0.2
+  checksum: 7dcfb5982bdb5c8426f7b8d32449c5026afbf23941035bc976fca03520f9a97f7665cb821b9ed2b799bbff3f248a6ac0b1dc147ccc95a948ffecb6bb10481d21
+  languageName: node
+  linkType: hard
+
 "@cspotcode/source-map-support@npm:^0.8.0":
   version: 0.8.1
   resolution: "@cspotcode/source-map-support@npm:0.8.1"
   dependencies:
     "@jridgewell/trace-mapping": 0.3.9
   checksum: 5718f267085ed8edb3e7ef210137241775e607ee18b77d95aa5bd7514f47f5019aa2d82d96b3bf342ef7aa890a346fa1044532ff7cc3009e7d24fce3ce6200fa
+  languageName: node
+  linkType: hard
+
+"@daybrush/utils@npm:^1.1.1, @daybrush/utils@npm:^1.13.0, @daybrush/utils@npm:^1.4.0, @daybrush/utils@npm:^1.6.0, @daybrush/utils@npm:^1.7.1":
+  version: 1.13.0
+  resolution: "@daybrush/utils@npm:1.13.0"
+  checksum: 0ec0670016efc66b367fbef6581718eb5fc383b612d1290637845b9b9572e3cc19717ad63a35689f12d5a95a3dbdc9552fd1e57169077745ef0fee1a0b4e0fcd
+  languageName: node
+  linkType: hard
+
+"@egjs/agent@npm:^2.2.1":
+  version: 2.4.3
+  resolution: "@egjs/agent@npm:2.4.3"
+  checksum: 4f2654ba7a877bb9cd1019c86fa245efb3a4c5e07a24e0e2a0bf1724ee457d25a57960a39b26c5fcd1fb71e80d2e6e3ad53eba6ab1a6f2099568f050fb28ee29
+  languageName: node
+  linkType: hard
+
+"@egjs/children-differ@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@egjs/children-differ@npm:1.0.1"
+  dependencies:
+    "@egjs/list-differ": ^1.0.0
+  checksum: 087f286822a93cc5ac2ba0beb9f332f3828a8870fea0e9d0a177078c96fc265ce74979be827a78dab674a833e3a22d4fe60636112a1aae93252e0a38f58ff754
+  languageName: node
+  linkType: hard
+
+"@egjs/component@npm:^3.0.2":
+  version: 3.0.5
+  resolution: "@egjs/component@npm:3.0.5"
+  checksum: d2ca53cc86b82df0fac3f21045a05d70a542c1f6a061cf534c67b336830644d0fbef07e322fcbe5bd809f59504103319a2c6467af58a9f8009a81655c3fe366f
+  languageName: node
+  linkType: hard
+
+"@egjs/list-differ@npm:^1.0.0":
+  version: 1.0.1
+  resolution: "@egjs/list-differ@npm:1.0.1"
+  checksum: 2c126c66d7753c1b86816192f265fa8a58fc45b62b739ebce9008202c2485dcc81d62a9e8d26ceb73efd1679140d39dd5ae3638d63e1ebaf5ca9d6bc824a16c7
   languageName: node
   linkType: hard
 
@@ -291,6 +346,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@icons/material@npm:^0.2.4":
+  version: 0.2.4
+  resolution: "@icons/material@npm:0.2.4"
+  peerDependencies:
+    react: "*"
+  checksum: 24baa360cb83f7e1a9e6784ac11185d57eb895b0efd3070ec915693378330f35ff9feb248f650b9649fa3e1045601286585dc05795a4c734d4849b33900351ee
+  languageName: node
+  linkType: hard
+
 "@isaacs/cliui@npm:^8.0.2":
   version: 8.0.2
   resolution: "@isaacs/cliui@npm:8.0.2"
@@ -491,7 +555,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/base@npm:5.0.0-beta.30":
+"@mui/base@npm:5.0.0-beta.30, @mui/base@npm:^5.0.0-beta.22":
   version: 5.0.0-beta.30
   resolution: "@mui/base@npm:5.0.0-beta.30"
   dependencies:
@@ -647,7 +711,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/utils@npm:^5.15.3":
+"@mui/utils@npm:^5.14.16, @mui/utils@npm:^5.15.3":
   version: 5.15.3
   resolution: "@mui/utils@npm:5.15.3"
   dependencies:
@@ -662,6 +726,54 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 2a5efd0fd9508c3dff9261b0a6f2801b47cc19dac04e9a79a55449162606a79a86e7e23e7d282f68843b1f8f860341549c893024c57f3380e2315de211e14e2a
+  languageName: node
+  linkType: hard
+
+"@mui/x-date-pickers@npm:^6.18.7":
+  version: 6.18.7
+  resolution: "@mui/x-date-pickers@npm:6.18.7"
+  dependencies:
+    "@babel/runtime": ^7.23.2
+    "@mui/base": ^5.0.0-beta.22
+    "@mui/utils": ^5.14.16
+    "@types/react-transition-group": ^4.4.8
+    clsx: ^2.0.0
+    prop-types: ^15.8.1
+    react-transition-group: ^4.4.5
+  peerDependencies:
+    "@emotion/react": ^11.9.0
+    "@emotion/styled": ^11.8.1
+    "@mui/material": ^5.8.6
+    "@mui/system": ^5.8.0
+    date-fns: ^2.25.0
+    date-fns-jalali: ^2.13.0-0
+    dayjs: ^1.10.7
+    luxon: ^3.0.2
+    moment: ^2.29.4
+    moment-hijri: ^2.1.2
+    moment-jalaali: ^0.7.4 || ^0.8.0 || ^0.9.0 || ^0.10.0
+    react: ^17.0.0 || ^18.0.0
+    react-dom: ^17.0.0 || ^18.0.0
+  peerDependenciesMeta:
+    "@emotion/react":
+      optional: true
+    "@emotion/styled":
+      optional: true
+    date-fns:
+      optional: true
+    date-fns-jalali:
+      optional: true
+    dayjs:
+      optional: true
+    luxon:
+      optional: true
+    moment:
+      optional: true
+    moment-hijri:
+      optional: true
+    moment-jalaali:
+      optional: true
+  checksum: 2ef6d453e1e458be9fb35083e49a02a3e054443452a618b0036dbf7cdb3df6283e724cfd5fec9a132f686bbd89322bcd5620484cd98c7b1fd55010ebf9635fab
   languageName: node
   linkType: hard
 
@@ -1813,6 +1925,34 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@scena/dragscroll@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "@scena/dragscroll@npm:1.4.0"
+  dependencies:
+    "@daybrush/utils": ^1.6.0
+    "@scena/event-emitter": ^1.0.2
+  checksum: 90c75e3e858b159fd856a6e6fc071c5d0975174f4d9201a53bca1ae86748d3fa1e302ed9195532162d7bb08ac91c3a0040d863cf6a8ebe4ca18739eef65f76f5
+  languageName: node
+  linkType: hard
+
+"@scena/event-emitter@npm:^1.0.2, @scena/event-emitter@npm:^1.0.5":
+  version: 1.0.5
+  resolution: "@scena/event-emitter@npm:1.0.5"
+  dependencies:
+    "@daybrush/utils": ^1.1.1
+  checksum: 400e0f6ab847aff6c1a6a6b62a0187193bdf9dedbe002ac31764b104bddb3c3bd1631df4252f52aa1677879842e96359aca46e025ed78d53c01facf8c76a5559
+  languageName: node
+  linkType: hard
+
+"@scena/matrix@npm:^1.0.0, @scena/matrix@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "@scena/matrix@npm:1.1.1"
+  dependencies:
+    "@daybrush/utils": ^1.4.0
+  checksum: e96aeab712e5fac4a437b1c1c2f5b445e47050c8b94dac2354bbece7d298b46bab5ea0049a24b360385f4edef8010538ee8d6f0ead570fbb83fdad9fe7e7b180
+  languageName: node
+  linkType: hard
+
 "@swc/core-darwin-arm64@npm:1.3.80":
   version: 1.3.80
   resolution: "@swc/core-darwin-arm64@npm:1.3.80"
@@ -1986,6 +2126,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/hex-rgb@npm:^4.1.1":
+  version: 4.1.1
+  resolution: "@types/hex-rgb@npm:4.1.1"
+  dependencies:
+    hex-rgb: "*"
+  checksum: 4e40125603e5239526591840948b7bce049c9cf2662ba0b7a8440c2a55a8188f40448b321274960f9b9760462fce9820a7a08fa86db8d2353553d1659974a3d2
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:^20.10.6":
   version: 20.10.6
   resolution: "@types/node@npm:20.10.6"
@@ -2016,7 +2165,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-transition-group@npm:^4.4.10":
+"@types/react-color@npm:^3.0.11":
+  version: 3.0.11
+  resolution: "@types/react-color@npm:3.0.11"
+  dependencies:
+    "@types/react": "*"
+    "@types/reactcss": "*"
+  checksum: 599d97d8e611f2993f856dda6832904a383c6266630483b513c0e9b3dcead94d2c4e573354ba4981d2297112983fe9a7d579eeab819bf7bd68ad6968856a7f6d
+  languageName: node
+  linkType: hard
+
+"@types/react-transition-group@npm:^4.4.10, @types/react-transition-group@npm:^4.4.8":
   version: 4.4.10
   resolution: "@types/react-transition-group@npm:4.4.10"
   dependencies:
@@ -2033,6 +2192,15 @@ __metadata:
     "@types/scheduler": "*"
     csstype: ^3.0.2
   checksum: ffed203bfe7aad772b8286f7953305c9181ac3a8f27d3f5400fbbc2a8e27ca8e5bbff818ee014f39ca0d19d2b3bb154e5bdbec7e232c6f80b59069375aa78349
+  languageName: node
+  linkType: hard
+
+"@types/reactcss@npm:*":
+  version: 1.2.11
+  resolution: "@types/reactcss@npm:1.2.11"
+  dependencies:
+    "@types/react": "*"
+  checksum: 5ca3fbc61eae33f4d668edca70be27ed07577f3bc6518826b3d013dc56bf2c91eae357109b37b2ee5aa0d6116bad3b65f5cafdfaae4a41920b0df00ce2cc05b9
   languageName: node
   linkType: hard
 
@@ -2562,6 +2730,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"css-styled@npm:^1.0.8, css-styled@npm:~1.0.8":
+  version: 1.0.8
+  resolution: "css-styled@npm:1.0.8"
+  dependencies:
+    "@daybrush/utils": ^1.13.0
+  checksum: ffd99f3403dff34fb682ba8a77fcc8cf0131dd3470efcd81b84c58be241904c0f877b929c54563c00994a01951c5afa45b164a56d8b7b1363c057e284f2b3061
+  languageName: node
+  linkType: hard
+
+"css-to-mat@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "css-to-mat@npm:1.1.1"
+  dependencies:
+    "@daybrush/utils": ^1.13.0
+    "@scena/matrix": ^1.0.0
+  checksum: bc88b044a8b24882e06170ad6d5cedfd220119fa03a55accf54ff0e7f6450d85f9be71408900be595d8bb5c0e07346f79ab7a3de4c820869bced4de25497b3c5
+  languageName: node
+  linkType: hard
+
 "css-tree@npm:^1.1.2, css-tree@npm:^1.1.3":
   version: 1.1.3
   resolution: "css-tree@npm:1.1.3"
@@ -2604,10 +2791,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:^3.0.6":
-  version: 3.0.6
-  resolution: "date-fns@npm:3.0.6"
-  checksum: ee62b8e764e4c11c418d342f401d3e85adb4a631b196746e49ac89099c8d34cb141f10ae953c4a72bd3c76fe4d8740ec89564c8599a31256c82adbbed56c0014
+"date-fns@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "date-fns@npm:3.1.0"
+  checksum: 8de5474a0e5a4b9901547f0eb572b0ae8b3027d6d8117053d9b258000a4350b673f03c847211f6dfee316c39a1df30e1ea0f85efd475ef90764c0c3d18aabed3
+  languageName: node
+  linkType: hard
+
+"dayjs@npm:^1.11.10":
+  version: 1.11.10
+  resolution: "dayjs@npm:1.11.10"
+  checksum: a6b5a3813b8884f5cd557e2e6b7fa569f4c5d0c97aca9558e38534af4f2d60daafd3ff8c2000fed3435cfcec9e805bcebd99f90130c6d1c5ef524084ced588c4
   languageName: node
   linkType: hard
 
@@ -2741,6 +2935,7 @@ __metadata:
     "@karmaniverous/serify-deserify": ^1.4.0
     "@mui/icons-material": ^5.15.3
     "@mui/material": ^5.15.3
+    "@mui/x-date-pickers": ^6.18.7
     "@parcel/config-default": ^2.11.0
     "@parcel/core": ^2.11.0
     "@parcel/packager-raw-url": ^2.11.0
@@ -2750,14 +2945,20 @@ __metadata:
     "@parcel/transformer-webmanifest": ^2.11.0
     "@preact/compat": ^17.1.2
     "@preact/signals": ^1.2.2
+    "@types/hex-rgb": ^4.1.1
     "@types/node": ^20.10.6
-    date-fns: ^3.0.6
+    "@types/react-color": ^3.0.11
+    date-fns: ^3.1.0
     date-fns-tz: ^2.0.0
+    dayjs: ^1.11.10
+    hex-rgb: ^5.0.0
     ical.js: ^1.5.0
     parcel: ^2.11.0
     parcel-reporter-clean-dist: ^1.0.4
     parcel-reporter-static-files-copy: ^1.5.3
     preact: ^10.19.3
+    preact-moveable: ^0.55.0
+    react-color: ^2.19.3
     sharp: ^0.31.1
     ts-node: ^10.9.2
     typescript: ^5.3.3
@@ -2935,6 +3136,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"framework-utils@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "framework-utils@npm:1.1.0"
+  checksum: 01b61ead1756ad9bb0d281d22d35c83ee9df3e5e3d63b2d19eb9ca4ba9e69439b698c623ac8161df3744233331017bfd79d82c44e1e61fbb30f0ea6b48d883f9
+  languageName: node
+  linkType: hard
+
 "fs-constants@npm:^1.0.0":
   version: 1.0.0
   resolution: "fs-constants@npm:1.0.0"
@@ -3006,6 +3214,16 @@ __metadata:
     strip-ansi: ^6.0.1
     wide-align: ^1.1.5
   checksum: 788b6bfe52f1dd8e263cda800c26ac0ca2ff6de0b6eee2fe0d9e3abf15e149b651bd27bf5226be10e6e3edb5c4e5d5985a5a1a98137e7a892f75eff76467ad2d
+  languageName: node
+  linkType: hard
+
+"gesto@npm:^1.19.3, gesto@npm:^1.19.4":
+  version: 1.19.4
+  resolution: "gesto@npm:1.19.4"
+  dependencies:
+    "@daybrush/utils": ^1.13.0
+    "@scena/event-emitter": ^1.0.2
+  checksum: b18098c28e18980309e39c00aab2c7b9b3052a7777830c553842d7d7c8032642cf3a6e8a47ec1073305e623eae856a618ea47e437e8d16e8323742344877f6f1
   languageName: node
   linkType: hard
 
@@ -3104,6 +3322,13 @@ __metadata:
   dependencies:
     function-bind: ^1.1.1
   checksum: b9ad53d53be4af90ce5d1c38331e712522417d017d5ef1ebd0507e07c2fbad8686fffb8e12ddecd4c39ca9b9b47431afbb975b8abf7f3c3b82c98e9aad052792
+  languageName: node
+  linkType: hard
+
+"hex-rgb@npm:*, hex-rgb@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "hex-rgb@npm:5.0.0"
+  checksum: a88e3aaae5311f98716fb41a4e5efbc8d823de5c5d40f9ea77d111de96f3fb087d809021f85d40a98048a4827cd30945413bf1a5001ae7c23727ac628d666d26
   languageName: node
   linkType: hard
 
@@ -3431,6 +3656,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"keycode@npm:^2.2.0":
+  version: 2.2.1
+  resolution: "keycode@npm:2.2.1"
+  checksum: 7a5c775b2410a3b6d9c07a415ecb70639187a965be239d2c11c71079cb1ca2f9dede94b86426f3ece475dc8ae3debf2367531bbcafc0af8c82f157d9a4f7e6cb
+  languageName: node
+  linkType: hard
+
+"keycon@npm:^1.2.0":
+  version: 1.4.0
+  resolution: "keycon@npm:1.4.0"
+  dependencies:
+    "@cfcs/core": ^0.0.6
+    "@daybrush/utils": ^1.7.1
+    "@scena/event-emitter": ^1.0.2
+    keycode: ^2.2.0
+  checksum: c35b0c709517b891b4651989dc2aed1fa03b433409cd5d8520c7efcebda94be7d9ad968297a40d3a9af400a1eb19d6e3cc38412bc220da758837420cb8024921
+  languageName: node
+  linkType: hard
+
 "lightningcss-darwin-arm64@npm:1.22.1":
   version: 1.22.1
   resolution: "lightningcss-darwin-arm64@npm:1.22.1"
@@ -3608,6 +3852,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash-es@npm:^4.17.15":
+  version: 4.17.21
+  resolution: "lodash-es@npm:4.17.21"
+  checksum: 05cbffad6e2adbb331a4e16fbd826e7faee403a1a04873b82b42c0f22090f280839f85b95393f487c1303c8a3d2a010048bf06151a6cbe03eee4d388fb0a12d2
+  languageName: node
+  linkType: hard
+
+"lodash@npm:^4.0.1, lodash@npm:^4.17.15":
+  version: 4.17.21
+  resolution: "lodash@npm:4.17.21"
+  checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
+  languageName: node
+  linkType: hard
+
 "loose-envify@npm:^1.4.0":
   version: 1.4.0
   resolution: "loose-envify@npm:1.4.0"
@@ -3669,6 +3927,13 @@ __metadata:
     socks-proxy-agent: ^7.0.0
     ssri: ^10.0.0
   checksum: 7268bf274a0f6dcf0343829489a4506603ff34bd0649c12058753900b0eb29191dce5dba12680719a5d0a983d3e57810f594a12f3c18494e93a1fbc6348a4540
+  languageName: node
+  linkType: hard
+
+"material-colors@npm:^1.2.1":
+  version: 1.2.6
+  resolution: "material-colors@npm:1.2.6"
+  checksum: 72d005ccccb82bab68eef3cd757e802668634fc86976dedb9fc564ce994f2d3258273766b7efecb7404a0031969e2d72201a1b74169763f0a53c0dd8d649209f
   languageName: node
   linkType: hard
 
@@ -4095,6 +4360,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"overlap-area@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "overlap-area@npm:1.1.0"
+  dependencies:
+    "@daybrush/utils": ^1.7.1
+  checksum: 718e48a54e11e02ec461f2ad3bc05f396e249a609325ee94ae3bffa568816cf16b3053f512ad549a27e4d644f4194c3e47e4c9c4af02826ae063df67026cbf58
+  languageName: node
+  linkType: hard
+
 "p-map@npm:^4.0.0":
   version: 4.0.0
   resolution: "p-map@npm:4.0.0"
@@ -4266,6 +4540,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"preact-css-styled@npm:^1.1.9":
+  version: 1.1.9
+  resolution: "preact-css-styled@npm:1.1.9"
+  dependencies:
+    css-styled: ~1.0.8
+    framework-utils: ^1.1.0
+  checksum: 799a79320096ff40e445c2270cf9a0237c151a5c9e7124323faee04c60aeada91cbb8b283f3d2161ce7ef35bf55ad9e02ab3bcaf0affc08a75f9a92f6803d1a8
+  languageName: node
+  linkType: hard
+
+"preact-moveable@npm:^0.55.0":
+  version: 0.55.0
+  resolution: "preact-moveable@npm:0.55.0"
+  dependencies:
+    preact-css-styled: ^1.1.9
+    react-moveable: ~0.56.0
+  checksum: c35a4de25cbb277d5f387a1379818554c75bb033b61bbe402c28b7be4fb55232be32195b51af1e42755996488526ccabbe63b97cbb804097c913cbf8d4f52db8
+  languageName: node
+  linkType: hard
+
 "preact@npm:^10.19.3":
   version: 10.19.3
   resolution: "preact@npm:10.19.3"
@@ -4305,7 +4599,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.6.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.5.10, prop-types@npm:^15.6.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -4347,6 +4641,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-color@npm:^2.19.3":
+  version: 2.19.3
+  resolution: "react-color@npm:2.19.3"
+  dependencies:
+    "@icons/material": ^0.2.4
+    lodash: ^4.17.15
+    lodash-es: ^4.17.15
+    material-colors: ^1.2.1
+    prop-types: ^15.5.10
+    reactcss: ^1.2.0
+    tinycolor2: ^1.4.1
+  peerDependencies:
+    react: "*"
+  checksum: 40b49e1aa2ab27a099cc37a3fa2d5bb906b8def4dbe2d922c0e42365e386d82b03f9b06a2b29a44a51f1e114cef72e61c0ba0740581a128d951936ea4617429b
+  languageName: node
+  linkType: hard
+
+"react-css-styled@npm:^1.1.9":
+  version: 1.1.9
+  resolution: "react-css-styled@npm:1.1.9"
+  dependencies:
+    css-styled: ~1.0.8
+    framework-utils: ^1.1.0
+  checksum: fa425552bf5863243c87bcfa9e5a03c73c00821110c788a9309f833a0bb536940024a1ba94139da8f343f2bf9ecc9153ef2fd86250754e2ae6c3ec2c29bc0272
+  languageName: node
+  linkType: hard
+
 "react-error-overlay@npm:6.0.9":
   version: 6.0.9
   resolution: "react-error-overlay@npm:6.0.9"
@@ -4368,10 +4689,40 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-moveable@npm:~0.56.0":
+  version: 0.56.0
+  resolution: "react-moveable@npm:0.56.0"
+  dependencies:
+    "@daybrush/utils": ^1.13.0
+    "@egjs/agent": ^2.2.1
+    "@egjs/children-differ": ^1.0.1
+    "@egjs/list-differ": ^1.0.0
+    "@scena/dragscroll": ^1.4.0
+    "@scena/event-emitter": ^1.0.5
+    "@scena/matrix": ^1.1.1
+    css-to-mat: ^1.1.1
+    framework-utils: ^1.1.0
+    gesto: ^1.19.3
+    overlap-area: ^1.1.0
+    react-css-styled: ^1.1.9
+    react-selecto: ^1.25.0
+  checksum: 2d2e501a18d6f426fcba0974e9564c6e10f8184ae5e7ba31cedf88026dce25a7749a82caf68de56abf1d110c200221b2574a510d78cba65338a716ebf4ddf860
+  languageName: node
+  linkType: hard
+
 "react-refresh@npm:^0.9.0":
   version: 0.9.0
   resolution: "react-refresh@npm:0.9.0"
   checksum: 6440146176f19402ffb7d66f317e40b1c42c88579b4d439b49021e38be6307c642da3e8732a72e6997b6bb1127db0da92f4aa433da4313ce8ebad0c1efa2ed4a
+  languageName: node
+  linkType: hard
+
+"react-selecto@npm:^1.25.0":
+  version: 1.26.3
+  resolution: "react-selecto@npm:1.26.3"
+  dependencies:
+    selecto: ~1.26.3
+  checksum: 84b6b5c7e2a13f9770c7ee88e99bccabee692554037900d968f75dfcd9aa217ebf291b17aead6231fb0dd60ffc24e5df1927ffc7e2b7c862d1abcf5daa6690e9
   languageName: node
   linkType: hard
 
@@ -4387,6 +4738,15 @@ __metadata:
     react: ">=16.6.0"
     react-dom: ">=16.6.0"
   checksum: 75602840106aa9c6545149d6d7ae1502fb7b7abadcce70a6954c4b64a438ff1cd16fc77a0a1e5197cdd72da398f39eb929ea06f9005c45b132ed34e056ebdeb1
+  languageName: node
+  linkType: hard
+
+"reactcss@npm:^1.2.0":
+  version: 1.2.3
+  resolution: "reactcss@npm:1.2.3"
+  dependencies:
+    lodash: ^4.0.1
+  checksum: c53e386a0881f1477e1cff661f6a6ad4c662230941f3827862193ac30f9b75cdf7bc7b4c7e5ca543d3e4e80fee1a3e9fa0056c206b1c0423726c41773ab3fe45
   languageName: node
   linkType: hard
 
@@ -4515,6 +4875,24 @@ __metadata:
   bin:
     sass: sass.js
   checksum: 74fc11d0fcd5e16c5331b57dd59865705a299c64e89f2b99646869caeb011dc8d0b6144a6c74a90c264e9ef70654207dbf44fc9b7e3393f8bd14809b904c8a52
+  languageName: node
+  linkType: hard
+
+"selecto@npm:~1.26.3":
+  version: 1.26.3
+  resolution: "selecto@npm:1.26.3"
+  dependencies:
+    "@daybrush/utils": ^1.13.0
+    "@egjs/children-differ": ^1.0.1
+    "@scena/dragscroll": ^1.4.0
+    "@scena/event-emitter": ^1.0.5
+    css-styled: ^1.0.8
+    css-to-mat: ^1.1.1
+    framework-utils: ^1.1.0
+    gesto: ^1.19.4
+    keycon: ^1.2.0
+    overlap-area: ^1.1.0
+  checksum: 4e3be5ed928a8a1f8a139b9c69dbdbbc13d6c96f04eaa64ae1fa3f1d2733f42046c06b1ef6ebfb015736401dabfee0bfd50a0a94de6a56a963ac5f1a94656fc0
   languageName: node
   linkType: hard
 
@@ -4837,6 +5215,13 @@ __metadata:
   version: 0.3.0
   resolution: "timsort@npm:0.3.0"
   checksum: 1a66cb897dacabd7dd7c91b7e2301498ca9e224de2edb9e42d19f5b17c4b6dc62a8d4cbc64f28be82aaf1541cb5a78ab49aa818f42a2989ebe049a64af731e2a
+  languageName: node
+  linkType: hard
+
+"tinycolor2@npm:^1.4.1":
+  version: 1.6.0
+  resolution: "tinycolor2@npm:1.6.0"
+  checksum: 6df4d07fceeedc0a878d7bac47e2cd47c1ceeb1078340a9eb8a295bc0651e17c750f73d47b3028d829f30b85c15e0572c0fd4142083e4c21a30a597e47f47230
   languageName: node
   linkType: hard
 

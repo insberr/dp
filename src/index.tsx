@@ -3,6 +3,9 @@ import 'preact/debug';
 import { render } from 'preact';
 import { Suspense, lazy } from 'preact/compat';
 
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+
 import PreactErrorCatcher from './components/PreactErrorCatcher';
 import ThemeWrapper from './components/ThemeWrapper';
 import LoadSpinner from './components/LoadingSpinner';
@@ -31,7 +34,9 @@ const mainComponentToRender = (
     <ThemeWrapper>
         <PreactErrorCatcher>
             <Suspense fallback={<LoadSpinner />}>
-                <App />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <App />
+                </LocalizationProvider>
             </Suspense>
         </PreactErrorCatcher>
     </ThemeWrapper>

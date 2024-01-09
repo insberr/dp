@@ -10,6 +10,7 @@ export enum PageToRender {
     Links,
 
     Settings,
+    MoveableTest,
 }
 
 export const pageToRender = persist<PageToRender>('pageToRender', PageToRender.Intro);

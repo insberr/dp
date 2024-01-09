@@ -1,13 +1,13 @@
 import { Box, Grid, Typography } from '@mui/material';
 import EventBox from './eventBox';
 import { ScheduleEvent, Schedule } from '../scheduleMain';
-import { isBefore, isSameDay, set } from 'date-fns';
+import { isBefore, isSameDay, isWithinInterval, set } from 'date-fns';
 
 import './daySchedule.scss';
-import { schedulesSignal } from '../../../storage/scheduleSignal';
+import { editEvent, schedulesSignal } from '../../../storage/scheduleSignal';
 import { timeHeightSignal } from '../../../storage/signals';
-import { useState } from 'preact/hooks';
 import ScheduleClickAddEventArea from './ScheduleClickAddEventArea';
+import Moveable, { OnDrag, OnResize } from 'preact-moveable';
 
 const hoursToDisplay = [...Array(25)]; // [1, 2, 3, 11, 12, 13, 14, 15, 16, 17];
 
@@ -28,7 +28,7 @@ export default function DaySchedule(props: {
             return schedule.scheduleEvents;
         })
         .filter((event: ScheduleEvent) => {
-            return isSameDay(event.startDate, props.displayDate);
+            return isSameDay(event.startDate, props.displayDate); // || isSameDay(event.endDate, props.displayDate);
         });
 
     return (
@@ -81,6 +81,39 @@ export default function DaySchedule(props: {
                             return <EventBox event={event} key={index} />;
                         })}
                     </Grid>
+                    <Moveable
+                        target={'.target'}
+                        origin={true}
+                        /* Resize, Scale event edges */
+                        edge={['n', 's']}
+                        /* draggable */
+                        draggable={true}
+                        throttleDrag={0}
+                        onDragStart={({ target, clientX, clientY }) => {
+                            console.log('onDragStart', target);
+                        }}
+                        onDrag={({ target, beforeDelta, beforeDist, left, top, right, bottom, delta, dist, transform, clientX, clientY }: OnDrag) => {
+                            console.log('onDrag left, top', left, top);
+                            // target!.style.left = `${left}px`;
+                            // target!.style.top = `${top}px`;
+                            console.log('onDrag translate', dist);
+                            target!.style.transform = transform;
+                        }}
+                        onDragEnd={({ target, isDrag, clientX, clientY }) => {
+                            console.log('onDragEnd', target, isDrag);
+                        }}
+                        /* When resize or scale, keeps a ratio of the width, height. */
+                        keepRatio={true}
+                        resizable={true}
+                        onResize={({ target, width, height, dist, delta, direction, clientX, clientY }: OnResize) => {
+                            if (direction[0] === 2) return;
+                            target.style.height = height + 'px';
+                            // const newDateForHeight = new Date(event.startDate.getTime() + (height / timeHeightSignal.value) * 60 * 60 * 1000);
+                        }}
+                        onResizeEnd={() => {
+                            // editEvent(event, { ...event, endDate: newDateForHeight });
+                        }}
+                    />
                 </Grid>
             </Box>
         </>

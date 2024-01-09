@@ -1,22 +1,29 @@
-import { Box, Button, Modal, Typography } from '@mui/material';
+import { Box, Button, Modal, TextField, Typography } from '@mui/material';
 import { convertLocationToObject } from '../../../utilities/ICSParser';
 import { differenceInMinutes, format } from 'date-fns';
-import { useState } from 'preact/hooks';
+import { useRef, useState } from 'preact/hooks';
 import { ScheduleEvent } from '../scheduleMain';
 
 import './daySchedule.scss';
-import { deleteEvent, schedulesSignal } from '../../../storage/scheduleSignal';
+import { deleteEvent, editEvent, schedulesSignal } from '../../../storage/scheduleSignal';
 import { timeHeightSignal } from '../../../storage/signals';
+import Moveable, { OnDrag, OnResize } from 'preact-moveable';
+import { EditEventMenu } from '../EditEventMenu';
 
 export type EventBoxProps = { event: ScheduleEvent; key: number | string; color?: string; opacity?: number };
 export default function EventBox(props: EventBoxProps) {
-    const event = props.event;
+    const [event, eventSet] = useState<ScheduleEvent>(props.event);
     const locationObject = convertLocationToObject(event.location);
     const durationMinutes = differenceInMinutes(event.endDate, event.startDate);
 
+    const boxRef = useRef<HTMLDivElement>(null);
+
     const eventID = `eventBox_${props.key}_${event.uid}_${event.startDate.getTime()}`;
     const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
+    const handleOpen = () => {
+        boxRef.current?.classList.add('target');
+        setOpen(true);
+    };
     const handleClose = () => setOpen(false);
 
     const topPosition = 28 + timeHeightSignal.value * (event.startDate.getHours() + event.startDate.getMinutes() / 60);
@@ -34,6 +41,7 @@ export default function EventBox(props: EventBoxProps) {
     return (
         <>
             <Box
+                ref={boxRef}
                 id={eventID}
                 className={'eventBox'}
                 sx={{
@@ -54,7 +62,14 @@ export default function EventBox(props: EventBoxProps) {
                     {')'} in room {locationObject.room}
                 </div>
             </Box>
-            <Modal open={open} onClose={handleClose} aria-labelledby={'model' + eventID + event.title} aria-describedby={'model' + eventID}>
+            <EditEventMenu
+                event={open ? event : null}
+                setEvent={(a: ScheduleEvent | null) => {
+                    if (a === null) return handleClose();
+                    eventSet(a);
+                }}
+            />
+            {/* <Modal open={open} onClose={handleClose} aria-labelledby={'model' + eventID + event.title} aria-describedby={'model' + eventID}>
                 <Box
                     sx={{
                         position: 'absolute',
@@ -68,9 +83,16 @@ export default function EventBox(props: EventBoxProps) {
                         p: 4,
                     }}
                 >
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        {event.title}
-                    </Typography>
+                    <TextField
+                        id={'event-title-edit-' + event.uid}
+                        label="Event Title"
+                        variant="standard"
+                        value={event.title}
+                        onChange={(e: any) => {
+                            const value = e.target.value;
+                            editEvent(event, { ...event, title: value });
+                        }}
+                    />
                     <Typography id={'modal-modal-description' + eventID} sx={{ mt: 2 }}>
                         {format(event.startDate, 'h:mma')} - {format(event.endDate, 'h:mma')} ({durationMinutes} minutes)
                     </Typography>
@@ -88,7 +110,7 @@ export default function EventBox(props: EventBoxProps) {
                         Delete Event
                     </Button>
                 </Box>
-            </Modal>
+            </Modal> */}
         </>
     );
 }

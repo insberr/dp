@@ -46,6 +46,13 @@ export default function SettingsPage() {
             >
                 Add to homescreen
             </Button>
+            <Button
+                onClick={() => {
+                    pageToRender.value = PageToRender.MoveableTest;
+                }}
+            >
+                Moveable Test
+            </Button>
         </div>
     );
 }

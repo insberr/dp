@@ -7,6 +7,8 @@ import CalendarMenuBar from './CalendarMenuBar';
 import { blankSchedulesSignal, createEvent, createScheduleAdvanced, generateUID, schedulesSignal } from '../../storage/scheduleSignal';
 import WeekSchedule from './WeekSchedule/WeekSchedule';
 import { useState } from 'preact/hooks';
+import { EditEventMenu } from './EditEventMenu';
+import { DateTimePicker } from '@mui/x-date-pickers';
 
 export enum ScheduleCreatedFrom {
     ICS_FILE,
@@ -80,20 +82,25 @@ export default function ScheduleMain() {
     }
 
     const [viewMode, viewModeSet] = useState(SchedulesViewMode.DAY);
+    const [newEventMenu, newEventMenuSet] = useState<ScheduleEvent | null>(null);
 
     // schedule.value = schedule.value.push(fakeEvent);
     const onClickScheduleHandler = (clickEvent: any, startDate: Date, endDate?: Date) => {
-        createEvent(schedulesSignal.value.schedules[0].uid, {
+        const newEvent = createEvent(schedulesSignal.value.schedules[0].uid, {
             parentScheduleUid: schedulesSignal.value.schedules[0].uid,
             uid: generateUID(),
-            title: 'New Event',
+            title: '',
             startDate: startDate,
             endDate: endDate || new Date(startDate.getTime() + 30 * 60000),
-            description: 'Test Click Schedule To Create Event',
-            location: 'Location: MAIN, Building:RB1, Room:MCHLNGLO',
-
+            description: '',
+            location: 'Location: MAIN, Building:RB1, Room:NONE',
             opacity: 0.5,
         });
+
+        if (newEvent === null) return;
+
+        newEventMenuSet(newEvent);
+
         // schedulesTemp[0].scheduleEvents.push();
         // schedulesSignal.value = { updated: true, schedules: schedulesTemp };
         // schedulesSignal.store();
@@ -131,6 +138,7 @@ export default function ScheduleMain() {
                     onDraggingSchedule={onDraggingSchedule}
                 />
             )}
+            <EditEventMenu event={newEventMenu} setEvent={newEventMenuSet} />
         </>
     );
 }

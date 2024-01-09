@@ -5,5 +5,6 @@ export const dateForDisplay = signal<Date>(new Date());
 export const currentDate = signal<Date>(new Date());
 
 setInterval(() => {
+    if (currentDate.value.getMinutes() === new Date().getMinutes()) return;
     currentDate.value = new Date();
 }, 1000);
