@@ -25,6 +25,7 @@ export function EditEventMenu(props: { event: ScheduleEvent | null; setEvent: (e
         props.setEvent(newEvent);
     };
 
+    // Temporary till I find a better color library
     const eventBGColor = hexRgb(event.backgroundColor?.includes('#') ? event.backgroundColor : false || '#ffffff');
 
     return (
