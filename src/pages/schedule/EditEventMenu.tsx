@@ -140,7 +140,7 @@ export function EditEventMenu(props: { event: ScheduleEvent | null; setEvent: (e
                                     createdFrom: ScheduleCreatedFrom.USER,
                                     uid: newUID,
                                     name: 'New Schedule',
-                                    repeatWeekly: true,
+                                    repeatWeekly: false,
                                     scheduleEvents: [],
                                 });
                             }
