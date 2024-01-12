@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material';
 import DaySchedule from '../DaySchedule/daySchedule';
 import { ScheduleEvent } from '../scheduleMain';
-import { subDays, addDays, eachWeekendOfInterval, eachDayOfInterval, isSameDay } from 'date-fns';
+import { subDays, addDays, eachWeekendOfInterval, eachDayOfInterval, isSameDay, isSunday } from 'date-fns';
 
 export default function WeekSchedule(props: {
     displayDate: Date;
@@ -9,9 +9,18 @@ export default function WeekSchedule(props: {
     onClickSchedule: (clickEvent: any, startDate: Date, endDate?: Date) => void;
     onDraggingSchedule: (startDate: Date, endDate: Date) => ScheduleEvent;
 }) {
-    const oneWeekAgo = subDays(props.displayDate, 7);
-    const weekendDays = eachWeekendOfInterval({ start: oneWeekAgo, end: props.displayDate });
-    const daysToDisplay = eachDayOfInterval({ start: weekendDays[1], end: addDays(weekendDays[0], 7) });
+    let daysToDisplay: Date[] = [];
+
+    if (isSunday(props.displayDate)) {
+        daysToDisplay = eachDayOfInterval({
+            start: props.displayDate,
+            end: addDays(props.displayDate, 6),
+        });
+    } else {
+        const oneWeekAgo = subDays(props.displayDate, 7);
+        const weekendDays = eachWeekendOfInterval({ start: oneWeekAgo, end: props.displayDate });
+        daysToDisplay = eachDayOfInterval({ start: weekendDays[1], end: addDays(weekendDays[0], 7) });
+    }
 
     return (
         <Grid container columns={7}>

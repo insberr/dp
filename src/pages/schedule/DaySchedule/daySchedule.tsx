@@ -1,13 +1,14 @@
 import { Box, Grid, Typography } from '@mui/material';
 import EventBox from './eventBox';
 import { ScheduleEvent, Schedule } from '../scheduleMain';
-import { isBefore, isSameDay, isWithinInterval, set } from 'date-fns';
+import { isBefore, isSameDay, isWithinInterval, setHours, setMinutes, setSeconds, differenceInWeeks, addWeeks, subWeeks, startOfDay } from 'date-fns';
 
 import './daySchedule.scss';
 import { editEvent, schedulesSignal } from '../../../storage/scheduleSignal';
 import { timeHeightSignal } from '../../../storage/signals';
 import ScheduleClickAddEventArea from './ScheduleClickAddEventArea';
 import Moveable, { OnDrag, OnResize } from 'preact-moveable';
+import { options } from 'preact';
 
 const hoursToDisplay = [...Array(25)]; // [1, 2, 3, 11, 12, 13, 14, 15, 16, 17];
 
@@ -23,12 +24,48 @@ export default function DaySchedule(props: {
 
     // TODO: Make this work frfr no cap
     const eventsForDisplayDate = schedulesSignal.value.schedules
-        // Will this actually work??
-        .flatMap((schedule: Schedule) => {
+        .map((schedule: Schedule) => {
+            if (schedule.repeatWeekly) {
+                const events = schedule.scheduleEvents
+                    .map((event) => {
+                        if (isSameDay(event.startDate, props.displayDate)) return event;
+
+                        const d = differenceInWeeks(startOfDay(props.displayDate), startOfDay(event.startDate));
+                        console.log(d);
+                        const addedWeeksStart = d >= 0 ? addWeeks(event.startDate, d) : subWeeks(event.startDate, Math.abs(d));
+                        const addedWeeksEnd = d >= 0 ? addWeeks(event.endDate, d) : subWeeks(event.endDate, Math.abs(d));
+
+                        if (isSameDay(addedWeeksStart, props.displayDate)) {
+                            console.log('isSameDay ', addedWeeksStart.toDateString());
+                            return { ...event, startDate: addedWeeksStart, endDate: addedWeeksEnd };
+                        }
+                        return null;
+                    })
+                    .filter((event) => event !== null) as ScheduleEvent[];
+
+                return events;
+            }
             return schedule.scheduleEvents;
         })
+        // Will this actually work??
+        // .flatMap((schedule: Schedule) => {
+        //     return schedule.scheduleEvents;
+        // })
+        .flatMap((events: ScheduleEvent[]) => {
+            return events;
+        })
         .filter((event: ScheduleEvent) => {
-            return isSameDay(event.startDate, props.displayDate); // || isSameDay(event.endDate, props.displayDate);
+            return (
+                isWithinInterval(event.startDate, {
+                    start: setSeconds(setMinutes(setHours(props.displayDate, 0), 0), 0),
+                    end: setSeconds(setMinutes(setHours(props.displayDate, 23), 59), 59),
+                }) ||
+                isWithinInterval(event.endDate, {
+                    start: setSeconds(setMinutes(setHours(props.displayDate, 0), 0), 0),
+                    end: setSeconds(setMinutes(setHours(props.displayDate, 23), 59), 59),
+                })
+            );
+            // return isSameDay(event.startDate, props.displayDate); // || isSameDay(event.endDate, props.displayDate);
         });
 
     return (

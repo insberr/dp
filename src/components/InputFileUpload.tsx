@@ -94,7 +94,7 @@ export default function InputFileUpload() {
                                     return event;
                                 }),
 
-                                repeatWeekly: true,
+                                repeatWeekly: false,
 
                                 defaultOpacity: 1,
                             });
