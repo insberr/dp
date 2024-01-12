@@ -23,11 +23,6 @@ export const schedulesSignal = persist<SchedulesSignal>('schedules', 'v1-beta0.1
 
     return data;
 });
-effect(() => {
-    if (schedulesSignal.value.updated === undefined) {
-        schedulesSignal.value = { updated: true, schedules: schedulesSignal.value as unknown as Schedules };
-    }
-});
 
 export function blankSchedulesSignal(): SchedulesSignal {
     const value = {

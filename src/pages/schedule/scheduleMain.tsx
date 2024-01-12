@@ -101,10 +101,7 @@ export default function ScheduleMain() {
                             uid: generateUID(),
                             name: 'Main Schedule',
                             scheduleEvents: [],
-                            repeatWeekly: true,
-
-                            defaultBackgroundColor: 'salmon',
-                            defaultBorderColor: 'salmon',
+                            repeatWeekly: false,
                             defaultOpacity: 1,
                         });
                     }}

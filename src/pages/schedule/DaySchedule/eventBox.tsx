@@ -1,13 +1,12 @@
-import { Box, Button, Modal, TextField, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { convertLocationToObject } from '../../../utilities/ICSParser';
 import { differenceInMinutes, format } from 'date-fns';
-import { useRef, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 import { ScheduleEvent } from '../scheduleMain';
 
 import './daySchedule.scss';
-import { deleteEvent, editEvent, schedulesSignal } from '../../../storage/scheduleSignal';
+import { schedulesSignal } from '../../../storage/scheduleSignal';
 import { timeHeightSignal } from '../../../storage/signals';
-import Moveable, { OnDrag, OnResize } from 'preact-moveable';
 import { EditEventMenu } from '../EditEventMenu';
 
 export type EventBoxProps = { event: ScheduleEvent; key: number | string; color?: string; opacity?: number };
@@ -16,12 +15,12 @@ export default function EventBox(props: EventBoxProps) {
     const locationObject = convertLocationToObject(event.location);
     const durationMinutes = differenceInMinutes(event.endDate, event.startDate);
 
-    const boxRef = useRef<HTMLDivElement>(null);
+    // const boxRef = useRef<HTMLDivElement>(null);
 
     const eventID = `eventBox_${props.key}_${event.uid}_${event.startDate.getTime()}`;
     const [open, setOpen] = useState(false);
     const handleOpen = () => {
-        boxRef.current?.classList.add('target');
+        // boxRef.current?.classList.add('target');
         setOpen(true);
     };
     const handleClose = () => setOpen(false);
@@ -41,7 +40,6 @@ export default function EventBox(props: EventBoxProps) {
     return (
         <>
             <Box
-                ref={boxRef}
                 id={eventID}
                 className={'eventBox'}
                 sx={{
