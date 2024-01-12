@@ -1,7 +1,28 @@
-import { Box, Button, Modal, TextField, Typography } from '@mui/material';
-import { ScheduleEvent } from './scheduleMain';
+import {
+    Box,
+    Button,
+    FormControl,
+    InputLabel,
+    Menu,
+    MenuItem,
+    Modal,
+    OutlinedInput,
+    Select,
+    SelectChangeEvent,
+    TextField,
+    Typography,
+} from '@mui/material';
+import { ScheduleCreatedFrom, ScheduleEvent } from './scheduleMain';
 import { format } from 'date-fns';
-import { deleteEvent, editEvent } from '../../storage/scheduleSignal';
+import {
+    createEvent,
+    createSchedule,
+    createScheduleAdvanced,
+    deleteEvent,
+    editEvent,
+    generateUID,
+    schedulesSignal,
+} from '../../storage/scheduleSignal';
 import { convertLocationToObject } from '../../utilities/ICSParser';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import { ChromePicker, Color } from 'react-color';
@@ -102,6 +123,50 @@ export function EditEventMenu(props: { event: ScheduleEvent | null; setEvent: (e
                         handleEventEdit({ ...event, backgroundColor: color.hex, borderColor: color.hex, opacity: color.rgb.a });
                     }}
                 />
+                <FormControl sx={{ m: 1, width: 300 }}>
+                    <InputLabel id="edit-event-schedule-select-label">Schedule</InputLabel>
+                    <Select
+                        labelId="edit-event-schedule-select-label"
+                        id="edit-event-schedule-select"
+                        value={event.parentScheduleUid}
+                        onChange={(e: any) => {
+                            const value = e.target?.value || null;
+                            let newUID = value;
+
+                            if (value === 'new-schedule') {
+                                newUID = generateUID();
+
+                                createScheduleAdvanced({
+                                    createdFrom: ScheduleCreatedFrom.USER,
+                                    uid: newUID,
+                                    name: 'New Schedule',
+                                    repeatWeekly: true,
+                                    scheduleEvents: [],
+                                });
+                            }
+
+                            deleteEvent(event);
+
+                            const newEvent = createEvent(newUID, event);
+                            if (newEvent === null) {
+                                throw new Error('Failed to create new event');
+                            }
+
+                            handleEventEdit(newEvent);
+                        }}
+                        input={<OutlinedInput label="Schedule" />}
+                        // MenuProps={MenuProps}
+                    >
+                        <MenuItem key={'new-schedule'} value={'new-schedule'} style={undefined}>
+                            Create New Schedule
+                        </MenuItem>
+                        {schedulesSignal.value.schedules.map((scheduleValue) => (
+                            <MenuItem key={scheduleValue.uid} value={scheduleValue.uid} style={undefined}>
+                                {scheduleValue.name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
                 <Button
                     onClick={() => {
                         deleteEvent(event);
