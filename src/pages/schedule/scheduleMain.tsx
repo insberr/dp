@@ -8,12 +8,33 @@ import { blankSchedulesSignal, createEvent, createScheduleAdvanced, generateUID,
 import WeekSchedule from './WeekSchedule/WeekSchedule';
 import { useState } from 'preact/hooks';
 import { EditEventMenu } from './EditEventMenu';
-import { DateTimePicker } from '@mui/x-date-pickers';
 
 export enum ScheduleCreatedFrom {
     ICS_FILE,
     USER,
     DEFAULT,
+}
+
+export enum ScheduleEventRepeatType {
+    DAILY,
+    WEEKLY,
+    MONTHLY,
+    YEARLY,
+    EDITED,
+}
+
+export type ScheduleEventRepeatBase = {
+    type: ScheduleEventRepeatType;
+};
+
+export interface ScheduleEventRepeatEdited extends ScheduleEventRepeatBase {
+    type: ScheduleEventRepeatType.EDITED;
+    editedRepeatParentEventUid: string;
+}
+
+export interface ScheduleEventRepeat extends ScheduleEventRepeatBase {
+    skipDates: Date[];
+    endDate: Date | null;
 }
 
 export type ScheduleEvent = {
@@ -24,6 +45,16 @@ export type ScheduleEvent = {
     endDate: Date;
     description: string;
     location: string;
+
+    /*
+        NOTE: I decedide that if a repeated event is edited,
+          it will be converted to its own event,
+          it will have a value that says it is a repeated event with a link to the parent event,
+          it will add the specific date to the skipDates array in the parent event,
+
+        
+    */
+    repeat?: ScheduleEventRepeat | ScheduleEventRepeatEdited;
 
     borderColor?: string;
     backgroundColor?: string;
@@ -37,6 +68,8 @@ export type Schedule = {
     uid: string;
     name: string;
     scheduleEvents: ScheduleEvent[];
+
+    repeatWeekly: boolean;
 
     // customizations for later?
     defaultBackgroundColor?: string;
@@ -68,6 +101,7 @@ export default function ScheduleMain() {
                             uid: generateUID(),
                             name: 'Main Schedule',
                             scheduleEvents: [],
+                            repeatWeekly: true,
 
                             defaultBackgroundColor: 'salmon',
                             defaultBorderColor: 'salmon',

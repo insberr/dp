@@ -7,7 +7,22 @@ export type SchedulesSignal = {
     updated: boolean;
 };
 
-export const schedulesSignal = persist<SchedulesSignal>('schedules', blankSchedulesSignal());
+export const schedulesSignal = persist<SchedulesSignal>('schedules', 'v1-beta0.1', blankSchedulesSignal(), (versionInStorage, data) => {
+    if (versionInStorage === undefined) {
+        // Before versioning
+        // Also before schedules had a repeatWeekly property
+        const schedulesUpdated = data.schedules.map((schedule) => {
+            schedule.repeatWeekly = false;
+            return schedule;
+        });
+
+        data.schedules = schedulesUpdated;
+
+        return data;
+    }
+
+    return data;
+});
 effect(() => {
     if (schedulesSignal.value.updated === undefined) {
         schedulesSignal.value = { updated: true, schedules: schedulesSignal.value as unknown as Schedules };
@@ -40,6 +55,9 @@ export function createEvent(scheduleUID: string, event: ScheduleEvent): Schedule
     const schedule = schedulesSignal.value?.schedules.find((scheduleFindValue) => scheduleFindValue.uid === scheduleUID);
     // TODO: Maybe we should return error and promt user to create a calendar?
     if (!schedule) return null;
+
+    // Make sure we set the parentScheduleUid to the schedule we are adding it to LOL
+    event.parentScheduleUid = scheduleUID;
 
     schedule.scheduleEvents.push(event);
 
@@ -84,9 +102,10 @@ export function createSchedule(createdFrom: ScheduleCreatedFrom, name: string, b
         createdFrom: createdFrom,
         name: name,
         scheduleEvents: [],
+        repeatWeekly: false,
 
-        defaultBackgroundColor: backgroundColor || 'color.primary',
-        defaultBorderColor: borderColor || 'color.primary',
+        defaultBackgroundColor: backgroundColor || '#000000',
+        defaultBorderColor: borderColor || '#000000',
         defaultOpacity: opacity || 1,
     });
 

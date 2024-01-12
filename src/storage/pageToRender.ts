@@ -13,7 +13,7 @@ export enum PageToRender {
     MoveableTest,
 }
 
-export const pageToRender = persist<PageToRender>('pageToRender', PageToRender.Intro);
+export const pageToRender = persist<PageToRender>('pageToRender', 'v1', PageToRender.Intro);
 effect(() => {
     if (typeof pageToRender.value !== 'number') {
         pageToRender.value = PageToRender.Intro;

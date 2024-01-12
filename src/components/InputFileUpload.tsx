@@ -94,8 +94,8 @@ export default function InputFileUpload() {
                                     return event;
                                 }),
 
-                                defaultBackgroundColor: 'salmon',
-                                defaultBorderColor: 'red',
+                                repeatWeekly: true,
+
                                 defaultOpacity: 1,
                             });
                         }
