@@ -149,7 +149,7 @@ export default function DaySchedule(props: {
                                 return (
                                     <>
                                         <Grid item sx={{ height: timeHeightSignal.value, overflow: 'hidden', paddingTop: 0 }}>
-                                            {props.hidetimes || hour === 0 || hour === 24 ? null : (
+                                            {hour === 0 || hour === 24 ? null : (
                                                 <Box
                                                     sx={{ height: 2, backgroundColor: 'grey', opacity: '40%', position: 'relative', top: 0, left: 0 }}
                                                 ></Box>
