@@ -4,9 +4,12 @@
     border-style: solid;
     padding-top: 1px;
     margin-bottom: 100px;
+    overflow: hidden;
+}
+
+.dayScheduleRoot.noSideBorders {
     border-left: none;
     border-right: none;
-    overflow: hidden;
 }
 
 .eventBox {
