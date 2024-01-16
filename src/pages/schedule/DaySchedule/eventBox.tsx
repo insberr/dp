@@ -7,24 +7,20 @@ import { ScheduleEvent } from '../scheduleMain';
 import './daySchedule.scss';
 import { schedulesSignal } from '../../../storage/scheduleSignal';
 import { timeHeightSignal } from '../../../storage/signals';
-import { EditEventMenu } from '../EditEventMenu';
 
-export type EventBoxProps = { onClick: (event: ScheduleEvent) => void; event: ScheduleEvent; key: number | string; color?: string; opacity?: number };
+export type EventBoxProps = {
+    onClick: (event: ScheduleEvent) => void;
+    event: ScheduleEvent;
+    key: number | string;
+    color?: string;
+    opacity?: number;
+    overlap?: number;
+};
 export default function EventBox(props: EventBoxProps) {
-    // const [event, eventSet] = useState<ScheduleEvent>(props.event);
     const event = props.event;
     const locationObject = convertLocationToObject(event.location);
     const durationMinutes = differenceInMinutes(event.endDate, event.startDate);
-
     const eventID = `eventBox_${props.key}_${event.uid}_${event.startDate.getTime()}`;
-
-    // const boxRef = useRef<HTMLDivElement>(null);
-    // const [open, setOpen] = useState(false);
-    // const handleOpen = () => {
-    //     // boxRef.current?.classList.add('target');
-    //     setOpen(true);
-    // };
-    // const handleClose = () => setOpen(false);
 
     const topPosition = timeHeightSignal.value * (event.startDate.getHours() + event.startDate.getMinutes() / 60);
     const height = timeHeightSignal.value * (durationMinutes / 60);
@@ -50,6 +46,7 @@ export default function EventBox(props: EventBoxProps) {
                     opacity: opacity,
                     top: topPosition + 'px',
                     height: height + 'px',
+                    left: props.overlap ? props.overlap * 10 + '%' : '0px',
                 }}
                 onClick={() => {
                     props.onClick(event);

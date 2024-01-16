@@ -1,7 +1,18 @@
 import { Box, Grid, Typography } from '@mui/material';
 import EventBox from './eventBox';
 import { ScheduleEvent, Schedule } from '../scheduleMain';
-import { isSameDay, differenceInWeeks, addWeeks, subWeeks, startOfDay, isWithinInterval, setSeconds, setMinutes, setHours } from 'date-fns';
+import {
+    isSameDay,
+    differenceInWeeks,
+    addWeeks,
+    subWeeks,
+    startOfDay,
+    isWithinInterval,
+    setSeconds,
+    setMinutes,
+    setHours,
+    differenceInMinutes,
+} from 'date-fns';
 
 import './daySchedule.scss';
 import { schedulesSignal } from '../../../storage/scheduleSignal';
@@ -62,6 +73,14 @@ export default function DaySchedule(props: {
         })
         .flatMap((events: ScheduleEvent[]) => {
             return events;
+        })
+        .sort((a: ScheduleEvent, b: ScheduleEvent) => {
+            // sort by duration
+            const durationMinutesA = differenceInMinutes(a.endDate, a.startDate);
+            const durationMinutesB = differenceInMinutes(b.endDate, b.startDate);
+            if (durationMinutesA < durationMinutesB) return 1;
+            if (durationMinutesA > durationMinutesB) return -1;
+            return 0;
         });
 
     // const eventsForDisplay = schedulesSignal.value.schedules.flatMap((schedule: Schedule) => {
@@ -183,7 +202,22 @@ export default function DaySchedule(props: {
                             hidden={props.hideTimeBar}
                         ></Box>
                         {eventsForDisplay.map((event: ScheduleEvent, index: number) => {
-                            return <EventBox onClick={props.onClickEvent} event={event} key={index} />;
+                            // does this event overlap any other events that are longer than it, and how much should it be indented?
+                            const howManyLongerEventsOverlap = eventsForDisplay.filter((otherEvent: ScheduleEvent) => {
+                                if (event.uid === otherEvent.uid) return false;
+                                if (
+                                    differenceInMinutes(event.endDate, event.startDate) >
+                                    differenceInMinutes(otherEvent.endDate, otherEvent.startDate)
+                                )
+                                    return false;
+                                if (event.startDate.getTime() === otherEvent.startDate.getTime()) return false;
+                                if (event.endDate.getTime() === otherEvent.endDate.getTime()) return false;
+                                if (event.startDate.getTime() > otherEvent.endDate.getTime()) return false;
+                                if (event.endDate.getTime() < otherEvent.startDate.getTime()) return false;
+                                return true;
+                            }).length;
+
+                            return <EventBox overlap={howManyLongerEventsOverlap} onClick={props.onClickEvent} event={event} key={index} />;
                         })}
                     </Grid>
                 </Grid>
