@@ -105,7 +105,7 @@ export function EditEventMenu(props: {
                 />
                 <Typography
                     id={'edit-event-modal-event-parent-schedule-repeating' + eventID}
-                    hidden={event.isParentScheduleRepeatedWeekly === undefined || event.isParentScheduleRepeatedWeekly === false}
+                    hidden={!event.isParentScheduleRepeatedWeekly}
                     sx={{ mt: 2 }}
                 >
                     This event is part of a repeating schedule, editing it will edit ALL repeated instances (untill I become not lazy and make it so

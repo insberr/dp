@@ -53,7 +53,10 @@ export default function DaySchedule(props: {
                         }) || [];
                     if (skipDates.length > 0) return false;
 
-                    if (isSameDay(event.startDate, props.displayDate)) return true;
+                    if (isSameDay(event.startDate, props.displayDate)) {
+                        event.isParentScheduleRepeatedWeekly = true;
+                        return true;
+                    }
 
                     const d = differenceInWeeks(startOfDay(props.displayDate), startOfDay(event.startDate));
                     // console.log(d);
