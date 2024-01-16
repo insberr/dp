@@ -1,6 +1,6 @@
 import { Box, Grid, Typography } from '@mui/material';
 import EventBox from './eventBox';
-import { ScheduleEvent, Schedule } from '../scheduleMain';
+import { ScheduleEvent, Schedule, ScheduleEventRepeat } from '../scheduleMain';
 import {
     isSameDay,
     differenceInWeeks,
@@ -21,10 +21,17 @@ import ScheduleClickAddEventArea from './ScheduleClickAddEventArea';
 
 const hoursToDisplay = [...Array(24)]; // [1, 2, 3, 11, 12, 13, 14, 15, 16, 17];
 
+export interface ScheduleEventExtraInfo extends ScheduleEvent {
+    isParentScheduleRepeatedWeekly?: boolean;
+    isContinuedFromPreviousDay?: boolean;
+    display_startDate?: Date;
+    display_endDate?: Date;
+}
+
 export default function DaySchedule(props: {
     displayDate: Date;
     timeBarTime: Date;
-    onClickEvent: (clickedEvent: ScheduleEvent) => void;
+    onClickEvent: (clickedEvent: ScheduleEventExtraInfo) => void;
     onClickSchedule: (clickEvent: any, startDate: Date, endDate?: Date) => void;
     onDraggingSchedule: (startDate: Date, endDate: Date) => ScheduleEvent;
     showSideBoarders?: boolean;
@@ -37,7 +44,15 @@ export default function DaySchedule(props: {
     const eventsForDisplay = schedulesSignal.value.schedules
         .map((schedule: Schedule) => {
             if (schedule.repeatWeekly) {
-                const events = schedule.scheduleEvents.filter((event) => {
+                const events = schedule.scheduleEvents.filter((eventTemp) => {
+                    const event = eventTemp as ScheduleEventExtraInfo;
+
+                    let skipDates =
+                        (event.repeat as ScheduleEventRepeat)?.skipDates.filter((date) => {
+                            return isSameDay(date, props.displayDate);
+                        }) || [];
+                    if (skipDates.length > 0) return false;
+
                     if (isSameDay(event.startDate, props.displayDate)) return true;
 
                     const d = differenceInWeeks(startOfDay(props.displayDate), startOfDay(event.startDate));
@@ -45,29 +60,68 @@ export default function DaySchedule(props: {
                     const addedWeeksStart = d >= 0 ? addWeeks(event.startDate, d) : subWeeks(event.startDate, Math.abs(d));
                     const addedWeeksEnd = d >= 0 ? addWeeks(event.endDate, d) : subWeeks(event.endDate, Math.abs(d));
 
+                    skipDates =
+                        (event.repeat as ScheduleEventRepeat)?.skipDates.filter((date) => {
+                            return isSameDay(date, addedWeeksStart);
+                        }) || [];
+                    if (skipDates.length > 0) {
+                        return false;
+                    }
+
                     if (isSameDay(addedWeeksStart, props.displayDate)) {
-                        // console.log('isSameDay ', addedWeeksStart.toDateString());
-                        event.startDate = addedWeeksStart;
-                        event.endDate = addedWeeksEnd;
+                        event.isParentScheduleRepeatedWeekly = true;
+                        event.display_startDate = addedWeeksStart;
+                        event.display_endDate = addedWeeksEnd;
                         return true;
                     }
+
                     return false;
                 });
 
                 return events;
             }
 
-            return schedule.scheduleEvents.filter((event: ScheduleEvent) => {
-                return (
-                    isWithinInterval(event.startDate, {
-                        start: setSeconds(setMinutes(setHours(new Date(props.displayDate), 0), 0), 0),
-                        end: setSeconds(setMinutes(setHours(new Date(props.displayDate), 23), 59), 59),
-                    }) ||
-                    isWithinInterval(event.endDate, {
-                        start: setSeconds(setMinutes(setHours(new Date(props.displayDate), 0), 0), 0),
-                        end: setSeconds(setMinutes(setHours(new Date(props.displayDate), 23), 59), 59),
-                    })
-                );
+            return schedule.scheduleEvents.filter((event: ScheduleEventExtraInfo) => {
+                const isStartSameDay = isWithinInterval(event.startDate, {
+                    start: setSeconds(setMinutes(setHours(new Date(props.displayDate), 0), 0), 0),
+                    end: setSeconds(setMinutes(setHours(new Date(props.displayDate), 23), 59), 59),
+                });
+
+                const isEndSameDay = isWithinInterval(event.endDate, {
+                    start: setSeconds(setMinutes(setHours(new Date(props.displayDate), 0), 0), 0),
+                    end: setSeconds(setMinutes(setHours(new Date(props.displayDate), 23), 59), 59),
+                });
+
+                const isDisplayDateBetweenStartAndEnd = isWithinInterval(props.displayDate, {
+                    start: event.startDate,
+                    end: event.endDate,
+                });
+
+                if (isStartSameDay && isEndSameDay) return true;
+
+                if (isStartSameDay) {
+                    event.isContinuedFromPreviousDay = false;
+                    event.display_startDate = event.startDate;
+                    event.display_endDate = setSeconds(setMinutes(setHours(new Date(props.displayDate), 23), 59), 59);
+                    return true;
+                }
+
+                if (isEndSameDay) {
+                    event.isContinuedFromPreviousDay = true;
+                    event.display_startDate = setSeconds(setMinutes(setHours(new Date(props.displayDate), 0), 0), 0);
+                    event.display_endDate = event.endDate;
+                    return true;
+                }
+
+                if (isDisplayDateBetweenStartAndEnd) {
+                    event.isContinuedFromPreviousDay = true;
+                    event.display_startDate = setSeconds(setMinutes(setHours(new Date(props.displayDate), 0), 0), 0);
+                    event.display_endDate = setSeconds(setMinutes(setHours(new Date(props.displayDate), 23), 59), 59);
+                    return true;
+                }
+
+                return false;
+
                 // return isSameDay(event.startDate, props.displayDate); // || isSameDay(event.endDate, props.displayDate);
             });
         })

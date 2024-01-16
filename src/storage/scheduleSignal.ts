@@ -118,6 +118,15 @@ export function createScheduleAdvanced(schedule: Schedule) {
     tellSchedulesSignalUpdated();
 }
 
+export function editSchedule(current: Schedule, newSchedule: Schedule) {
+    const index = schedulesSignal.value.schedules.findIndex((scheduleFindValue) => scheduleFindValue.uid === current.uid);
+    if (index === -1) return;
+
+    schedulesSignal.value.schedules[index] = newSchedule;
+
+    tellSchedulesSignalUpdated();
+}
+
 export function getEvent(eventUID: string, scheduleUID: string): ScheduleEvent | null {
     // if (scheduleUID) {
     const schedule = schedulesSignal.value.schedules.find((scheduleFindValue) => scheduleFindValue.uid === scheduleUID);

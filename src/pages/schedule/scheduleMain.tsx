@@ -1,6 +1,6 @@
 import { currentDate, dateForDisplay } from '../../storage/dateForDisplay';
 import InputFileUpload from '../../components/InputFileUpload';
-import DaySchedule from './DaySchedule/daySchedule';
+import DaySchedule, { ScheduleEventExtraInfo } from './DaySchedule/daySchedule';
 import { Button } from '@mui/material';
 import CalendarMenuBar from './CalendarMenuBar';
 
@@ -8,6 +8,7 @@ import { blankSchedulesSignal, createEvent, createScheduleAdvanced, generateUID,
 import WeekSchedule from './WeekSchedule/WeekSchedule';
 import { useState } from 'preact/hooks';
 import { EditEventMenu } from './EditEventMenu';
+import { EditScheduleMenu } from './EditScheduleMenu';
 
 export enum ScheduleCreatedFrom {
     ICS_FILE,
@@ -40,9 +41,13 @@ export interface ScheduleEventRepeat extends ScheduleEventRepeatBase {
 export type ScheduleEvent = {
     parentScheduleUid: string;
     uid: string;
-    title: string;
+
     startDate: Date;
     endDate: Date;
+
+    fullDayEvent?: boolean; // TODO implement this
+
+    title: string;
     description: string;
     location: string;
 
@@ -113,7 +118,8 @@ export default function ScheduleMain() {
     }
 
     const [viewMode, viewModeSet] = useState(SchedulesViewMode.DAY);
-    const [editEventMenu, editEventMenuSet] = useState<ScheduleEvent | null>(null);
+    const [editEventMenu, editEventMenuSet] = useState<ScheduleEventExtraInfo | null>(null);
+    const [editScheduleMenu, editScheduleMenuSet] = useState<string | null>(null);
 
     // schedule.value = schedule.value.push(fakeEvent);
     const onClickScheduleHandler = (clickEvent: any, startDate: Date, endDate?: Date) => {
@@ -151,8 +157,12 @@ export default function ScheduleMain() {
         return newEvent;
     };
 
-    const onClickEventHandler = (event: ScheduleEvent) => {
+    const onClickEventHandler = (event: ScheduleEventExtraInfo) => {
         editEventMenuSet(event);
+    };
+
+    const editScheduleHandler = (scheduleUID: string | null) => {
+        editScheduleMenuSet(scheduleUID);
     };
 
     return (
@@ -176,7 +186,8 @@ export default function ScheduleMain() {
                     onDraggingSchedule={onDraggingSchedule}
                 />
             )}
-            <EditEventMenu event={editEventMenu} setEvent={editEventMenuSet} />
+            <EditEventMenu editScheduleHandler={editScheduleHandler} event={editEventMenu} setEvent={editEventMenuSet} />
+            <EditScheduleMenu schedule={editScheduleMenu} setSchedule={editScheduleMenuSet} />
         </>
     );
 }

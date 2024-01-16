@@ -1,7 +1,9 @@
 import {
     Box,
     Button,
+    Divider,
     FormControl,
+    IconButton,
     InputLabel,
     Menu,
     MenuItem,
@@ -25,11 +27,17 @@ import {
 } from '../../storage/scheduleSignal';
 import { convertLocationToObject } from '../../utilities/ICSParser';
 import { DateTimePicker } from '@mui/x-date-pickers';
-import { ChromePicker, Color } from 'react-color';
-import hexRgb, { RgbaObject } from 'hex-rgb';
+import { ChromePicker } from 'react-color';
+import hexRgb from 'hex-rgb';
 import dayjs from 'dayjs';
+import EditIcon from '@mui/icons-material/Edit';
+import { ScheduleEventExtraInfo } from './DaySchedule/daySchedule';
 
-export function EditEventMenu(props: { event: ScheduleEvent | null; setEvent: (event: ScheduleEvent | null) => void }) {
+export function EditEventMenu(props: {
+    event: ScheduleEventExtraInfo | null;
+    setEvent: (event: ScheduleEventExtraInfo | null) => void;
+    editScheduleHandler: (schedule: string | null) => void;
+}) {
     if (props.event === null) return <></>;
 
     const event = props.event;
@@ -79,7 +87,15 @@ export function EditEventMenu(props: { event: ScheduleEvent | null; setEvent: (e
                         handleEventEdit({ ...event, title: value });
                     }}
                 />
-                <Typography id={'modal-modal-description' + eventID} sx={{ mt: 2 }}>
+                <Typography
+                    id={'edit-event-modal-event-parent-schedule-repeating' + eventID}
+                    hidden={event.isParentScheduleRepeatedWeekly === undefined || event.isParentScheduleRepeatedWeekly === false}
+                    sx={{ mt: 2 }}
+                >
+                    This event is part of a repeating schedule, editing it will edit ALL repeated instances (untill I become not lazy and make it so
+                    it doesnt do that lol)
+                </Typography>
+                <Typography id={'edit-event-modal-description' + eventID} sx={{ mt: 2 }}>
                     {format(event.startDate, 'h:mma')} - {format(event.endDate, 'h:mma')} ({durationMinutes} minutes)
                 </Typography>
                 <DateTimePicker
@@ -155,14 +171,25 @@ export function EditEventMenu(props: { event: ScheduleEvent | null; setEvent: (e
                             handleEventEdit(newEvent);
                         }}
                         input={<OutlinedInput label="Schedule" />}
-                        // MenuProps={MenuProps}
+                        renderValue={(selected) => schedulesSignal.value.schedules.find((schedule) => schedule.uid === selected)?.name || selected}
                     >
-                        <MenuItem key={'new-schedule'} value={'new-schedule'} style={undefined}>
+                        <MenuItem divider key={'new-schedule'} value={'new-schedule'} style={undefined}>
                             Create New Schedule
                         </MenuItem>
+
                         {schedulesSignal.value.schedules.map((scheduleValue) => (
                             <MenuItem key={scheduleValue.uid} value={scheduleValue.uid} style={undefined}>
                                 {scheduleValue.name}
+                                <IconButton
+                                    sx={{ position: 'absolute', right: 0 }}
+                                    onClick={() => {
+                                        props.editScheduleHandler(scheduleValue.uid);
+                                    }}
+                                    color="primary"
+                                    aria-label="add to shopping cart"
+                                >
+                                    <EditIcon />
+                                </IconButton>
                             </MenuItem>
                         ))}
                     </Select>
