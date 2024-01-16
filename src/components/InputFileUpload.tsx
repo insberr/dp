@@ -4,6 +4,7 @@ import { Input } from '@mui/material';
 import ICSParser from '../utilities/ICSParser';
 import { createScheduleAdvanced, generateUID, schedulesSignal } from '../storage/scheduleSignal';
 import { ScheduleCreatedFrom, ScheduleEvent } from '../pages/schedule/scheduleMain';
+import {} from 'date-fns';
 
 export default function InputFileUpload() {
     return (
@@ -24,6 +25,7 @@ export default function InputFileUpload() {
                 type="file"
                 onChange={(change) => {
                     if (change === null) {
+                        // TODO: Show error to user
                         console.log('Uploaded ICS file is null. How ???');
                         return;
                     }
@@ -61,13 +63,21 @@ export default function InputFileUpload() {
                                 description: icsEvent.description,
                                 location: icsEvent.location,
 
-                                backgroundColor: 'salmon',
-                                borderColor: 'red',
+                                backgroundColor: '#000000',
+                                borderColor: '#000000',
                                 opacity: 1,
                             };
 
                             return event;
                         });
+
+                        // TODO: Reduce events to a single week so we can make the schedule repeat weekly
+                        // Get first event
+                        // Get last event
+                        // Find the first day of the week that the first event is on
+                        // Get all events from then to 7 days later
+                        // For each event in the 7 days, find all events that are exactly 7 days after it, repeating till the last week is reached
+                        // If there is not an event 7 days after it, add it to the skip list
 
                         // Remember, this does not modify the localstorage value, so when we are done we need to set it
                         if (existingICSFileCalendars.length > 0) {
@@ -85,6 +95,7 @@ export default function InputFileUpload() {
                             console.log('Adding ICS file calendar');
 
                             const scheduleUID = generateUID();
+
                             createScheduleAdvanced({
                                 createdFrom: ScheduleCreatedFrom.ICS_FILE,
                                 uid: scheduleUID,
@@ -94,16 +105,11 @@ export default function InputFileUpload() {
                                     return event;
                                 }),
 
-                                repeatWeekly: false,
+                                repeatWeekly: true,
 
                                 defaultOpacity: 1,
                             });
                         }
-
-                        // Save the schedules to localstorage now that we are done
-                        // schedulesSignal.value = schedulesSignalValue;
-
-                        // console.log('event:file: ', file);
                     };
 
                     // If theres an error with the uploaded file, log to console and alert the user
