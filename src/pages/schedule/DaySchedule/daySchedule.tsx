@@ -13,6 +13,7 @@ const hoursToDisplay = [...Array(25)]; // [1, 2, 3, 11, 12, 13, 14, 15, 16, 17];
 export default function DaySchedule(props: {
     displayDate: Date;
     timeBarTime: Date;
+    onClickEvent: (clickedEvent: ScheduleEvent) => void;
     onClickSchedule: (clickEvent: any, startDate: Date, endDate?: Date) => void;
     onDraggingSchedule: (startDate: Date, endDate: Date) => ScheduleEvent;
     hideTimeBar?: boolean;
@@ -62,6 +63,12 @@ export default function DaySchedule(props: {
             return events;
         });
 
+    // const eventsForDisplay = schedulesSignal.value.schedules.flatMap((schedule: Schedule) => {
+    //     return schedule.scheduleEvents.filter((event: ScheduleEvent) => {
+    //         return isSameDay(event.startDate, props.displayDate);
+    //     });
+    // });
+
     return (
         <>
             <Box className="dayScheduleRoot">
@@ -109,7 +116,7 @@ export default function DaySchedule(props: {
                             hidden={props.hideTimeBar}
                         ></Box>
                         {eventsForDisplay.map((event: ScheduleEvent, index: number) => {
-                            return <EventBox event={event} key={index} />;
+                            return <EventBox onClick={props.onClickEvent} event={event} key={index} />;
                         })}
                     </Grid>
                 </Grid>

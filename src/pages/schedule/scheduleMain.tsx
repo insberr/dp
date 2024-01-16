@@ -113,7 +113,7 @@ export default function ScheduleMain() {
     }
 
     const [viewMode, viewModeSet] = useState(SchedulesViewMode.DAY);
-    const [newEventMenu, newEventMenuSet] = useState<ScheduleEvent | null>(null);
+    const [editEventMenu, editEventMenuSet] = useState<ScheduleEvent | null>(null);
 
     // schedule.value = schedule.value.push(fakeEvent);
     const onClickScheduleHandler = (clickEvent: any, startDate: Date, endDate?: Date) => {
@@ -130,7 +130,7 @@ export default function ScheduleMain() {
 
         if (newEvent === null) return;
 
-        newEventMenuSet(newEvent);
+        editEventMenuSet(newEvent);
 
         // schedulesTemp[0].scheduleEvents.push();
         // schedulesSignal.value = { updated: true, schedules: schedulesTemp };
@@ -151,6 +151,10 @@ export default function ScheduleMain() {
         return newEvent;
     };
 
+    const onClickEventHandler = (event: ScheduleEvent) => {
+        editEventMenuSet(event);
+    };
+
     return (
         <>
             <CalendarMenuBar viewMode={viewMode} viewModeSet={viewModeSet} />
@@ -158,6 +162,7 @@ export default function ScheduleMain() {
                 <DaySchedule
                     displayDate={dateForDisplay.value}
                     timeBarTime={currentDate.value}
+                    onClickEvent={onClickEventHandler}
                     onClickSchedule={onClickScheduleHandler}
                     onDraggingSchedule={onDraggingSchedule}
                 />
@@ -165,11 +170,12 @@ export default function ScheduleMain() {
                 <WeekSchedule
                     displayDate={dateForDisplay.value}
                     timeBarTime={currentDate.value}
+                    onClickEvent={onClickEventHandler}
                     onClickSchedule={onClickScheduleHandler}
                     onDraggingSchedule={onDraggingSchedule}
                 />
             )}
-            <EditEventMenu event={newEventMenu} setEvent={newEventMenuSet} />
+            <EditEventMenu event={editEventMenu} setEvent={editEventMenuSet} />
         </>
     );
 }

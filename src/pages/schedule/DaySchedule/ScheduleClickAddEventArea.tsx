@@ -17,7 +17,17 @@ export default function ScheduleClickAddEventArea(props: {
     const [isMouseDown, setIsMouseDown] = useState(false);
     return (
         <>
-            {isMouseDown && draggingEventBox && <EventBox event={draggingEventBox} color={'green'} opacity={0.5} key={-1} />}
+            {isMouseDown && draggingEventBox && (
+                <EventBox
+                    onClick={() => {
+                        return;
+                    }}
+                    event={draggingEventBox}
+                    color={'green'}
+                    opacity={0.5}
+                    key={-1}
+                />
+            )}
 
             <Box
                 sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: isMouseDown ? 3 : 0 }}

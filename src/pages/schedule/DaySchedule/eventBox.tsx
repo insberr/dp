@@ -9,23 +9,22 @@ import { schedulesSignal } from '../../../storage/scheduleSignal';
 import { timeHeightSignal } from '../../../storage/signals';
 import { EditEventMenu } from '../EditEventMenu';
 
-export type EventBoxProps = { event: ScheduleEvent; key: number | string; color?: string; opacity?: number };
+export type EventBoxProps = { onClick: (event: ScheduleEvent) => void; event: ScheduleEvent; key: number | string; color?: string; opacity?: number };
 export default function EventBox(props: EventBoxProps) {
-    console.log('EventBox', props.event);
     // const [event, eventSet] = useState<ScheduleEvent>(props.event);
     const event = props.event;
     const locationObject = convertLocationToObject(event.location);
     const durationMinutes = differenceInMinutes(event.endDate, event.startDate);
 
-    // const boxRef = useRef<HTMLDivElement>(null);
-
     const eventID = `eventBox_${props.key}_${event.uid}_${event.startDate.getTime()}`;
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => {
-        // boxRef.current?.classList.add('target');
-        setOpen(true);
-    };
-    const handleClose = () => setOpen(false);
+
+    // const boxRef = useRef<HTMLDivElement>(null);
+    // const [open, setOpen] = useState(false);
+    // const handleOpen = () => {
+    //     // boxRef.current?.classList.add('target');
+    //     setOpen(true);
+    // };
+    // const handleClose = () => setOpen(false);
 
     const topPosition = 28 + timeHeightSignal.value * (event.startDate.getHours() + event.startDate.getMinutes() / 60);
     const height = timeHeightSignal.value * (durationMinutes / 60);
@@ -52,7 +51,9 @@ export default function EventBox(props: EventBoxProps) {
                     top: topPosition + 'px',
                     height: height + 'px',
                 }}
-                onClick={handleOpen}
+                onClick={() => {
+                    props.onClick(event);
+                }}
             >
                 <div>
                     {event.title} {format(event.startDate, 'h:mma')} - {format(event.endDate, 'h:mma')} ({durationMinutes} minutes)
@@ -63,12 +64,12 @@ export default function EventBox(props: EventBoxProps) {
                     {')'} in room {locationObject.room}
                 </div>
             </Box>
-            <EditEventMenu
+            {/* <EditEventMenu
                 event={open ? event : null}
                 setEvent={(a: ScheduleEvent | null) => {
                     if (a === null) return handleClose();
                 }}
-            />
+            /> */}
         </>
     );
 }

@@ -6,6 +6,7 @@ import { subDays, addDays, eachWeekendOfInterval, eachDayOfInterval, isSameDay, 
 export default function WeekSchedule(props: {
     displayDate: Date;
     timeBarTime: Date;
+    onClickEvent: (clickedEvent: ScheduleEvent) => void;
     onClickSchedule: (clickEvent: any, startDate: Date, endDate?: Date) => void;
     onDraggingSchedule: (startDate: Date, endDate: Date) => ScheduleEvent;
 }) {
@@ -32,6 +33,7 @@ export default function WeekSchedule(props: {
                         <DaySchedule
                             displayDate={day}
                             timeBarTime={props.timeBarTime}
+                            onClickEvent={props.onClickEvent}
                             onClickSchedule={props.onClickSchedule}
                             onDraggingSchedule={props.onDraggingSchedule}
                             hideTimeBar={isDisplayDate ? false : true}
