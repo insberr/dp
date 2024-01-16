@@ -49,8 +49,24 @@ export function EditEventMenu(props: {
         props.setEvent(null);
     };
 
+    // TODO: Make this a utility function, and make it less likely to be forgotten if new properties are added to ScheduleEvent
+    const stripEventOfExtraInfo = (event: ScheduleEventExtraInfo): ScheduleEvent => {
+        return {
+            parentScheduleUid: event.parentScheduleUid,
+            uid: event.uid,
+            startDate: event.startDate,
+            endDate: event.endDate,
+            title: event.title,
+            description: event.description,
+            location: event.location,
+            backgroundColor: event.backgroundColor,
+            borderColor: event.borderColor,
+            opacity: event.opacity,
+        };
+    };
+
     const handleEventEdit = (newEvent: ScheduleEvent) => {
-        editEvent(event, newEvent);
+        editEvent(event, stripEventOfExtraInfo(newEvent));
         props.setEvent(newEvent);
     };
 
@@ -204,7 +220,7 @@ export function EditEventMenu(props: {
                 </Button>
                 <Button
                     onClick={() => {
-                        editEvent(event, event);
+                        // editEvent(event, event);
                         handleClose();
                     }}
                 >
