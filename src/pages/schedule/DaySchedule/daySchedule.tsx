@@ -16,6 +16,7 @@ export default function DaySchedule(props: {
     onClickEvent: (clickedEvent: ScheduleEvent) => void;
     onClickSchedule: (clickEvent: any, startDate: Date, endDate?: Date) => void;
     onDraggingSchedule: (startDate: Date, endDate: Date) => ScheduleEvent;
+    showSideBoarders?: boolean;
     hideTimeBar?: boolean;
     hidetimes?: boolean;
 }) {
@@ -71,7 +72,7 @@ export default function DaySchedule(props: {
 
     return (
         <>
-            <Box className="dayScheduleRoot">
+            <Box className={'dayScheduleRoot' + (props.showSideBoarders ? '' : ' noSideBorders')}>
                 <Grid
                     container
                     spacing={0}
@@ -138,6 +139,7 @@ export default function DaySchedule(props: {
                             spacing={0}
                             rowSpacing={2}
                             sx={{
+                                position: 'absolute',
                                 marginTop: 0,
                                 '& .MuiGrid-item': {
                                     paddingTop: 0,
@@ -165,17 +167,18 @@ export default function DaySchedule(props: {
                             onDraggingSchedule={props.onDraggingSchedule}
                         />
                         <Box
+                            id="timeBar"
                             sx={{
                                 top: () => {
                                     const time = props.timeBarTime;
-                                    const value = 12 + timeHeightSignal.value * (time.getHours() + time.getMinutes() / 60);
+                                    const value = timeHeightSignal.value * (time.getHours() + time.getMinutes() / 60);
                                     return value;
                                 },
                                 height: 0,
                                 position: 'relative',
                                 backgroundColor: 'red',
                                 blockSize: 2,
-                                zIndex: 2,
+                                opacity: '60%',
                             }}
                             hidden={props.hideTimeBar}
                         ></Box>

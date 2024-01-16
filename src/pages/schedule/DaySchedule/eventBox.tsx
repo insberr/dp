@@ -26,7 +26,7 @@ export default function EventBox(props: EventBoxProps) {
     // };
     // const handleClose = () => setOpen(false);
 
-    const topPosition = 28 + timeHeightSignal.value * (event.startDate.getHours() + event.startDate.getMinutes() / 60);
+    const topPosition = timeHeightSignal.value * (event.startDate.getHours() + event.startDate.getMinutes() / 60);
     const height = timeHeightSignal.value * (durationMinutes / 60);
 
     // Figure out colors

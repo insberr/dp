@@ -32,6 +32,7 @@ export default function WeekSchedule(props: {
                         {isDisplayDate ? <div>Today</div> : <div>{day.toDateString()}</div>}
                         <DaySchedule
                             displayDate={day}
+                            showSideBoarders
                             timeBarTime={props.timeBarTime}
                             onClickEvent={props.onClickEvent}
                             onClickSchedule={props.onClickSchedule}

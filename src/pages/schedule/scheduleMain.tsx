@@ -165,6 +165,7 @@ export default function ScheduleMain() {
                     onClickEvent={onClickEventHandler}
                     onClickSchedule={onClickScheduleHandler}
                     onDraggingSchedule={onDraggingSchedule}
+                    showSideBoarders={false}
                 />
             ) : (
                 <WeekSchedule
