@@ -47,6 +47,7 @@ export default function EventBox(props: EventBoxProps) {
                     top: topPosition + 'px',
                     height: height + 'px',
                     left: props.overlap ? props.overlap * 10 + '%' : '0px',
+                    width: props.overlap ? 100 - props.overlap * 10 + '%' : '100%',
                 }}
                 onClick={() => {
                     props.onClick(event);
