@@ -11,7 +11,9 @@ import { EditEventMenu } from '../EditEventMenu';
 
 export type EventBoxProps = { event: ScheduleEvent; key: number | string; color?: string; opacity?: number };
 export default function EventBox(props: EventBoxProps) {
-    const [event, eventSet] = useState<ScheduleEvent>(props.event);
+    console.log('EventBox', props.event);
+    // const [event, eventSet] = useState<ScheduleEvent>(props.event);
+    const event = props.event;
     const locationObject = convertLocationToObject(event.location);
     const durationMinutes = differenceInMinutes(event.endDate, event.startDate);
 
@@ -41,6 +43,7 @@ export default function EventBox(props: EventBoxProps) {
         <>
             <Box
                 id={eventID}
+                key={eventID}
                 className={'eventBox'}
                 sx={{
                     borderColor: borderColor,
@@ -64,51 +67,8 @@ export default function EventBox(props: EventBoxProps) {
                 event={open ? event : null}
                 setEvent={(a: ScheduleEvent | null) => {
                     if (a === null) return handleClose();
-                    eventSet(a);
                 }}
             />
-            {/* <Modal open={open} onClose={handleClose} aria-labelledby={'model' + eventID + event.title} aria-describedby={'model' + eventID}>
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        width: 400,
-                        bgcolor: 'background.paper',
-                        border: '2px solid #000',
-                        boxShadow: 24,
-                        p: 4,
-                    }}
-                >
-                    <TextField
-                        id={'event-title-edit-' + event.uid}
-                        label="Event Title"
-                        variant="standard"
-                        value={event.title}
-                        onChange={(e: any) => {
-                            const value = e.target.value;
-                            editEvent(event, { ...event, title: value });
-                        }}
-                    />
-                    <Typography id={'modal-modal-description' + eventID} sx={{ mt: 2 }}>
-                        {format(event.startDate, 'h:mma')} - {format(event.endDate, 'h:mma')} ({durationMinutes} minutes)
-                    </Typography>
-                    <Typography id={'modal-modal-description' + eventID} sx={{ mt: 2 }}>
-                        {locationObject.location} building {'('}
-                        {locationObject.building}
-                        {')'} in room {locationObject.room}
-                    </Typography>
-                    <Button
-                        onClick={() => {
-                            deleteEvent(event);
-                            handleClose();
-                        }}
-                    >
-                        Delete Event
-                    </Button>
-                </Box>
-            </Modal> */}
         </>
     );
 }
