@@ -242,22 +242,6 @@ export default function DaySchedule(props: {
                             onClickSchedule={props.onClickSchedule}
                             onDraggingSchedule={props.onDraggingSchedule}
                         />
-                        <Box
-                            id="timeBar"
-                            sx={{
-                                top: () => {
-                                    const time = props.timeBarTime;
-                                    const value = timeHeightSignal.value * (time.getHours() + time.getMinutes() / 60);
-                                    return value;
-                                },
-                                height: 0,
-                                position: 'relative',
-                                backgroundColor: 'red',
-                                blockSize: 2,
-                                opacity: '60%',
-                            }}
-                            hidden={props.hideTimeBar}
-                        ></Box>
                         {eventsForDisplay.map((event: ScheduleEvent, index: number) => {
                             // does this event overlap any other events that are longer than it, and how much should it be indented?
                             const howManyLongerEventsOverlap = eventsForDisplay.filter((otherEvent: ScheduleEvent) => {
@@ -276,6 +260,22 @@ export default function DaySchedule(props: {
 
                             return <EventBox overlap={howManyLongerEventsOverlap} onClick={props.onClickEvent} event={event} key={index} />;
                         })}
+                        <Box
+                            id="timeBar"
+                            sx={{
+                                top: () => {
+                                    const time = props.timeBarTime;
+                                    const value = timeHeightSignal.value * (time.getHours() + time.getMinutes() / 60);
+                                    return value;
+                                },
+                                height: 0,
+                                position: 'relative',
+                                backgroundColor: 'red',
+                                blockSize: 2,
+                                opacity: '60%',
+                            }}
+                            hidden={props.hideTimeBar}
+                        ></Box>
                     </Grid>
                 </Grid>
             </Box>
