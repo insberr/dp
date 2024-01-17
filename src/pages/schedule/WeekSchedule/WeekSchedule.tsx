@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material';
 import DaySchedule from '../DaySchedule/daySchedule';
 import { ScheduleEvent } from '../scheduleMain';
-import { subDays, addDays, eachWeekendOfInterval, eachDayOfInterval, isSameDay, isSunday } from 'date-fns';
+import { format, subDays, addDays, eachWeekendOfInterval, eachDayOfInterval, isSameDay, isSunday } from 'date-fns';
 
 export default function WeekSchedule(props: {
     displayDate: Date;
@@ -29,17 +29,23 @@ export default function WeekSchedule(props: {
                 const isDisplayDate = isSameDay(day, props.displayDate);
                 return (
                     <Grid item xs={1}>
-                        {isDisplayDate ? <div>Today</div> : <div>{day.toDateString()}</div>}
-                        <DaySchedule
-                            displayDate={day}
-                            showSideBoarders
-                            timeBarTime={props.timeBarTime}
-                            onClickEvent={props.onClickEvent}
-                            onClickSchedule={props.onClickSchedule}
-                            onDraggingSchedule={props.onDraggingSchedule}
-                            hideTimeBar={isDisplayDate ? false : true}
-                            hidetimes={index === 0 ? false : true}
-                        />
+                        <Grid container rows={15}>
+                            <Grid item xs={1}>
+                                {format(day, 'MM/dd/yyyy')}
+                            </Grid>
+                            <Grid item xs={14}>
+                                <DaySchedule
+                                    displayDate={day}
+                                    showSideBoarders
+                                    timeBarTime={props.timeBarTime}
+                                    onClickEvent={props.onClickEvent}
+                                    onClickSchedule={props.onClickSchedule}
+                                    onDraggingSchedule={props.onDraggingSchedule}
+                                    hideTimeBar={isDisplayDate ? false : true}
+                                    hidetimes={index === 0 ? false : true}
+                                />
+                            </Grid>
+                        </Grid>
                     </Grid>
                 );
             })}
