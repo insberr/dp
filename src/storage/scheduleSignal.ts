@@ -27,7 +27,7 @@ export const schedulesSignal = persist<SchedulesSignal>('schedules', 'v1-beta0.2
             };
 
             if (schedule.repeatWeekly) {
-                schedule.repeat.type = ScheduleRepeatType.WEEKLY;
+                schedule.repeat.type = 3;
                 delete schedule.repeatWeekly;
             }
 
