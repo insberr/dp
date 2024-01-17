@@ -1,6 +1,6 @@
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Grid, Grid2TypeMap, Typography } from '@mui/material';
 import EventBox from './eventBox';
-import { ScheduleEvent, Schedule, ScheduleEventRepeat } from '../scheduleMain';
+import { ScheduleEvent, Schedule, ScheduleEventRepeat, ScheduleRepeatType } from '../scheduleMain';
 import {
     isSameDay,
     differenceInWeeks,
@@ -12,12 +12,16 @@ import {
     setMinutes,
     setHours,
     differenceInMinutes,
+    isAfter,
+    isBefore,
 } from 'date-fns';
 
 import './daySchedule.scss';
 import { schedulesSignal } from '../../../storage/scheduleSignal';
 import { timeHeightSignal } from '../../../storage/signals';
 import ScheduleClickAddEventArea from './ScheduleClickAddEventArea';
+import MoveableLibPlay from '../../moveable/moveableLibPlay';
+import { useRef } from 'preact/hooks';
 
 const hoursToDisplay = [...Array(24)]; // [1, 2, 3, 11, 12, 13, 14, 15, 16, 17];
 
@@ -26,6 +30,106 @@ export interface ScheduleEventExtraInfo extends ScheduleEvent {
     isContinuedFromPreviousDay?: boolean;
     display_startDate?: Date;
     display_endDate?: Date;
+}
+
+function filterScheduleEventsNotRepeating(schedule: Schedule, displayDate: Date) {
+    return schedule.scheduleEvents.filter((event: ScheduleEventExtraInfo) => {
+        const isStartSameDay = isWithinInterval(event.startDate, {
+            start: setSeconds(setMinutes(setHours(new Date(displayDate), 0), 0), 0),
+            end: setSeconds(setMinutes(setHours(new Date(displayDate), 23), 59), 59),
+        });
+
+        const isEndSameDay = isWithinInterval(event.endDate, {
+            start: setSeconds(setMinutes(setHours(new Date(displayDate), 0), 0), 0),
+            end: setSeconds(setMinutes(setHours(new Date(displayDate), 23), 59), 59),
+        });
+
+        const isDisplayDateBetweenStartAndEnd = isWithinInterval(displayDate, {
+            start: event.startDate,
+            end: event.endDate,
+        });
+
+        if (isStartSameDay && isEndSameDay) return true;
+
+        if (isStartSameDay) {
+            event.isContinuedFromPreviousDay = false;
+            event.display_startDate = event.startDate;
+            event.display_endDate = setSeconds(setMinutes(setHours(new Date(displayDate), 23), 59), 59);
+            return true;
+        }
+
+        if (isEndSameDay) {
+            event.isContinuedFromPreviousDay = true;
+            event.display_startDate = setSeconds(setMinutes(setHours(new Date(displayDate), 0), 0), 0);
+            event.display_endDate = event.endDate;
+            return true;
+        }
+
+        if (isDisplayDateBetweenStartAndEnd) {
+            event.isContinuedFromPreviousDay = true;
+            event.display_startDate = setSeconds(setMinutes(setHours(new Date(displayDate), 0), 0), 0);
+            event.display_endDate = setSeconds(setMinutes(setHours(new Date(displayDate), 23), 59), 59);
+            return true;
+        }
+
+        return false;
+
+        // return isSameDay(event.startDate, props.displayDate); // || isSameDay(event.endDate, props.displayDate);
+    });
+}
+
+function filterScheduleEvents(schedule: Schedule, displayDate: Date): ScheduleEventExtraInfo[] {
+    if (schedule.repeat.type === ScheduleRepeatType.WEEKLY) {
+        if (schedule.repeat.startDate && isBefore(displayDate, schedule.repeat.startDate)) {
+            return filterScheduleEventsNotRepeating(schedule, displayDate);
+        }
+        if (schedule.repeat.endDate && isAfter(displayDate, schedule.repeat.endDate)) {
+            return filterScheduleEventsNotRepeating(schedule, displayDate);
+        }
+
+        const events = schedule.scheduleEvents
+            .map((eventTemp) => {
+                const event = eventTemp as ScheduleEventExtraInfo;
+
+                let skipDates =
+                    (event.repeat as ScheduleEventRepeat)?.skipDates.filter((date) => {
+                        return isSameDay(date, displayDate);
+                    }) || [];
+                if (skipDates.length > 0) return null;
+
+                if (isSameDay(event.startDate, displayDate)) {
+                    event.isParentScheduleRepeatedWeekly = true;
+                    return event;
+                }
+
+                const d = differenceInWeeks(startOfDay(displayDate), startOfDay(event.startDate));
+                // console.log(d);
+                const addedWeeksStart = d >= 0 ? addWeeks(event.startDate, d) : subWeeks(event.startDate, Math.abs(d));
+                const addedWeeksEnd = d >= 0 ? addWeeks(event.endDate, d) : subWeeks(event.endDate, Math.abs(d));
+
+                skipDates =
+                    (event.repeat as ScheduleEventRepeat)?.skipDates.filter((date) => {
+                        return isSameDay(date, addedWeeksStart);
+                    }) || [];
+                if (skipDates.length > 0) {
+                    return null;
+                }
+
+                if (isSameDay(addedWeeksStart, displayDate)) {
+                    event.isParentScheduleRepeatedWeekly = true;
+                    event.display_startDate = addedWeeksStart;
+                    event.display_endDate = addedWeeksEnd;
+                    return event;
+                }
+
+                return null;
+            })
+            .filter((event) => event !== null) as ScheduleEventExtraInfo[];
+
+        return events;
+    }
+
+    return filterScheduleEventsNotRepeating(schedule, displayDate);
 }
 
 export default function DaySchedule(props: {
@@ -38,97 +142,13 @@ export default function DaySchedule(props: {
     hideTimeBar?: boolean;
     hidetimes?: boolean;
 }) {
-    // TODO: Make this work frfr no cap
-    // const eventsForDisplayDate =
-    // console.log(eventsForDisplayDate);
+    const divRef = useRef<HTMLDivElement>(null);
+
     const eventsForDisplay = schedulesSignal.value.schedules
         .map((schedule: Schedule) => {
-            if (schedule.repeatWeekly) {
-                const events = schedule.scheduleEvents.filter((eventTemp) => {
-                    const event = eventTemp as ScheduleEventExtraInfo;
-
-                    let skipDates =
-                        (event.repeat as ScheduleEventRepeat)?.skipDates.filter((date) => {
-                            return isSameDay(date, props.displayDate);
-                        }) || [];
-                    if (skipDates.length > 0) return false;
-
-                    if (isSameDay(event.startDate, props.displayDate)) {
-                        event.isParentScheduleRepeatedWeekly = true;
-                        return true;
-                    }
-
-                    const d = differenceInWeeks(startOfDay(props.displayDate), startOfDay(event.startDate));
-                    // console.log(d);
-                    const addedWeeksStart = d >= 0 ? addWeeks(event.startDate, d) : subWeeks(event.startDate, Math.abs(d));
-                    const addedWeeksEnd = d >= 0 ? addWeeks(event.endDate, d) : subWeeks(event.endDate, Math.abs(d));
-
-                    skipDates =
-                        (event.repeat as ScheduleEventRepeat)?.skipDates.filter((date) => {
-                            return isSameDay(date, addedWeeksStart);
-                        }) || [];
-                    if (skipDates.length > 0) {
-                        return false;
-                    }
-
-                    if (isSameDay(addedWeeksStart, props.displayDate)) {
-                        event.isParentScheduleRepeatedWeekly = true;
-                        event.display_startDate = addedWeeksStart;
-                        event.display_endDate = addedWeeksEnd;
-                        return true;
-                    }
-
-                    return false;
-                });
-
-                return events;
-            }
-
-            return schedule.scheduleEvents.filter((event: ScheduleEventExtraInfo) => {
-                const isStartSameDay = isWithinInterval(event.startDate, {
-                    start: setSeconds(setMinutes(setHours(new Date(props.displayDate), 0), 0), 0),
-                    end: setSeconds(setMinutes(setHours(new Date(props.displayDate), 23), 59), 59),
-                });
-
-                const isEndSameDay = isWithinInterval(event.endDate, {
-                    start: setSeconds(setMinutes(setHours(new Date(props.displayDate), 0), 0), 0),
-                    end: setSeconds(setMinutes(setHours(new Date(props.displayDate), 23), 59), 59),
-                });
-
-                const isDisplayDateBetweenStartAndEnd = isWithinInterval(props.displayDate, {
-                    start: event.startDate,
-                    end: event.endDate,
-                });
-
-                if (isStartSameDay && isEndSameDay) return true;
-
-                if (isStartSameDay) {
-                    event.isContinuedFromPreviousDay = false;
-                    event.display_startDate = event.startDate;
-                    event.display_endDate = setSeconds(setMinutes(setHours(new Date(props.displayDate), 23), 59), 59);
-                    return true;
-                }
-
-                if (isEndSameDay) {
-                    event.isContinuedFromPreviousDay = true;
-                    event.display_startDate = setSeconds(setMinutes(setHours(new Date(props.displayDate), 0), 0), 0);
-                    event.display_endDate = event.endDate;
-                    return true;
-                }
-
-                if (isDisplayDateBetweenStartAndEnd) {
-                    event.isContinuedFromPreviousDay = true;
-                    event.display_startDate = setSeconds(setMinutes(setHours(new Date(props.displayDate), 0), 0), 0);
-                    event.display_endDate = setSeconds(setMinutes(setHours(new Date(props.displayDate), 23), 59), 59);
-                    return true;
-                }
-
-                return false;
-
-                // return isSameDay(event.startDate, props.displayDate); // || isSameDay(event.endDate, props.displayDate);
-            });
+            return filterScheduleEvents(schedule, props.displayDate);
         })
-        .flatMap((events: ScheduleEvent[]) => {
+        .flatMap((events: ScheduleEventExtraInfo[]) => {
             return events;
         })
         .sort((a: ScheduleEvent, b: ScheduleEvent) => {
@@ -229,7 +249,14 @@ export default function DaySchedule(props: {
                                         <Grid item sx={{ height: timeHeightSignal.value, overflow: 'hidden', paddingTop: 0 }}>
                                             {hour === 0 || hour === 24 ? null : (
                                                 <Box
-                                                    sx={{ height: 2, backgroundColor: 'grey', opacity: '40%', position: 'relative', top: 0, left: 0 }}
+                                                    sx={{
+                                                        height: 2,
+                                                        backgroundColor: 'grey',
+                                                        opacity: '40%',
+                                                        position: 'relative',
+                                                        top: 0,
+                                                        left: 0,
+                                                    }}
                                                 ></Box>
                                             )}
                                         </Grid>
@@ -242,24 +269,32 @@ export default function DaySchedule(props: {
                             onClickSchedule={props.onClickSchedule}
                             onDraggingSchedule={props.onDraggingSchedule}
                         />
-                        {eventsForDisplay.map((event: ScheduleEvent, index: number) => {
-                            // does this event overlap any other events that are longer than it, and how much should it be indented?
-                            const howManyLongerEventsOverlap = eventsForDisplay.filter((otherEvent: ScheduleEvent) => {
-                                if (event.uid === otherEvent.uid) return false;
-                                if (
-                                    differenceInMinutes(event.endDate, event.startDate) >
-                                    differenceInMinutes(otherEvent.endDate, otherEvent.startDate)
-                                )
-                                    return false;
-                                if (event.startDate.getTime() === otherEvent.startDate.getTime()) return false;
-                                if (event.endDate.getTime() === otherEvent.endDate.getTime()) return false;
-                                if (event.startDate.getTime() > otherEvent.endDate.getTime()) return false;
-                                if (event.endDate.getTime() < otherEvent.startDate.getTime()) return false;
-                                return true;
-                            }).length;
+                        <MoveableLibPlay>
+                            {eventsForDisplay.map((event: ScheduleEventExtraInfo, index: number) => {
+                                // does this event overlap any other events that are longer than it, and how much should it be indented?
+                                const howManyLongerEventsOverlap = eventsForDisplay.filter((otherEvent: ScheduleEventExtraInfo) => {
+                                    const startDate = event.display_startDate || event.startDate;
+                                    const endDate = event.display_endDate || event.endDate;
 
-                            return <EventBox overlap={howManyLongerEventsOverlap} onClick={props.onClickEvent} event={event} key={index} />;
-                        })}
+                                    const otherStartDate = otherEvent.display_startDate || otherEvent.startDate;
+                                    const otherEndDate = otherEvent.display_endDate || otherEvent.endDate;
+
+                                    if (event.uid === otherEvent.uid) return false;
+                                    if (
+                                        differenceInMinutes(event.endDate, event.startDate) >
+                                        differenceInMinutes(otherEvent.endDate, otherEvent.startDate)
+                                    )
+                                        return false;
+                                    if (startDate.getTime() === otherStartDate.getTime()) return false;
+                                    if (endDate.getTime() === otherEndDate.getTime()) return false;
+                                    if (startDate.getTime() > otherEndDate.getTime()) return false;
+                                    if (endDate.getTime() < otherStartDate.getTime()) return false;
+                                    return true;
+                                }).length;
+
+                                return <EventBox overlap={howManyLongerEventsOverlap} onClick={props.onClickEvent} event={event} key={index} />;
+                            })}
+                        </MoveableLibPlay>
                         <Box
                             id="timeBar"
                             sx={{
@@ -274,7 +309,7 @@ export default function DaySchedule(props: {
                                 blockSize: 2,
                                 opacity: '60%',
                             }}
-                            hidden={props.hideTimeBar}
+                            hidden={!isSameDay(props.displayDate, new Date())}
                         ></Box>
                     </Grid>
                 </Grid>
