@@ -1,15 +1,17 @@
 import { Box, Button, TextField } from '@mui/material';
 import ChangeDateButtons, { collapseUnusedTime } from './changeDateButtons';
 import { dateForDisplay } from '../../storage/dateForDisplay';
-import { timeHeightSignal } from '../../storage/signals';
+import { timeHeightSignal, viewModeSignal } from '../../storage/signals';
 import { SchedulesViewMode } from './scheduleMain';
+import { format } from 'date-fns';
 
-export default function CalendarMenuBar(props: { viewMode: SchedulesViewMode; viewModeSet: (viewMode: SchedulesViewMode) => void }) {
+export default function CalendarMenuBar() {
     return (
         <Box sx={{ top: 0, height: 150 }}>
             <ChangeDateButtons />
-            <div>Display Date: {dateForDisplay.value.toString()}</div>
+            <div>Display Date: {format(dateForDisplay.value, 'MM/dd/yyyy')}</div>
             <Button
+                hidden
                 variant="contained"
                 onClick={() => {
                     collapseUnusedTime.value = !collapseUnusedTime.value;
@@ -18,8 +20,8 @@ export default function CalendarMenuBar(props: { viewMode: SchedulesViewMode; vi
                 Collapse Unused Time (todo)
             </Button>
             <TextField
-                id="outlined-basic"
-                label="Outlined"
+                id="timeheight-textbox-changer"
+                label="Time Height"
                 variant="outlined"
                 value={timeHeightSignal.value}
                 onChange={(e: any) => {
@@ -32,7 +34,7 @@ export default function CalendarMenuBar(props: { viewMode: SchedulesViewMode; vi
             />
             <Button
                 onClick={() => {
-                    props.viewModeSet(props.viewMode === SchedulesViewMode.DAY ? SchedulesViewMode.WEEK : SchedulesViewMode.DAY);
+                    viewModeSignal.value = viewModeSignal.value === SchedulesViewMode.DAY ? SchedulesViewMode.WEEK : SchedulesViewMode.DAY;
                 }}
             >
                 Toggle Week View
