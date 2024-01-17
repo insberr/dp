@@ -2956,8 +2956,10 @@ __metadata:
     parcel: ^2.11.0
     parcel-reporter-clean-dist: ^1.0.4
     parcel-reporter-static-files-copy: ^1.5.3
+    path-browserify: ^1.0.0
     preact: ^10.19.3
     preact-moveable: ^0.55.0
+    preact-selecto: ^1.23.3
     react-color: ^2.19.3
     sharp: ^0.31.1
     ts-node: ^10.9.2
@@ -4444,6 +4446,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"path-browserify@npm:^1.0.0":
+  version: 1.0.1
+  resolution: "path-browserify@npm:1.0.1"
+  checksum: c6d7fa376423fe35b95b2d67990060c3ee304fc815ff0a2dc1c6c3cfaff2bd0d572ee67e18f19d0ea3bbe32e8add2a05021132ac40509416459fffee35200699
+  languageName: node
+  linkType: hard
+
 "path-is-absolute@npm:^1.0.0":
   version: 1.0.1
   resolution: "path-is-absolute@npm:1.0.1"
@@ -4557,6 +4566,15 @@ __metadata:
     preact-css-styled: ^1.1.9
     react-moveable: ~0.56.0
   checksum: c35a4de25cbb277d5f387a1379818554c75bb033b61bbe402c28b7be4fb55232be32195b51af1e42755996488526ccabbe63b97cbb804097c913cbf8d4f52db8
+  languageName: node
+  linkType: hard
+
+"preact-selecto@npm:^1.23.3":
+  version: 1.23.3
+  resolution: "preact-selecto@npm:1.23.3"
+  dependencies:
+    react-selecto: ~1.26.3
+  checksum: 8c9be14742433b9ed6ed577197c55f61654a53e19eb2a0c907f76ba842814229f315a7d89765b7bd4e441b575d43862bcf2ef1f79f4c447523d1f6f965124b67
   languageName: node
   linkType: hard
 
@@ -4717,7 +4735,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-selecto@npm:^1.25.0":
+"react-selecto@npm:^1.25.0, react-selecto@npm:~1.26.3":
   version: 1.26.3
   resolution: "react-selecto@npm:1.26.3"
   dependencies:
