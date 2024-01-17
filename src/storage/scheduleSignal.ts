@@ -112,7 +112,7 @@ export function createSchedule(createdFrom: ScheduleCreatedFrom, name: string, b
         name: name,
         scheduleEvents: [],
         repeat: {
-            type: ScheduleRepeatType.NONE,
+            type: 0,
         },
 
         defaultBackgroundColor: backgroundColor || '#000000',
