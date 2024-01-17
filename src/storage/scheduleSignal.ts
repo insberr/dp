@@ -1,5 +1,5 @@
 import { effect } from '@preact/signals';
-import { Schedules, ScheduleCreatedFrom, ScheduleEvent, Schedule } from '../pages/schedule/scheduleMain';
+import { Schedules, ScheduleCreatedFrom, ScheduleEvent, Schedule, ScheduleRepeatType } from '../pages/schedule/scheduleMain';
 import { persist } from './persistSignal';
 
 export type SchedulesSignal = {
@@ -7,7 +7,7 @@ export type SchedulesSignal = {
     updated: boolean;
 };
 
-export const schedulesSignal = persist<SchedulesSignal>('schedules', 'v1-beta0.1', blankSchedulesSignal(), (versionInStorage, data) => {
+export const schedulesSignal = persist<SchedulesSignal>('schedules', 'v1-beta0.2', blankSchedulesSignal(), (versionInStorage, data) => {
     if (versionInStorage === undefined) {
         // Before versioning
         // Also before schedules had a repeatWeekly property
@@ -19,6 +19,20 @@ export const schedulesSignal = persist<SchedulesSignal>('schedules', 'v1-beta0.1
         data.schedules = schedulesUpdated;
 
         return data;
+    } else if (versionInStorage === 'v1-beta0.1') {
+        // Update schedules to have new repeat property
+        const schedulesUpdated = data.schedules.map((schedule) => {
+            schedule.repeat = {
+                type: ScheduleRepeatType.NONE,
+            };
+
+            if (schedule.repeatWeekly) {
+                schedule.repeat.type = ScheduleRepeatType.WEEKLY;
+                delete schedule.repeatWeekly;
+            }
+
+            return schedule;
+        });
     }
 
     return data;
@@ -97,7 +111,9 @@ export function createSchedule(createdFrom: ScheduleCreatedFrom, name: string, b
         createdFrom: createdFrom,
         name: name,
         scheduleEvents: [],
-        repeatWeekly: false,
+        repeat: {
+            type: ScheduleRepeatType.NONE,
+        },
 
         defaultBackgroundColor: backgroundColor || '#000000',
         defaultBorderColor: borderColor || '#000000',

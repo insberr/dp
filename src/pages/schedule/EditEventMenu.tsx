@@ -14,7 +14,7 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import { ScheduleCreatedFrom, ScheduleEvent } from './scheduleMain';
+import { ScheduleCreatedFrom, ScheduleEvent, ScheduleRepeatType } from './scheduleMain';
 import { format } from 'date-fns';
 import {
     createEvent,
@@ -59,6 +59,7 @@ export function EditEventMenu(props: {
             title: event.title,
             description: event.description,
             location: event.location,
+            repeat: event.repeat,
             backgroundColor: event.backgroundColor,
             borderColor: event.borderColor,
             opacity: event.opacity,
@@ -172,7 +173,9 @@ export function EditEventMenu(props: {
                                     createdFrom: ScheduleCreatedFrom.USER,
                                     uid: newUID,
                                     name: 'New Schedule',
-                                    repeatWeekly: false,
+                                    repeat: {
+                                        type: ScheduleRepeatType.NONE,
+                                    },
                                     scheduleEvents: [],
                                 });
                             }

@@ -9,6 +9,7 @@ import WeekSchedule from './WeekSchedule/WeekSchedule';
 import { useState } from 'preact/hooks';
 import { EditEventMenu } from './EditEventMenu';
 import { EditScheduleMenu } from './EditScheduleMenu';
+import { viewModeSignal } from '../../storage/signals';
 
 export enum ScheduleCreatedFrom {
     ICS_FILE,
@@ -22,6 +23,16 @@ export enum ScheduleEventRepeatType {
     MONTHLY,
     YEARLY,
     EDITED,
+    SCHEDULE_REPEAT,
+}
+
+export enum ScheduleRepeatType {
+    NONE,
+    CUSTOM_MINUTES_DURATION,
+    DAILY,
+    WEEKLY,
+    MONTHLY,
+    YEARLY,
 }
 
 export type ScheduleEventRepeatBase = {
@@ -74,7 +85,12 @@ export type Schedule = {
     name: string;
     scheduleEvents: ScheduleEvent[];
 
-    repeatWeekly: boolean;
+    repeat: {
+        type: ScheduleRepeatType;
+        startDate?: Date;
+        endDate?: Date;
+    };
+    repeatWeekly?: boolean;
 
     // customizations for later?
     defaultBackgroundColor?: string;
@@ -106,7 +122,9 @@ export default function ScheduleMain() {
                             uid: generateUID(),
                             name: 'Main Schedule',
                             scheduleEvents: [],
-                            repeatWeekly: false,
+                            repeat: {
+                                type: ScheduleRepeatType.NONE,
+                            },
                             defaultOpacity: 1,
                         });
                     }}
@@ -117,7 +135,6 @@ export default function ScheduleMain() {
         );
     }
 
-    const [viewMode, viewModeSet] = useState(SchedulesViewMode.DAY);
     const [editEventMenu, editEventMenuSet] = useState<ScheduleEventExtraInfo | null>(null);
     const [editScheduleMenu, editScheduleMenuSet] = useState<string | null>(null);
 
@@ -167,8 +184,8 @@ export default function ScheduleMain() {
 
     return (
         <>
-            <CalendarMenuBar viewMode={viewMode} viewModeSet={viewModeSet} />
-            {viewMode === SchedulesViewMode.DAY ? (
+            <CalendarMenuBar />
+            {viewModeSignal.value === SchedulesViewMode.DAY ? (
                 <DaySchedule
                     displayDate={dateForDisplay.value}
                     timeBarTime={currentDate.value}
