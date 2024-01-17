@@ -23,7 +23,7 @@ export const schedulesSignal = persist<SchedulesSignal>('schedules', 'v1-beta0.2
         // Update schedules to have new repeat property
         const schedulesUpdated = data.schedules.map((schedule) => {
             schedule.repeat = {
-                type: ScheduleRepeatType.NONE,
+                type: 0,
             };
 
             if (schedule.repeatWeekly) {
@@ -112,7 +112,7 @@ export function createSchedule(createdFrom: ScheduleCreatedFrom, name: string, b
         name: name,
         scheduleEvents: [],
         repeat: {
-            type: 0,
+            type: ScheduleRepeatType.NONE,
         },
 
         defaultBackgroundColor: backgroundColor || '#000000',
