@@ -3,8 +3,8 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Input } from '@mui/material';
 import ICSParser from '../utilities/ICSParser';
 import { createScheduleAdvanced, generateUID, schedulesSignal } from '../storage/scheduleSignal';
-import { ScheduleCreatedFrom, ScheduleEvent } from '../pages/schedule/scheduleMain';
-import {} from 'date-fns';
+import { ScheduleCreatedFrom, ScheduleEvent, ScheduleEventRepeatType, ScheduleRepeatType } from '../pages/schedule/scheduleMain';
+import { addDays, eachWeekendOfInterval, isAfter, isBefore, isSameDay, isSunday, setHours, setMinutes, setSeconds, subDays } from 'date-fns';
 
 export default function InputFileUpload() {
     return (
@@ -63,8 +63,6 @@ export default function InputFileUpload() {
                                 description: icsEvent.description,
                                 location: icsEvent.location,
 
-                                backgroundColor: '#000000',
-                                borderColor: '#000000',
                                 opacity: 1,
                             };
 
@@ -73,11 +71,52 @@ export default function InputFileUpload() {
 
                         // TODO: Reduce events to a single week so we can make the schedule repeat weekly
                         // Get first event
+                        const firstEvent = scheduleFromICS_FILE[0];
                         // Get last event
+                        const lastEvent = scheduleFromICS_FILE[scheduleFromICS_FILE.length - 1];
                         // Find the first day of the week that the first event is on
+                        let startingWeekFirstDayOfWeek = firstEvent.startDate;
+                        if (!isSunday(startingWeekFirstDayOfWeek)) {
+                            startingWeekFirstDayOfWeek = eachWeekendOfInterval({
+                                start: subDays(startingWeekFirstDayOfWeek, 7),
+                                end: startingWeekFirstDayOfWeek,
+                            })[1]; // Sunday
+                        }
+
+                        startingWeekFirstDayOfWeek = setHours(setMinutes(setSeconds(startingWeekFirstDayOfWeek, 0), 0), 0);
+
                         // Get all events from then to 7 days later
+                        const eventsInFirstWeek = scheduleFromICS_FILE.filter((event: ScheduleEvent) => {
+                            return (
+                                isAfter(event.startDate, startingWeekFirstDayOfWeek) &&
+                                isBefore(event.startDate, setHours(setMinutes(setSeconds(addDays(startingWeekFirstDayOfWeek, 7), 59), 59), 23))
+                            );
+                        });
                         // For each event in the 7 days, find all events that are exactly 7 days after it, repeating till the last week is reached
                         // If there is not an event 7 days after it, add it to the skip list
+                        const eventsReduced = eventsInFirstWeek.map((event: ScheduleEvent) => {
+                            // Find all events that are exactly 7 day increments apart,
+                            // if there is not one for a givent week, add it to the skip list
+                            const skipWeeks: Date[] = [];
+                            let currentWeek = event.startDate;
+                            while (isBefore(currentWeek, lastEvent.startDate)) {
+                                const nextWeek = setHours(setMinutes(setSeconds(addDays(currentWeek, 7), 0), 0), 0);
+
+                                const nextWeekEvent = scheduleFromICS_FILE.find((event: ScheduleEvent) => {
+                                    return isSameDay(event.startDate, nextWeek);
+                                });
+
+                                if (!nextWeekEvent) {
+                                    skipWeeks.push(nextWeek);
+                                }
+
+                                currentWeek = nextWeek;
+                            }
+
+                            event.repeat = { type: ScheduleEventRepeatType.SCHEDULE_REPEAT, skipDates: skipWeeks, endDate: null };
+
+                            return event;
+                        });
 
                         // Remember, this does not modify the localstorage value, so when we are done we need to set it
                         if (existingICSFileCalendars.length > 0) {
@@ -87,7 +126,7 @@ export default function InputFileUpload() {
 
                             const index = schedulesSignalValue.indexOf(existingICSFileCalendars[0]);
 
-                            schedulesSignalValue[index].scheduleEvents = scheduleFromICS_FILE.map((event: ScheduleEvent) => {
+                            schedulesSignalValue[index].scheduleEvents = eventsReduced.map((event: ScheduleEvent) => {
                                 event.parentScheduleUid = existingICSFileCalendars[0].uid;
                                 return event;
                             });
@@ -100,13 +139,23 @@ export default function InputFileUpload() {
                                 createdFrom: ScheduleCreatedFrom.ICS_FILE,
                                 uid: scheduleUID,
                                 name: 'Calendar From ICS File',
-                                scheduleEvents: scheduleFromICS_FILE.map((event: ScheduleEvent) => {
+                                scheduleEvents: eventsReduced.map((event: ScheduleEvent) => {
                                     event.parentScheduleUid = scheduleUID;
                                     return event;
                                 }),
 
-                                repeatWeekly: true,
+                                repeat: {
+                                    type: ScheduleRepeatType.WEEKLY,
 
+                                    // TODO: For now, just need to test, then ill make this proper days
+                                    startDate: startingWeekFirstDayOfWeek,
+                                    endDate: addDays(lastEvent.endDate, 1),
+                                },
+
+                                // Salmon color in hex
+                                defaultBackgroundColor: '#FA8072',
+                                // Slightly darker salmon color in hex
+                                defaultBorderColor: '#E9967A',
                                 defaultOpacity: 1,
                             });
                         }
