@@ -57,7 +57,8 @@ export default function EventBox(props: EventBoxProps) {
                 }}
             >
                 <div>
-                    {event.title} {format(startDate, 'h:mma')} - {format(endDate, 'h:mma')} ({durationMinutes} minutes)
+                    {/*{event.title} {format(startDate, 'h:mma')} - {format(endDate, 'h:mma')} ({durationMinutes} minutes)*/}
+                    TODO: date-fns format is broken
                 </div>
                 <div>
                     {locationObject.location} building {'('}

@@ -113,7 +113,8 @@ export function EditEventMenu(props: {
                     it doesnt do that lol)
                 </Typography>
                 <Typography id={'edit-event-modal-description' + eventID} sx={{ mt: 2 }}>
-                    {format(event.startDate, 'h:mma')} - {format(event.endDate, 'h:mma')} ({durationMinutes} minutes)
+                    {/*{format(event.startDate, 'h:mma')} - {format(event.endDate, 'h:mma')} ({durationMinutes} minutes)*/}
+                    TODO: date-fns format is broken
                 </Typography>
                 <DateTimePicker
                     label="Start Date And Time"

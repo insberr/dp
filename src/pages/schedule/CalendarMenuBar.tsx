@@ -9,7 +9,8 @@ export default function CalendarMenuBar() {
     return (
         <Box sx={{ top: 0, height: 150 }}>
             <ChangeDateButtons />
-            <div>Display Date: {format(dateForDisplay.value, 'MM/dd/yyyy')}</div>
+            {/*<div>Display Date: {format(dateForDisplay.value, 'MM/dd/yyyy')}</div>*/}
+            <div>Display Date: {dateForDisplay.value.toString()}</div>
             <Button
                 hidden
                 variant="contained"
