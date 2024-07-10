@@ -12,11 +12,11 @@ export default function MenuBar() {
                 showLabels
                 sx={{ paddingBottom: 4, paddingTop: 4 }}
                 value={pageToRender.value}
-                onChange={(event, newValue) => {
+                onChange={(event: any, newValue: any) => {
                     pageToRender.value = newValue;
                 }}
             >
-                <BottomNavigationAction label="Schedule" icon={<RestoreIcon />} value={PageToRender.Schedule} />
+                <BottomNavigationAction label="Schedule" icon={<RestoreIcon />} value={PageToRender.ScheduleX} />
                 <BottomNavigationAction label="Links" icon={<FavoriteIcon />} value={PageToRender.Links} />
                 <BottomNavigationAction label="Settings" icon={<GearIcon />} value={PageToRender.Settings} />
             </BottomNavigation>

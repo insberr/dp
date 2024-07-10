@@ -1,4 +1,4 @@
-import { Box, Grid, Grid2TypeMap, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import EventBox from './eventBox';
 import { ScheduleEvent, Schedule, ScheduleEventRepeat, ScheduleRepeatType } from '../scheduleMain';
 import {
@@ -20,7 +20,6 @@ import './daySchedule.scss';
 import { schedulesSignal } from '../../../storage/scheduleSignal';
 import { timeHeightSignal } from '../../../storage/signals';
 import ScheduleClickAddEventArea from './ScheduleClickAddEventArea';
-import MoveableLibPlay from '../../moveable/moveableLibPlay';
 import { useRef } from 'preact/hooks';
 
 const hoursToDisplay = [...Array(24)]; // [1, 2, 3, 11, 12, 13, 14, 15, 16, 17];
@@ -269,7 +268,7 @@ export default function DaySchedule(props: {
                             onClickSchedule={props.onClickSchedule}
                             onDraggingSchedule={props.onDraggingSchedule}
                         />
-                        <MoveableLibPlay>
+                        <div>
                             {eventsForDisplay.map((event: ScheduleEventExtraInfo, index: number) => {
                                 // does this event overlap any other events that are longer than it, and how much should it be indented?
                                 const howManyLongerEventsOverlap = eventsForDisplay.filter((otherEvent: ScheduleEventExtraInfo) => {
@@ -294,7 +293,7 @@ export default function DaySchedule(props: {
 
                                 return <EventBox overlap={howManyLongerEventsOverlap} onClick={props.onClickEvent} event={event} key={index} />;
                             })}
-                        </MoveableLibPlay>
+                        </div>
                         <Box
                             id="timeBar"
                             sx={{

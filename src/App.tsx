@@ -9,7 +9,7 @@ import MenuBar from './components/MenuBar';
 import RouterWrapper from './components/RouterWrapper';
 import IntroPage from './pages/IntroPage';
 import { defferedInstallPrompt } from './storage/signals';
-import MoveableLibPlay from './pages/moveable/moveableLibPlay';
+import ScheduleXMain from './pages/scheduleX/SceduleXMain';
 
 export default function App() {
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -36,12 +36,14 @@ export default function App() {
                     <CreateAccountPage />
                 </Router>
             </RouterWrapper>
-            <RouterWrapper pageIDs={[PageToRender.MoveableTest, PageToRender.Schedule, PageToRender.Settings, PageToRender.Links]}>
-                <Router pageID={PageToRender.MoveableTest}>
-                    <MoveableLibPlay />
-                </Router>
-                <Router pageID={PageToRender.Schedule}>
-                    <ScheduleMain />
+            <RouterWrapper pageIDs={[
+                PageToRender.ScheduleX,
+                PageToRender.Schedule,
+                PageToRender.Settings,
+                PageToRender.Links
+            ]}>
+                <Router pageID={PageToRender.ScheduleX}>
+                    <ScheduleXMain />
                 </Router>
                 <Router pageID={PageToRender.Settings}>
                     <SettingsPage />
@@ -71,6 +73,8 @@ export default function App() {
                 <Box
                     sx={{
                         marginBottom: '70px',
+                        position: 'absolute',
+                        bottom: '0px',
                     }}
                 >
                     Created By Jonah Matteson (@insberr)
