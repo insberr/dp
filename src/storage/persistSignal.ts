@@ -1,19 +1,19 @@
 import { signal, Signal, effect } from '@preact/signals';
 // @ts-ignore - No types exist for this package
-import { serify, deserify } from '@karmaniverous/serify-deserify';
+import { serify, deserify, defaultOptions } from '@karmaniverous/serify-deserify';
 
 export function persistJSON<Type>(key: string, defaultValue: Type): Signal<Type> {
     const localStorageItem = localStorage.getItem(key);
     let value = defaultValue;
 
     if (localStorageItem !== null) {
-        value = deserify(JSON.parse(localStorageItem));
+        value = deserify(JSON.parse(localStorageItem), defaultOptions) as Type;
     }
 
     const internal = signal<Type>(value);
 
     effect(() => {
-        localStorage.setItem(key, JSON.stringify(serify(internal.value)));
+        localStorage.setItem(key, JSON.stringify(serify(internal.value, defaultOptions)));
     });
 
     return internal;
@@ -33,7 +33,7 @@ export function persist<Type>(
     let value = defaultValue;
 
     if (localStorageItem !== null) {
-        const deserialized = deserify(JSON.parse(localStorageItem));
+        const deserialized = deserify(JSON.parse(localStorageItem), defaultOptions) as any;
         value = deserialized.data;
 
         if (deserialized.version !== version && migrate !== undefined) {
@@ -48,7 +48,7 @@ export function persist<Type>(
     // };
 
     effect(() => {
-        localStorage.setItem(key, JSON.stringify(serify({ data: internal.value, version: version })));
+        localStorage.setItem(key, JSON.stringify(serify({ data: internal.value, version: version }, defaultOptions)));
     });
 
     return internal;

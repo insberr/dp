@@ -31,7 +31,8 @@ export default function WeekSchedule(props: {
                     <Grid item xs={1}>
                         <Grid container rows={15}>
                             <Grid item xs={1}>
-                                {format(day, 'MM/dd/yyyy')}
+                                {/*{format(day, 'MM/dd/yyyy')}*/}
+                                {day.toString()}
                             </Grid>
                             <Grid item xs={14}>
                                 <DaySchedule
