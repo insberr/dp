@@ -1799,6 +1799,34 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@schedule-x/current-time@npm:^1.50.0":
+  version: 1.50.0
+  resolution: "@schedule-x/current-time@npm:1.50.0"
+  checksum: 7979b0d3d792a7a96a3d056738bf6b7c5a6cf2f22cf4481ba4ad37536762c398d44f4092ee2fe802683e48917083e1b1bb6e215202deb20e73616941f3f9d9a8
+  languageName: node
+  linkType: hard
+
+"@schedule-x/drag-and-drop@npm:^1.50.0":
+  version: 1.50.0
+  resolution: "@schedule-x/drag-and-drop@npm:1.50.0"
+  checksum: 7e95d6e23665c2ab9059018f4582c83f4fc7901c3f53770c242609fa6362cec0ffd3a47a3b1424e7f9de5e01428659f142cfdb469be40d24add9a4d2968dd984
+  languageName: node
+  linkType: hard
+
+"@schedule-x/event-recurrence@npm:^1.50.0":
+  version: 1.50.0
+  resolution: "@schedule-x/event-recurrence@npm:1.50.0"
+  checksum: 2adde10fa68f04255dfb6ab437d506e712d589a05853864dbc71e2d70125b613f92e84b0ed328116b6ddaf240471e3f89910f26f8001ac1cc87459376fea3bcb
+  languageName: node
+  linkType: hard
+
+"@schedule-x/events-service@npm:^1.50.0":
+  version: 1.50.0
+  resolution: "@schedule-x/events-service@npm:1.50.0"
+  checksum: 3abb6f9a929d8f54d6f432f4a61dd813e9cf1dce3919d1159240c9d34e90c083d57f5661e4970c21b345b859ad69d5fc9c538232532d3ccba971e0e580be2494
+  languageName: node
+  linkType: hard
+
 "@schedule-x/react@npm:^1.48.0":
   version: 1.48.0
   resolution: "@schedule-x/react@npm:1.48.0"
@@ -1807,6 +1835,13 @@ __metadata:
     react: ^16.7.0 || ^17 || ^18
     react-dom: ^16.7.0 || ^17 || ^18
   checksum: 3e16ef7a2e5fac5773b94f7213f5a3c7fdbed354b959c35497728c67b41f257a6fd140c10553699b3b5787945913def81dead77076a629205a3caae5457d4fd9
+  languageName: node
+  linkType: hard
+
+"@schedule-x/resize@npm:^1.50.0":
+  version: 1.50.0
+  resolution: "@schedule-x/resize@npm:1.50.0"
+  checksum: 1d47f3df6334efa8fde76ec9ddfeb91b4cd47e96321436fd61f1aa31dec72cfebc52d13a5e27bacbeb9618866605d7e36bbc897496d06e0ec8f3a2590d7bfe61
   languageName: node
   linkType: hard
 
@@ -2711,7 +2746,12 @@ __metadata:
     "@preact/compat": ^17.1.2
     "@preact/signals": ^1.3.0
     "@schedule-x/calendar": ^1.50.0
+    "@schedule-x/current-time": ^1.50.0
+    "@schedule-x/drag-and-drop": ^1.50.0
+    "@schedule-x/event-recurrence": ^1.50.0
+    "@schedule-x/events-service": ^1.50.0
     "@schedule-x/react": ^1.48.0
+    "@schedule-x/resize": ^1.50.0
     "@schedule-x/theme-default": ^1.50.0
     "@types/hex-rgb": ^4.1.1
     "@types/node": ^20.14.10

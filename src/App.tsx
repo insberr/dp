@@ -73,7 +73,7 @@ export default function App() {
                 <Box
                     sx={{
                         marginBottom: '70px',
-                        position: 'absolute',
+                        position: 'fixed',
                         bottom: '0px',
                     }}
                 >
