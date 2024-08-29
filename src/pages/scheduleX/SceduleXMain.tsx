@@ -8,6 +8,7 @@ import {
 } from '@schedule-x/calendar';
 
 import '@schedule-x/theme-default/dist/index.css';
+import '../../styles/schedule-x-overides.scss';
 import { useEffect, useState } from 'preact/hooks';
 import { Box, Button } from '@mui/material';
 import {
@@ -100,7 +101,7 @@ export default function ScheduleXMain() {
         eventsServicePlugin.set(events);
     }, [schedulesSignal.value]);
 
-    return <Box mb={10} mt={5}>
+    return <Box mb={10}>
         <ScheduleXCalendar calendarApp={cal} />
     </Box>;
 }

@@ -1,4 +1,4 @@
-import { Box, Stack } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import ScheduleMain from './pages/schedule/scheduleMain';
 import LoginPage from './pages/login/loginPage';
 import { PageToRender } from './storage/pageToRender';
@@ -77,7 +77,7 @@ export default function App() {
                         bottom: '0px',
                     }}
                 >
-                    Created By Jonah Matteson (@insberr)
+                    <Typography variant="caption">Created By Jonah Matteson (@insberr)</Typography>
                 </Box>
                 <MenuBar />
             </RouterWrapper>
