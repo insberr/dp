@@ -1,5 +1,5 @@
 import { Box, Stack, Typography } from '@mui/material';
-import ScheduleMain from './pages/schedule/scheduleMain';
+// import ScheduleMain from './pages/schedule/scheduleMain';
 import LoginPage from './pages/login/loginPage';
 import { PageToRender } from './storage/pageToRender';
 import Router from './components/Router';

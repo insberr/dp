@@ -21,6 +21,8 @@ import { createCurrentTimePlugin } from '@schedule-x/current-time';
 import { createEventRecurrencePlugin, createEventsServicePlugin } from "@schedule-x/event-recurrence";
 import InputFileUpload from '../../components/InputFileUpload';
 import { ScheduleCreatedFrom, ScheduleRepeatType } from '../schedule/scheduleMain';
+import { createDragAndDropPlugin } from '@schedule-x/drag-and-drop';
+import { createEventModalPlugin } from '@schedule-x/event-modal';
 
 const recurrencePlugin = createEventRecurrencePlugin();
 const eventsServicePlugin = createEventsServicePlugin();
@@ -30,19 +32,33 @@ const cal = createCalendar({
     views: [viewWeek, viewDay, viewMonthAgenda, viewMonthGrid],
     defaultView: viewDay.name,
     isDark: true,
-    plugins: [recurrencePlugin, eventsServicePlugin, createCurrentTimePlugin()],
+    plugins: [
+        recurrencePlugin,
+        eventsServicePlugin,
+        createCurrentTimePlugin(),
+        createDragAndDropPlugin(),
+        createEventModalPlugin()
+    ],
     dayBoundaries: {
         start: '08:00',
         end: '23:00'
     },
-    events: [
-        {
-            id: '0',
-            title: 'Event 1',
-            start: '2024-07-10 06:00',
-            end: '2024-12-15 08:00'
+    calendars: {
+        all: {
+            colorName: 'all_events',
+            lightColors: {
+                main: '#ff4a4a',
+                container: '#ffaaaa',
+                onContainer: '#590000',
+            },
+            darkColors: {
+                main: '#ffc0c0',
+                onContainer: '#ffdede',
+                container: '#b53434',
+            },
         }
-    ]
+    },
+    events: []
 });
 
 export default function ScheduleXMain() {
@@ -85,13 +101,16 @@ export default function ScheduleXMain() {
                 const start = `${e.startDate.getFullYear()}-${(e.startDate.getMonth() + 1).toString().padStart(2, '0')}-${e.startDate.getDate().toString().padStart(2, '0')} ${e.startDate.getHours().toString().padStart(2, '0')}:${e.startDate.getMinutes().toString().padStart(2, '0')}`;
                 const end = `${e.endDate.getFullYear()}-${(e.endDate.getMonth() + 1).toString().padStart(2, '0')}-${e.endDate.getDate().toString().padStart(2, '0')} ${e.endDate.getHours().toString().padStart(2, '0')}:${e.endDate.getMinutes().toString().padStart(2, '0')}`;
 
-                console.log(start, end);
+                console.log(start, end, e);
 
                 return {
                     id: idx,
                     title: e.title,
                     start,
                     end,
+                    location: e.location,
+                    description: e.description,
+                    calendarId: "all",
                     // rrule: 'FREQ=WEEKLY;UNTIL=20240729T235959'
                     // start: `2024-07-10 ${e.startDate.getHours().toString().padStart(2, '0')}:${e.startDate.getMinutes().toString().padStart(2, '0')}`,
                     // end: `2024-07-10 ${e.endDate.getHours().toString().padStart(2, '0')}:${e.endDate.getMinutes().toString().padStart(2, '0')}`,
