@@ -80,6 +80,7 @@ export default function ScheduleXMain() {
 
         const events = schedulesSignal.value.schedules[0].scheduleEvents
             .map((e, idx) => {
+                // fixme: for some reason date-fns format doesnt work
                 const start = `${e.startDate.getFullYear()}-${(e.startDate.getMonth() + 1).toString().padStart(2, '0')}-${e.startDate.getDate().toString().padStart(2, '0')} ${e.startDate.getHours().toString().padStart(2, '0')}:${e.startDate.getMinutes().toString().padStart(2, '0')}`;
                 const end = `${e.endDate.getFullYear()}-${(e.endDate.getMonth() + 1).toString().padStart(2, '0')}-${e.endDate.getDate().toString().padStart(2, '0')} ${e.endDate.getHours().toString().padStart(2, '0')}:${e.endDate.getMinutes().toString().padStart(2, '0')}`;
 
