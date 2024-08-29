@@ -10,12 +10,17 @@ export enum PageToRender {
     Links,
 
     Settings,
-    MoveableTest,
+    ScheduleX,
 }
 
 export const pageToRender = persist<PageToRender>('pageToRender', 'v1', PageToRender.Intro);
 effect(() => {
     if (typeof pageToRender.value !== 'number') {
         pageToRender.value = PageToRender.Intro;
+    }
+
+    // TODO: TEMPORARY: remove once schedule x replaces schedule
+    if (pageToRender.value === PageToRender.Schedule) {
+        pageToRender.value = PageToRender.ScheduleX;
     }
 });
